@@ -14,9 +14,20 @@
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
-            <groupId>jun    it</groupId>
+            <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.hp.hpl.jena</groupId>
+            <artifactId>jena</artifactId>
+            <version>${jena.version}</version>
         </dependency>
     </dependencies>
 </project>

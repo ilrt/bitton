@@ -8,4 +8,8 @@ package org.ilrt.wf.facets;
 public interface Facet {
 
     String getName();
+
+    Facet getState();
+
+    String getParam();
 }

@@ -13,7 +13,8 @@
     </modules>
     <properties>
         <junit.version>4.4</junit.version>
-        <caboto.version>0.1-SNAPSHOT</caboto.version>
+        <facets.version>0.1-SNAPSHOT</facets.version>
+        <jena.version>2.6.2</jena.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <build>

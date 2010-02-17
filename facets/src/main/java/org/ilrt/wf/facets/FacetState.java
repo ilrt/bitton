@@ -19,5 +19,5 @@ public interface FacetState {
 
     FacetState getParent();
 
-    FacetStateParam getParam();
+    String getParamValue();
 }
