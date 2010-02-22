@@ -34,5 +34,5 @@ public interface FacetQueryService {
      * @param futureFacetState      a future state for which we need to calculate the count.
      * @return                      the state and the associated count.
      */
-    Map<FacetState, Integer> getCounts(FacetState futureFacetState);
+    Map<FacetState, Integer> getCounts(FacetState currentFacetState);
 }
