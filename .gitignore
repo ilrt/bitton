@@ -14,5 +14,5 @@ nbproject
 Thumbs*
 build.xml
 catalog.xml
-.idea/*
+.idea
 out
