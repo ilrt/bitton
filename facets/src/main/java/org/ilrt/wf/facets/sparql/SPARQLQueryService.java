@@ -5,12 +5,24 @@
 
 package org.ilrt.wf.facets.sparql;
 
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.sparql.algebra.Algebra;
+import com.hp.hpl.jena.sparql.algebra.Op;
+import com.hp.hpl.jena.sparql.algebra.OpVisitor;
+import com.hp.hpl.jena.sparql.algebra.TransformCopy;
+import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
+import com.hp.hpl.jena.sparql.algebra.op.OpTriple;
+import com.hp.hpl.jena.sparql.core.BasicPattern;
+import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.syntax.ElementTriplesBlock;
 import com.hp.hpl.jena.sparql.syntax.ElementVisitorBase;
 import java.util.Collections;
@@ -34,6 +46,10 @@ public class SPARQLQueryService implements FacetQueryService {
     @Override
     public Map<FacetState, List<RDFNode>> getRefinements(FacetState currentFacetState) {
         Query query = QueryFactory.read("/sparql/refinements.rq");
+
+        Op op = Algebra.compile(query);
+
+
 
         Property rel = null;
         String toBind = null;
@@ -64,11 +80,31 @@ public class SPARQLQueryService implements FacetQueryService {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    static class Rebinder extends ElementVisitorBase {
+    public static class Rebinder extends TransformCopy {
+        private final Binding bindings;
+
+        public Rebinder(Binding bindings) {
+            this.bindings = bindings;
+        }
 
         @Override
-        public void visit(ElementTriplesBlock e) {
-            
+        public Op transform(OpBGP op) {
+            BasicPattern pattern = op.getPattern();
+            BasicPattern newPattern = new BasicPattern();
+            for (Triple t: pattern) {
+               Node s = bind(t.getSubject());
+                Node p = bind(t.getPredicate());
+                Node o = bind(t.getObject());
+                newPattern.add(Triple.create(s, p, o));
+            }
+            return new OpBGP(newPattern);
+        }
+
+        private Node bind(Node node) {
+            if (node instanceof Var && 
+                    bindings.contains((Var) node))
+                return bindings.get((Var) node);
+            else return node;
         }
 
     }
