@@ -31,8 +31,8 @@ public interface FacetQueryService {
      * method call, it does allow the option to configure applications not to
      * produce counts since they can be an expensive operation.
      *
-     * @param futureFacetState      a future state for which we need to calculate the count.
+     * @param currentFacetState      a future state for which we need to calculate the count.
      * @return                      the state and the associated count.
      */
-    Map<FacetState, Integer> getCounts(FacetState futureFacetState);
+    Map<FacetState, Integer> getCounts(FacetState currentFacetState);
 }
