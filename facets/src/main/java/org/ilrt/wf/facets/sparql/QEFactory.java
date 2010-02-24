@@ -7,6 +7,7 @@ package org.ilrt.wf.facets.sparql;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QuerySolution;
 
 /**
  *

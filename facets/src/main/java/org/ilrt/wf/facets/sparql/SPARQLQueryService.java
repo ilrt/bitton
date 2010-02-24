@@ -5,26 +5,14 @@
 
 package org.ilrt.wf.facets.sparql;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.sparql.algebra.Algebra;
-import com.hp.hpl.jena.sparql.algebra.Op;
-import com.hp.hpl.jena.sparql.algebra.OpVisitor;
-import com.hp.hpl.jena.sparql.algebra.TransformCopy;
-import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
-import com.hp.hpl.jena.sparql.algebra.op.OpTriple;
-import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
-import com.hp.hpl.jena.sparql.syntax.ElementTriplesBlock;
-import com.hp.hpl.jena.sparql.syntax.ElementVisitorBase;
+import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,23 +35,21 @@ public class SPARQLQueryService implements FacetQueryService {
     public Map<FacetState, List<RDFNode>> getRefinements(FacetState currentFacetState) {
         Query query = QueryFactory.read("/sparql/refinements.rq");
 
-        Op op = Algebra.compile(query);
+        Binding binding = new BindingMap();
 
-
-
-        Property rel = null;
-        String toBind = null;
         if (currentFacetState.getBroaderProperty() != FacetState.NONE) {
-            rel = currentFacetState.getBroaderProperty();
+            binding.add(Var.alloc("p"), currentFacetState.getBroaderProperty().asNode());
+            binding.add(Var.alloc("o"), currentFacetState.getValue().asNode());
             query.addProjectVars(Collections.singleton("s"));
-            toBind = "o";
         } else {
-            rel = currentFacetState.getNarrowerProperty();
+            binding.add(Var.alloc("p"), currentFacetState.getNarrowerProperty().asNode());
+            binding.add(Var.alloc("s"), currentFacetState.getValue().asNode());
             query.addProjectVars(Collections.singleton("o"));
-            toBind = "s";
         }
 
-        QueryExecution qe = qef.get(query);
+        QueryExecution qe = qef.get(
+                QueryRebinder.rebind(query, binding)
+                );
 
         try {
             List<RDFNode> toReturn = new LinkedList<RDFNode>();
@@ -78,34 +64,5 @@ public class SPARQLQueryService implements FacetQueryService {
     @Override
     public Map<FacetState, Integer> getCounts(FacetState futureFacetState) {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public static class Rebinder extends TransformCopy {
-        private final Binding bindings;
-
-        public Rebinder(Binding bindings) {
-            this.bindings = bindings;
-        }
-
-        @Override
-        public Op transform(OpBGP op) {
-            BasicPattern pattern = op.getPattern();
-            BasicPattern newPattern = new BasicPattern();
-            for (Triple t: pattern) {
-               Node s = bind(t.getSubject());
-                Node p = bind(t.getPredicate());
-                Node o = bind(t.getObject());
-                newPattern.add(Triple.create(s, p, o));
-            }
-            return new OpBGP(newPattern);
-        }
-
-        private Node bind(Node node) {
-            if (node instanceof Var && 
-                    bindings.contains((Var) node))
-                return bindings.get((Var) node);
-            else return node;
-        }
-
     }
 }

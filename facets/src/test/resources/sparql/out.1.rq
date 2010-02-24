@@ -1,0 +1,9 @@
+SELECT ?s
+WHERE
+{
+  ?s <urn:ex:p> "foo" ;
+     <urn:ex:p1> 1 ;
+     <urn:ex:p> <urn:ex:o> ;
+     <urn:ex:p1> "lit"@en .
+  GRAPH ?g { <urn:ex:o> <urn:ex:p1> 2 ; <urn:ex:p> "lit"@en . }
+}

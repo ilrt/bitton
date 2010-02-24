@@ -1,0 +1,6 @@
+# Ok, pretty simple :-)
+# We bind ?p to broader / narrower, and set ?s or ?o accordingly
+select *
+where {
+  ?s ?p ?o .
+}
