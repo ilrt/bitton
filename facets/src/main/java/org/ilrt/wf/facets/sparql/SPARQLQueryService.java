@@ -13,6 +13,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
+import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,18 +34,22 @@ public class SPARQLQueryService implements FacetQueryService {
 
     @Override
     public Map<FacetState, List<RDFNode>> getRefinements(FacetState currentFacetState) {
+        URL toBindRes = this.getClass().getResource("/sparql/refinements.rq");
         Query query = QueryFactory.read("/sparql/refinements.rq");
 
+        /**
+         * Rejig refinements query, binding the bits we need
+         */
         Binding binding = new BindingMap();
-
+        query.setQueryResultStar(false);
         if (currentFacetState.getBroaderProperty() != FacetState.NONE) {
             binding.add(Var.alloc("p"), currentFacetState.getBroaderProperty().asNode());
             binding.add(Var.alloc("o"), currentFacetState.getValue().asNode());
-            query.addProjectVars(Collections.singleton("s"));
+            query.addResultVar("s");
         } else {
             binding.add(Var.alloc("p"), currentFacetState.getNarrowerProperty().asNode());
             binding.add(Var.alloc("s"), currentFacetState.getValue().asNode());
-            query.addProjectVars(Collections.singleton("o"));
+            query.addResultVar("o");
         }
 
         QueryExecution qe = qef.get(

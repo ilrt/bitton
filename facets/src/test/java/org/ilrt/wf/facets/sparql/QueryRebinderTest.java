@@ -11,15 +11,10 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.sparql.algebra.Algebra;
 import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.algebra.Transformer;
-import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
 import java.net.URL;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -52,11 +47,5 @@ public class QueryRebinderTest {
 
         Op result = Transformer.transform(new QueryRebinder(binding), Algebra.compile(toBind));
         assertEquals(Algebra.compile(desired), result);
-    }
-
-    final static String fix(final String javaURL) {
-        if (javaURL.startsWith("file:/"))
-            return javaURL.replaceFirst("file:/+", "/");
-        return javaURL;
     }
 }
