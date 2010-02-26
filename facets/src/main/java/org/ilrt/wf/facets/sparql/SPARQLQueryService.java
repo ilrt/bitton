@@ -34,8 +34,8 @@ public class SPARQLQueryService implements FacetQueryService {
 
     @Override
     public Map<FacetState, List<RDFNode>> getRefinements(FacetState currentFacetState) {
-        URL toBindRes = this.getClass().getResource("/sparql/refinements.rq");
-        Query query = QueryFactory.read("/sparql/refinements.rq");
+        URL refinementsQ = this.getClass().getResource("/sparql/refinements.rq");
+        Query query = QueryFactory.read(refinementsQ.toExternalForm());
 
         /**
          * Rejig refinements query, binding the bits we need

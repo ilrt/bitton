@@ -1,0 +1,7 @@
+@prefix ns: <http://example.com/ns#> .
+
+ns:b1 ns:broader ns:a .
+ns:b2 ns:broader ns:a .
+ns:b3 ns:broader ns:a .
+
+ns:a ns:narrower ns:n1, ns:n2, ns:n3, ns:n4 .
