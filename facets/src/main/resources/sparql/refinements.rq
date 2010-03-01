@@ -2,5 +2,5 @@
 # We bind ?p to broader / narrower, and set ?s or ?o accordingly
 select *
 where {
-  ?s ?p ?o .
+  graph ?g { ?s ?p ?o . }
 }
