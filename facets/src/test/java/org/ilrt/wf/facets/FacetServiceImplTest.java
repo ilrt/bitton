@@ -38,16 +38,7 @@ public class FacetServiceImplTest {
     @Test
     public void generate() {
 
-        // mock the FacetQueryService.class and set the expectations
-
-        final FacetQueryService facetQueryService = context.mock(FacetQueryService.class);
-
-        context.checking(new Expectations() {{
-            oneOf(facetQueryService).getRefinements(null);
-        }});
-
-
-        // mock the Configuration.class and set the expectations
+        // mock the Configuration.class
 
         final Configuration configuration = context.mock(Configuration.class);
 
@@ -56,9 +47,13 @@ public class FacetServiceImplTest {
         }});
 
 
+        // mock the FacetFactory.class
+
+        final FacetFactory facetFactory = context.mock(FacetFactory.class);
+
         // test the service
 
-        FacetService facetService = new FacetServiceImpl(facetQueryService, configuration);
+        FacetService facetService = new FacetServiceImpl(facetFactory, configuration);
         FacetView facetView = facetService.generate(request);
 
 
