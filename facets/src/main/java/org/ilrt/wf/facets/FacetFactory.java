@@ -6,5 +6,5 @@ package org.ilrt.wf.facets;
  */
 public interface FacetFactory {
 
-    Facet create(FacetConstraint constraint);
+    Facet create(FacetConstraint constraint) throws FacetException;
 }
