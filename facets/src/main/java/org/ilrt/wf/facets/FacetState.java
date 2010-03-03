@@ -4,6 +4,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import java.util.List;
+import org.ilrt.wf.facets.constraints.Constraint;
 
 /**
  *
@@ -43,4 +44,9 @@ public interface FacetState {
      * @return Current value of this state. May be NONE for 'top' state (?)
      */
     RDFNode getValue();
+
+    /**
+     * @return How this state constrains values
+     */
+    Constraint getConstraint();
 }

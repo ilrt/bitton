@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import org.ilrt.wf.facets.FacetState;
+import org.ilrt.wf.facets.constraints.Constraint;
 import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -130,6 +131,11 @@ public class SPARQLQueryServiceTest {
         @Override
         public RDFNode getValue() {
             return value;
+        }
+
+        @Override
+        public Constraint getConstraint() {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
     }

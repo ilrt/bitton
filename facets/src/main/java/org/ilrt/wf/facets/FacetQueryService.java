@@ -26,13 +26,13 @@ public interface FacetQueryService {
     Map<FacetState, List<RDFNode>> getRefinements(FacetState currentFacetState);
 
     /**
-     * Return the number of matches for a future facet state - for example, there my be
+     * Return the number of matches for future facet states - for example, there my be
      * 8 conferences being held in Bristol. By separating the count from the refinement
      * method call, it does allow the option to configure applications not to
      * produce counts since they can be an expensive operation.
      *
-     * @param currentFacetState      a future state for which we need to calculate the count.
-     * @return                      the state and the associated count.
+     * @param currentFacetStates    the current state of all facets
+     * @return                      the future states and their associated count.
      */
-    Map<FacetState, Integer> getCounts(FacetState currentFacetState);
+    Map<FacetState, Integer> getCounts(List<FacetState> currentFacetStates);
 }

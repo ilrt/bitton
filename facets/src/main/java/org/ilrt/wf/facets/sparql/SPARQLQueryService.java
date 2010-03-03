@@ -5,12 +5,14 @@
 
 package org.ilrt.wf.facets.sparql;
 
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.algebra.Algebra;
+import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
@@ -67,16 +69,22 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     @Override
-    public Map<FacetState, Integer> getCounts(FacetState currentFacetState) {
+    public Map<FacetState, Integer> getCounts(List<FacetState> currentFacetStates) {
         // Inefficient first pass
         Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
-        for (FacetState ffs: currentFacetState.getRefinements()) {
-            counts.put(ffs, getCount(ffs));
-        }
+        /*for (FacetState ffs: currentFacetState.getRefinements()) {
+            counts.put(ffs, getCount(ffs,));
+        }*/
         return counts;
     }
 
     protected int getCount(FacetState ffs) {
+        Var subject = Var.alloc("subject");
+        if (ffs.getValue() != null) {
+            BasicPattern pattern = new BasicPattern();
+            pattern.add(Triple.create(subject,
+                    ffs.getLinkProperty().asNode(), ffs.getValue().asNode()));
+        }
         return -1;
     }
 }
