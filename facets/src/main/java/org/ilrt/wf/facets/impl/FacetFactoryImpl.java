@@ -5,6 +5,7 @@ import org.ilrt.wf.facets.FacetConstraint;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetFactory;
 import org.ilrt.wf.facets.FacetQueryService;
+import org.ilrt.wf.facets.constraints.RegexpConstraint;
 
 import java.util.Map;
 
@@ -49,6 +50,22 @@ public class FacetFactoryImpl implements FacetFactory {
      */
     protected char[] alphaNumericArray() {
         return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+    }
+
+    /**
+     * @param c     the character we want to represent in a label
+     * @return      the label representation of a character
+     */
+    protected String alphaNumericLabel(char c) {
+        return c + "*";
+    }
+
+    /**
+     * @param c     the character we want to represent in a constraint
+     * @return      the constraint that represents the character
+     */
+    protected RegexpConstraint alphaNumericConstraint(char c) {
+        return new RegexpConstraint("^" + c);
     }
 
     private FacetQueryService facetQueryService;

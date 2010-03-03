@@ -3,32 +3,38 @@ package org.ilrt.wf.facets.impl;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetConstraint;
 import org.ilrt.wf.facets.FacetException;
-import org.ilrt.wf.facets.FacetFactory;
 import org.ilrt.wf.facets.FacetQueryService;
-import org.ilrt.wf.facets.impl.FacetFactoryImpl;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+
 @RunWith(JMock.class)
 public class FacetFactoryImplTest {
 
+
+    @Before
+    public void setUp() {
+        final FacetQueryService mockQueryService = context.mock(FacetQueryService.class);
+        facetFactory = new FacetFactoryImpl(mockQueryService);
+    }
 
     /**
      * Tests to see that the factory will throw an exception if it doesn't recognize the
      * facet type specified in a configuration file.
      *
-     * @throws org.ilrt.wf.facets.FacetException   expected exception for this test
+     * @throws org.ilrt.wf.facets.FacetException
+     *          expected exception for this test
      */
     @Test(expected = FacetException.class)
     public void unrecognizedFacetType() throws FacetException {
-
-        final FacetQueryService mockQueryService = context.mock(FacetQueryService.class);
 
         // mock the configuration - it will return an unrecognized facet type
 
@@ -50,7 +56,6 @@ public class FacetFactoryImplTest {
 
         // test the service
 
-        FacetFactory facetFactory = new FacetFactoryImpl(mockQueryService);
         facetFactory.create(mockConstraint);
     }
 
@@ -58,13 +63,30 @@ public class FacetFactoryImplTest {
     @Test
     public void expectedAlphaNumericArray() {
 
-        final FacetQueryService mockQueryService = context.mock(FacetQueryService.class);
-        FacetFactory facetFactory = new FacetFactoryImpl(mockQueryService);
+        assertEquals("Unexpected array size", 36, facetFactory.alphaNumericArray().length);
+    }
 
+    @Test
+    public void alphaNumericLabel() {
 
-       // AssertEquals("Unexpected array size", 26, facetFactory.);
+        final String label = "A*";
+
+        assertEquals("Unexpected label", label, facetFactory.alphaNumericLabel(c));
+    }
+
+    @Test
+    public void alphaNumericConstraint() {
+
+        final String constraint = "^A";
+
+        assertEquals("Unexpected constraint", constraint, facetFactory.alphaNumericConstraint(c).getRegexp());
     }
 
     // mock context
     private final Mockery context = new JUnit4Mockery();
+
+    // common char used in tests
+    private final char c = 'A';
+
+    FacetFactoryImpl facetFactory;
 }
