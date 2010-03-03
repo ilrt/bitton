@@ -10,11 +10,13 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.sparql.algebra.Algebra;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -52,9 +54,7 @@ public class SPARQLQueryService implements FacetQueryService {
             query.addResultVar("o");
         }
 
-        QueryExecution qe = qef.get(
-                QueryRebinder.rebind(query, binding)
-                );
+        QueryExecution qe = qef.get( QueryRebinder.rebind(query, binding) );
 
         try {
             List<RDFNode> toReturn = new LinkedList<RDFNode>();
@@ -67,7 +67,16 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     @Override
-    public Map<FacetState, Integer> getCounts(FacetState futureFacetState) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Map<FacetState, Integer> getCounts(FacetState currentFacetState) {
+        // Inefficient first pass
+        Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
+        for (FacetState ffs: currentFacetState.getRefinements()) {
+            counts.put(ffs, getCount(ffs));
+        }
+        return counts;
+    }
+
+    protected int getCount(FacetState ffs) {
+        return -1;
     }
 }
