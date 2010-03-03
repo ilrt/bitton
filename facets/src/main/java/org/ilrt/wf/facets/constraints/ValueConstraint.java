@@ -18,6 +18,8 @@ public class ValueConstraint implements Constraint {
         this.value = value;
     }
 
+    public RDFNode getValue() { return value; }
+
     @Override
     public boolean matches(RDFNode node) {
         return value.equals(node);

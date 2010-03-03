@@ -5,13 +5,18 @@
 
 package org.ilrt.wf.facets.sparql;
 
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.algebra.Algebra;
+import com.hp.hpl.jena.sparql.algebra.Op;
+import com.hp.hpl.jena.sparql.algebra.op.OpNull;
+import com.hp.hpl.jena.sparql.algebra.op.OpTriple;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
@@ -24,6 +29,11 @@ import java.util.List;
 import java.util.Map;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetState;
+import org.ilrt.wf.facets.constraints.Constraint;
+import org.ilrt.wf.facets.constraints.RangeConstraint;
+import org.ilrt.wf.facets.constraints.RegexpConstraint;
+import org.ilrt.wf.facets.constraints.UnConstraint;
+import org.ilrt.wf.facets.constraints.ValueConstraint;
 
 /**
  *
@@ -72,19 +82,46 @@ public class SPARQLQueryService implements FacetQueryService {
     public Map<FacetState, Integer> getCounts(List<FacetState> currentFacetStates) {
         // Inefficient first pass
         Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
-        /*for (FacetState ffs: currentFacetState.getRefinements()) {
-            counts.put(ffs, getCount(ffs,));
-        }*/
+        for (FacetState state: currentFacetStates) {
+            getStateCounts(state, currentFacetStates, counts);
+        }
         return counts;
     }
 
-    protected int getCount(FacetState ffs) {
-        Var subject = Var.alloc("subject");
-        if (ffs.getValue() != null) {
-            BasicPattern pattern = new BasicPattern();
-            pattern.add(Triple.create(subject,
-                    ffs.getLinkProperty().asNode(), ffs.getValue().asNode()));
+    protected void getStateCounts(FacetState state,
+            List<FacetState> currentFacetStates, Map<FacetState, Integer> counts) {
+        // Get contrast state
+        List<FacetState> otherStates = new LinkedList<FacetState>(currentFacetStates);
+        otherStates.remove(state);
+        for (FacetState futureState: state.getRefinements()) {
+            counts.put(futureState, getCount(futureState, otherStates));
         }
+    }
+
+    protected int getCount(FacetState ffs, List<FacetState> otherStates) {
+        Var subject = Var.alloc("subject");
+
         return -1;
+    }
+
+    protected Op stateToOp(FacetState state) {
+        return constraintToOp(state.getLinkProperty(), state.getConstraint());
+    }
+
+    protected Op constraintToOp(Property prop, Constraint constraint) {
+        if (constraint instanceof UnConstraint) return OpNull.create();
+        if (constraint instanceof ValueConstraint)
+            return new OpTriple(
+                    Triple.create(Node.ANY, prop.asNode(),
+                    ((ValueConstraint) constraint).getValue().asNode()));
+        if (constraint instanceof RangeConstraint) {
+            // create triple
+            // create filter
+        }
+        if (constraint instanceof RegexpConstraint) {
+            // create triple
+            // create filter
+        }
+        throw new RuntimeException("Unknown constraint type");
     }
 }
