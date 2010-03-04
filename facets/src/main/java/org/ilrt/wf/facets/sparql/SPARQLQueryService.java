@@ -11,16 +11,19 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.sparql.algebra.Algebra;
-import com.hp.hpl.jena.sparql.algebra.Op;
+import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
+import com.hp.hpl.jena.sparql.algebra.op.OpN;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
 import com.hp.hpl.jena.sparql.algebra.op.OpTriple;
-import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
+import com.hp.hpl.jena.sparql.expr.E_LessThan;
+import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
+import com.hp.hpl.jena.sparql.expr.E_Regex;
+import com.hp.hpl.jena.sparql.expr.ExprVar;
+import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +43,9 @@ import org.ilrt.wf.facets.constraints.ValueConstraint;
  * @author pldms
  */
 public class SPARQLQueryService implements FacetQueryService {
+
+    private final static Node SUBJECT = Var.alloc("s");
+
     private final QEFactory qef;
 
     public SPARQLQueryService(QEFactory qef) {
@@ -104,27 +110,58 @@ public class SPARQLQueryService implements FacetQueryService {
         return -1;
     }
 
-    protected Op stateToOp(FacetState state) {
+    protected void stateToOp(OpN ops, FacetState state) {
         for (Constraint constraint: state.getConstraints()) {
-            Op op = constraintToOp(state.getLinkProperty(), constraint);
+            constraintToOps(ops, constraint);
         }
-        return null;
     }
 
-    protected Op constraintToOp(Property prop, Constraint constraint) {
-        if (constraint instanceof UnConstraint) return OpNull.create();
-        if (constraint instanceof ValueConstraint)
-            return new OpTriple(
-                    Triple.create(Node.ANY, prop.asNode(),
-                    ((ValueConstraint) constraint).getValue().asNode()));
-        if (constraint instanceof RangeConstraint) {
+    protected void constraintToOps(OpN ops, Constraint constraint) {
+        if (constraint instanceof UnConstraint) ops.add(OpNull.create());
+        else if (constraint instanceof ValueConstraint)
+            ops.add( new OpTriple(
+                    Triple.create(SUBJECT, constraint.getProperty().asNode(),
+                    ((ValueConstraint) constraint).getValue().asNode()))
+                    );
+        else if (constraint instanceof RangeConstraint) {
+            RangeConstraint rc = (RangeConstraint) constraint;
+            Var val = Var.alloc("x"); // TODO generate
             // create triple
-            // create filter
+            ops.add( new OpTriple(
+                    Triple.create(SUBJECT, constraint.getProperty().asNode(),
+                    val) )
+                    );
+            // create filters
+            ops.add( OpFilter.filter(
+                    new E_LessThanOrEqual(
+                      NodeValueNode.makeNode(rc.getFrom().asNode()),
+                      new ExprVar(val) ),
+                    OpNull.create()
+                    ));
+            ops.add( OpFilter.filter(
+                    new E_LessThan(
+                      new ExprVar(val),
+                      NodeValueNode.makeNode(rc.getFrom().asNode()) ),
+                    OpNull.create()
+                    ));
         }
-        if (constraint instanceof RegexpConstraint) {
+        else if (constraint instanceof RegexpConstraint) {
+            RegexpConstraint rc = (RegexpConstraint) constraint;
+            Var val = Var.alloc("x"); // TODO generate
             // create triple
-            // create filter
-        }
-        throw new RuntimeException("Unknown constraint type");
+            ops.add( new OpTriple(
+                    Triple.create(SUBJECT, constraint.getProperty().asNode(),
+                    val) )
+                    );
+            // create filters
+            ops.add( OpFilter.filter(
+                    new E_Regex(
+                      new ExprVar(val),
+                      rc.getRegexp(),
+                      "i"
+                      ),
+                    OpNull.create()
+                    ));
+        } else throw new RuntimeException("Unknown constraint type");
     }
 }

@@ -20,6 +20,7 @@ public class UnConstraint implements Constraint {
         return true;
     }
 
+    // TODO ought to be an empty property
     @Override
     public Property getProperty() {
         throw new UnsupportedOperationException("Don't bother");
