@@ -7,8 +7,8 @@ import org.ilrt.wf.facets.constraints.Constraint;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class FacetStateImpl implements FacetState {
 
@@ -48,11 +48,6 @@ public class FacetStateImpl implements FacetState {
     }
 
     @Override
-    public Property getLinkProperty() {
-        return linkProperty;
-    }
-
-    @Override
     public Property getBroaderProperty() {
         return broaderProperty;
     }
@@ -69,7 +64,7 @@ public class FacetStateImpl implements FacetState {
 
     @Override
     public Collection<Constraint> getConstraints() {
-        return Collections.singleton(constraint);
+        return constraint;
     }
 
     // ---------- setter methods provided in the class implementation
@@ -98,10 +93,6 @@ public class FacetStateImpl implements FacetState {
         this.paramValue = paramValue;
     }
 
-    public void setLinkProperty(Property linkProperty) {
-        this.linkProperty = linkProperty;
-    }
-
     public void setBroaderProperty(Property broaderProperty) {
         this.broaderProperty = broaderProperty;
     }
@@ -114,7 +105,7 @@ public class FacetStateImpl implements FacetState {
         this.value = value;
     }
 
-    public void setConstraint(Constraint constraint) {
+    public void setConstraints(Set<Constraint> constraint) {
         this.constraint = constraint;
     }
 
@@ -124,9 +115,8 @@ public class FacetStateImpl implements FacetState {
     private List<FacetState> refinements = new ArrayList<FacetState>();
     private FacetState parent = null;
     private String paramValue = null;
-    private Property linkProperty = null;
     private Property broaderProperty = null;
     private Property narrowerProperty = null;
     private RDFNode value;
-    private Constraint constraint = null;
+    private Set<Constraint> constraint = null;
 }

@@ -1,5 +1,6 @@
 package org.ilrt.wf.facets.impl;
 
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetConstraint;
 import org.ilrt.wf.facets.FacetException;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(JMock.class)
 public class FacetFactoryImplTest {
@@ -62,7 +62,9 @@ public class FacetFactoryImplTest {
         facetFactory.create(mockConstraint);
     }
 
-
+    /**
+     * Is the alpha-numeric array is correct?
+     */
     @Test
     public void expectedAlphaNumericArray() {
 
@@ -70,25 +72,34 @@ public class FacetFactoryImplTest {
                 facetFactory.alphaNumericArray().length);
     }
 
+    /**
+     * Is label for a character in the correct format?
+     */
     @Test
     public void alphaNumericLabel() {
 
         assertEquals("Unexpected label", label, facetFactory.alphaNumericLabel(c));
     }
 
+    /**
+     * Is the constraint for a character in the correct format?
+     */
     @Test
     public void alphaNumericConstraint() {
 
         assertEquals("Unexpected constraint", constraint,
-                facetFactory.alphaNumericConstraint(c).getRegexp());
+                facetFactory.alphaNumericConstraint(ResourceFactory.
+                        createProperty(linkProperty), c).getRegexp());
     }
 
+    /**
+     * Test the refinements for an alpha-numeric facet are correct.
+     */
     @Test
     public void alphaNumericRefinements() {
 
-        final String linkProperty = "http://http://purl.org/dc/elements/1.1/title";
 
-        List<FacetState> states = facetFactory.alphaNumericRefinements(linkProperty);
+        List<FacetState> states = facetFactory.alphaNumericRefinements(typeProperty, linkProperty);
 
         // check we have the expected number of elements
 
@@ -97,11 +108,10 @@ public class FacetFactoryImplTest {
 
         // check one of the items ...
 
-        FacetStateImpl state = (FacetStateImpl)states.get(10);
+        FacetStateImpl state = (FacetStateImpl) states.get(10);
 
         assertEquals("Unexpected label", label, state.getName());
-        assertNotNull("Expected constraint", state.getConstraints());
-        assertEquals("Unexpected link property", linkProperty, state.getLinkProperty().getURI());
+        assertEquals("Unexpected number of constraints", 2, state.getConstraints().size());
     }
 
 
@@ -113,6 +123,8 @@ public class FacetFactoryImplTest {
     private final String label = "A*";
     private final String constraint = "^A";
     private final int MAX_ALPHANUMERIC_ITEMS = 36;
+    private final String linkProperty = "http://http://purl.org/dc/elements/1.1/title";
+    private final String typeProperty = "http://example.org/vocab/#Thingy";
 
     private FacetFactoryImpl facetFactory;
 }
