@@ -6,6 +6,8 @@ import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.constraints.Constraint;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class FacetStateImpl implements FacetState {
@@ -66,8 +68,8 @@ public class FacetStateImpl implements FacetState {
     }
 
     @Override
-    public Constraint getConstraint() {
-        return constraint;
+    public Collection<Constraint> getConstraints() {
+        return Collections.singleton(constraint);
     }
 
     // ---------- setter methods provided in the class implementation

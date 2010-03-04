@@ -100,7 +100,7 @@ public class FacetFactoryImplTest {
         FacetStateImpl state = (FacetStateImpl)states.get(10);
 
         assertEquals("Unexpected label", label, state.getName());
-        assertNotNull("Expected constraint", state.getConstraint());
+        assertNotNull("Expected constraint", state.getConstraints());
         assertEquals("Unexpected link property", linkProperty, state.getLinkProperty().getURI());
     }
 

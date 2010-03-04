@@ -5,16 +5,18 @@
 
 package org.ilrt.wf.facets.constraints;
 
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
 /**
  *
  * @author pldms
  */
-public class RangeConstraint implements Constraint {
+public class RangeConstraint extends AbstractConstraint {
     private final RDFNode from, to;
     
-    public RangeConstraint(RDFNode from, RDFNode to) {
+    public RangeConstraint(Property property, RDFNode from, RDFNode to) {
+        super(property);
         this.from = from; this.to = to;
     }
 

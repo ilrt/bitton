@@ -5,6 +5,7 @@
 
 package org.ilrt.wf.facets.constraints;
 
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
 /**
@@ -17,6 +18,11 @@ public class UnConstraint implements Constraint {
     @Override
     public boolean matches(RDFNode node) {
         return true;
+    }
+
+    @Override
+    public Property getProperty() {
+        throw new UnsupportedOperationException("Don't bother");
     }
 
 }

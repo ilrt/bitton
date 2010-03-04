@@ -66,7 +66,7 @@ public class FacetFactoryImpl implements FacetFactory {
      * @return the constraint that represents the character
      */
     protected RegexpConstraint alphaNumericConstraint(char c) {
-        return new RegexpConstraint("^" + c);
+        return new RegexpConstraint(null, "^" + c); // TODO NOT NULL!!
     }
 
     protected List<FacetState> alphaNumericRefinements(String linkProperty) {

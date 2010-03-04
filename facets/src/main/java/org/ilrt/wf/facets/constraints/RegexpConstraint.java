@@ -5,16 +5,18 @@
 
 package org.ilrt.wf.facets.constraints;
 
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 
 /**
  *
  * @author pldms
  */
-public class RegexpConstraint implements Constraint {
+public class RegexpConstraint extends AbstractConstraint {
     private final String regexp;
 
-    public RegexpConstraint(String regexp) {
+    public RegexpConstraint(Property property, String regexp) {
+        super(property);
         this.regexp = regexp;
     }
 

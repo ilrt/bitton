@@ -105,7 +105,10 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     protected Op stateToOp(FacetState state) {
-        return constraintToOp(state.getLinkProperty(), state.getConstraint());
+        for (Constraint constraint: state.getConstraints()) {
+            Op op = constraintToOp(state.getLinkProperty(), constraint);
+        }
+        return null;
     }
 
     protected Op constraintToOp(Property prop, Constraint constraint) {

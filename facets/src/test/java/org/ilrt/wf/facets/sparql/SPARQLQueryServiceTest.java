@@ -11,6 +11,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.util.FileManager;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.ilrt.wf.facets.FacetState;
@@ -134,7 +135,7 @@ public class SPARQLQueryServiceTest {
         }
 
         @Override
-        public Constraint getConstraint() {
+        public Collection<Constraint> getConstraints() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
