@@ -8,7 +8,7 @@ public interface Facet {
 
     String getName();
 
-    Facet getState();
+    FacetState getState();
 
     String getParam();
 
