@@ -26,8 +26,6 @@ public interface FacetState {
 
     String getParamValue();
 
-    Property getLinkProperty();
-
     public final static Property NONE =
             ResourceFactory.createProperty("urn:x-ilrt:none");
 
