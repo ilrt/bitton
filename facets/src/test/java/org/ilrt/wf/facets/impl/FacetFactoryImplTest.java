@@ -4,6 +4,7 @@ import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetConstraint;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetQueryService;
+import org.ilrt.wf.facets.FacetState;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -12,9 +13,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(JMock.class)
 public class FacetFactoryImplTest {
@@ -63,13 +66,12 @@ public class FacetFactoryImplTest {
     @Test
     public void expectedAlphaNumericArray() {
 
-        assertEquals("Unexpected array size", 36, facetFactory.alphaNumericArray().length);
+        assertEquals("Unexpected array size", MAX_ALPHANUMERIC_ITEMS,
+                facetFactory.alphaNumericArray().length);
     }
 
     @Test
     public void alphaNumericLabel() {
-
-        final String label = "A*";
 
         assertEquals("Unexpected label", label, facetFactory.alphaNumericLabel(c));
     }
@@ -77,16 +79,40 @@ public class FacetFactoryImplTest {
     @Test
     public void alphaNumericConstraint() {
 
-        final String constraint = "^A";
-
-        assertEquals("Unexpected constraint", constraint, facetFactory.alphaNumericConstraint(c).getRegexp());
+        assertEquals("Unexpected constraint", constraint,
+                facetFactory.alphaNumericConstraint(c).getRegexp());
     }
+
+    @Test
+    public void alphaNumericRefinements() {
+
+        final String linkProperty = "http://http://purl.org/dc/elements/1.1/title";
+
+        List<FacetState> states = facetFactory.alphaNumericRefinements(linkProperty);
+
+        // check we have the expected number of elements
+
+        assertEquals("Unexpected array size", MAX_ALPHANUMERIC_ITEMS,
+                states.size());
+
+        // check one of the items ...
+
+        FacetStateImpl state = (FacetStateImpl)states.get(10);
+
+        assertEquals("Unexpected label", label, state.getName());
+        assertNotNull("Expected constraint", state.getConstraint());
+        assertEquals("Unexpected link property", linkProperty, state.getLinkProperty().getURI());
+    }
+
 
     // mock context
     private final Mockery context = new JUnit4Mockery();
 
-    // common char used in tests
+    // common variables used in a number of tests
     private final char c = 'A';
+    private final String label = "A*";
+    private final String constraint = "^A";
+    private final int MAX_ALPHANUMERIC_ITEMS = 36;
 
-    FacetFactoryImpl facetFactory;
+    private FacetFactoryImpl facetFactory;
 }
