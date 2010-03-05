@@ -21,6 +21,7 @@ import java.util.Map;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.UnConstraint;
+import org.ilrt.wf.facets.constraints.ValueConstraint;
 import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -32,6 +33,8 @@ import static org.junit.Assert.*;
 public class SPARQLQueryServiceTest {
     private final Model model;
     private final String NS = "http://example.com/ns#";
+    private final Property prop = ResourceFactory.createProperty(NS, "prop");
+    private final RDFNode val = ResourceFactory.createResource(NS + "val");
     private final Property broader = ResourceFactory.createProperty(NS, "broader");
     private final Property narrower = ResourceFactory.createProperty(NS, "narrower");
 
@@ -66,11 +69,18 @@ public class SPARQLQueryServiceTest {
 
     @Test
     public void checkConstraintToOp() {
-        /*SPARQLQueryService instance = new SPARQLQueryService(null);
+        SPARQLQueryService instance = new SPARQLQueryService(null);
         Constraint constraint = new UnConstraint();
         OpN op = OpSequence.create();
         instance.constraintToOps(op, constraint);
-        assertEquals(Algebra.parse("()"), op);*/
+        assertEquals(Algebra.parse("(sequence (null))"), op);
+
+        constraint = new ValueConstraint(prop, val);
+        op = OpSequence.create();
+        instance.constraintToOps(op, constraint);
+        assertEquals(Algebra.parse("(sequence (triple ?s <http://example.com/ns#prop> <http://example.com/ns#val>))"), op);
+
+        
     }
 
     /**
