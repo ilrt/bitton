@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  * @author Damian Steer (d.steer.@bristol.ac.uk)
  */
-public interface FacetService {
+public interface FacetViewService {
 
     FacetView generate(HttpServletRequest request) throws FacetException;
 

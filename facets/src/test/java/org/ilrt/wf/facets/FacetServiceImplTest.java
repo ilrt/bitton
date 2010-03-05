@@ -1,7 +1,7 @@
 package org.ilrt.wf.facets;
 
 import org.ilrt.wf.facets.config.Configuration;
-import org.ilrt.wf.facets.impl.FacetServiceImpl;
+import org.ilrt.wf.facets.impl.FacetViewServiceImpl;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -53,8 +53,8 @@ public class FacetServiceImplTest {
 
         // test the service
 
-        FacetService facetService = new FacetServiceImpl(facetFactory, configuration);
-//        FacetView facetView = facetService.generate(request);
+        FacetViewService facetViewService = new FacetViewServiceImpl(facetFactory, configuration);
+//        FacetView facetView = facetViewService.generate(request);
 
 
 //        assertNotNull("The facet view should never be null", facetView);

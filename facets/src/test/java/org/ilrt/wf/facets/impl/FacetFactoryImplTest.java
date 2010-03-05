@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JMock.class)
 public class FacetFactoryImplTest {
@@ -98,8 +100,13 @@ public class FacetFactoryImplTest {
     @Test
     public void alphaNumericRefinements() {
 
+        // pseudo root state
+        final FacetStateImpl rootState = new FacetStateImpl();
+        rootState.setRoot(true);
 
-        List<FacetState> states = facetFactory.alphaNumericRefinements(typeProperty, linkProperty);
+        // get the states
+        List<FacetState> states =
+                facetFactory.alphaNumericRefinements(typeProperty, linkProperty, rootState);
 
         // check we have the expected number of elements
 
@@ -109,9 +116,10 @@ public class FacetFactoryImplTest {
         // check one of the items ...
 
         FacetStateImpl state = (FacetStateImpl) states.get(10);
-
         assertEquals("Unexpected label", label, state.getName());
         assertEquals("Unexpected number of constraints", 2, state.getConstraints().size());
+        assertFalse("The state should not assert that it is a parent", state.isRoot());
+        assertTrue("The parent should assert it is the root", state.getParent().isRoot());
     }
 
 

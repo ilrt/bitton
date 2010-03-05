@@ -16,6 +16,7 @@ import org.ilrt.wf.facets.constraints.ValueConstraint;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class FacetFactoryImpl implements FacetFactory {
@@ -36,14 +37,35 @@ public class FacetFactoryImpl implements FacetFactory {
         }
     }
 
+    @Override
+    public Facet calculateCount(List<Facet> facet) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     private Facet createAlphaNumericFacet(FacetConstraint constraint) {
 
+        String typeProperty = constraint.getConfig().get(Facet.CONSTRAINT_TYPE);
+        String linkProperty = constraint.getConfig().get(Facet.LINK_PROPERTY);
+
+        // this alpha-numeric facet has been selected via the request object
         if (constraint.getParameters().containsKey(constraint.getConfig().get(Facet.PARAM_NAME))) {
 
+//            String paramValue =
 
-        } else {
+
+            return null;
+        } else { // we want them all
+
+            // create a pseudo parent
+            FacetStateImpl root = new FacetStateImpl();
+            root.setRoot(true);
 
 
+
+
+
+            //return create(constraint.getConfig(),
+            //        alphaNumericRefinements(typeProperty, linkProperty));
         }
 
 
@@ -51,6 +73,21 @@ public class FacetFactoryImpl implements FacetFactory {
     }
 
     // ---------- methods relating to alpha numeric facets
+
+    protected Facet create(Map<String, String> config, List<FacetState> states) {
+
+        // get the name and parameter name
+        String name = config.get(Facet.FACET_TITLE);
+        String paramName = config.get(Facet.PARAM_NAME);
+
+        // create a pseudo root state to fake a hierarchy
+        FacetStateImpl root = new FacetStateImpl();
+        root.setRoot(true);
+        root.setRefinements(states);
+
+        return new FacetImpl(name, root, paramName);
+    }
+
 
     /**
      * @return an array of alpha-numeric characters.
@@ -76,7 +113,8 @@ public class FacetFactoryImpl implements FacetFactory {
         return new RegexpConstraint(p, "^" + c);
     }
 
-    protected List<FacetState> alphaNumericRefinements(String typeProperty, String linkProperty) {
+    protected List<FacetState> alphaNumericRefinements(String typeProperty, String linkProperty,
+                                                       FacetState rootState) {
 
         // each state is constrained to a type, e.g. foaf:Person
         ValueConstraint valueConstraint = new ValueConstraint(RDF.type,
@@ -86,7 +124,7 @@ public class FacetFactoryImpl implements FacetFactory {
         Property p = ResourceFactory.createProperty(linkProperty);
 
         // list to hold refinements
-        List<FacetState> refinements = new ArrayList<FacetState>();
+        List<FacetState> refinementsList = new ArrayList<FacetState>();
 
         // go through the list
         for (char c : alphaNumericArray()) {
@@ -96,14 +134,15 @@ public class FacetFactoryImpl implements FacetFactory {
             constraints.add(valueConstraint);
             constraints.add(alphaNumericConstraint(p, c));
 
+            // populate the state
             FacetStateImpl facet = new FacetStateImpl();
             facet.setName(alphaNumericLabel(c));
             facet.setConstraints(constraints);
-            facet.setLinkProperty(ResourceFactory.createProperty(linkProperty));
-            refinements.add(facet);
+            facet.setParent(rootState);
+            refinementsList.add(facet);
         }
 
-        return refinements;
+        return refinementsList;
     }
 
     private final FacetQueryService facetQueryService;
