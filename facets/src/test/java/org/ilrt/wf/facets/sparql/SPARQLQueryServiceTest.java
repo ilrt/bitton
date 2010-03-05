@@ -9,13 +9,18 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.sparql.algebra.Algebra;
+import com.hp.hpl.jena.sparql.algebra.op.OpN;
+import com.hp.hpl.jena.sparql.algebra.op.OpSequence;
 import com.hp.hpl.jena.util.FileManager;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.constraints.Constraint;
+import org.ilrt.wf.facets.constraints.UnConstraint;
 import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -27,7 +32,6 @@ import static org.junit.Assert.*;
 public class SPARQLQueryServiceTest {
     private final Model model;
     private final String NS = "http://example.com/ns#";
-    private final Property link = ResourceFactory.createProperty(NS, "link");
     private final Property broader = ResourceFactory.createProperty(NS, "broader");
     private final Property narrower = ResourceFactory.createProperty(NS, "narrower");
 
@@ -43,7 +47,7 @@ public class SPARQLQueryServiceTest {
     @Test
     public void testGetBroaderRefinements() {
         FacetState fs = new MFacetState(ResourceFactory.createResource(NS + "a"),
-                link, broader, FacetState.NONE);
+                broader, FacetState.NONE);
         SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
         Map<FacetState, List<RDFNode>> a = instance.getRefinements(fs);
 
@@ -53,11 +57,20 @@ public class SPARQLQueryServiceTest {
     @Test
     public void testGetNarrowerRefinements() {
         FacetState fs = new MFacetState(ResourceFactory.createResource(NS + "a"),
-                link, FacetState.NONE, narrower);
+                FacetState.NONE, narrower);
         SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
         Map<FacetState, List<RDFNode>> a = instance.getRefinements(fs);
 
         assertEquals("Got correct narrower refinements", 4, a.get(fs).size());
+    }
+
+    @Test
+    public void checkConstraintToOp() {
+        /*SPARQLQueryService instance = new SPARQLQueryService(null);
+        Constraint constraint = new UnConstraint();
+        OpN op = OpSequence.create();
+        instance.constraintToOps(op, constraint);
+        assertEquals(Algebra.parse("()"), op);*/
     }
 
     /**
@@ -69,17 +82,15 @@ public class SPARQLQueryServiceTest {
     }
 
     static class MFacetState implements FacetState {
-        private final Property link;
         private final Property broader;
         private final Property narrower;
         private final RDFNode value;
+        private Collection<Constraint> constraints;
 
-        public MFacetState(RDFNode value, Property link, Property broader, Property narrower) {
-            if (link == null ||
-                    broader == null ||
+        public MFacetState(RDFNode value, Property broader, Property narrower) {
+            if (broader == null ||
                     narrower == null) throw new IllegalArgumentException("No nulls");
             this.value = value;
-            this.link = link;
             this.broader = broader;
             this.narrower = narrower;
         }
@@ -115,11 +126,6 @@ public class SPARQLQueryServiceTest {
         }
 
         @Override
-        public Property getLinkProperty() {
-            return link;
-        }
-
-        @Override
         public Property getBroaderProperty() {
             return broader;
         }
@@ -136,9 +142,16 @@ public class SPARQLQueryServiceTest {
 
         @Override
         public Collection<Constraint> getConstraints() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return constraints;
         }
 
+        public void setConstraint(Constraint constraint) {
+            this.constraints = Collections.singleton(constraint);
+        }
+
+        public void setConstraints(Collection<Constraint> constraints) {
+            this.constraints = constraints;
+        }
     }
 
 }
