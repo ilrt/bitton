@@ -1,11 +1,14 @@
 package org.ilrt.wf.facets.impl;
 
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetConstraint;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetState;
+import org.ilrt.wf.facets.constraints.ValueConstraint;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -14,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +34,22 @@ public class FacetFactoryImplTest {
         final FacetQueryService mockQueryService = context.mock(FacetQueryService.class);
         facetFactory = new FacetFactoryImpl(mockQueryService);
     }
+
+    /**
+    @Test
+    public void createAlphaNumericFacetWithRefinements() throws FacetException {
+
+        Map<String, String> config = new HashMap<String, String>();
+        config.put(Facet.FACET_TYPE, Facet.ALPHA_NUMERIC_FACET_TYPE);
+
+        Map<String, String[]> parameters = new HashMap<String, String[]>();
+
+        FacetConstraintImpl facetConstraint = new FacetConstraintImpl(config, parameters);
+
+        Facet facet = facetFactory.create(facetConstraint);
+
+    }
+    **/
 
     /**
      * Tests to see that the factory will throw an exception if it doesn't recognize the
@@ -95,6 +115,17 @@ public class FacetFactoryImplTest {
     }
 
     /**
+     * Is the constraint for a character in the correct format?
+     */
+    @Test
+    public void alphaNumericConstraintFromLabel() {
+
+        assertEquals("Unexpected constraint", constraint,
+                facetFactory.alphaNumericConstraint(ResourceFactory.
+                        createProperty(linkProperty), label).getRegexp());
+    }
+
+    /**
      * Test the refinements for an alpha-numeric facet are correct.
      */
     @Test
@@ -104,22 +135,25 @@ public class FacetFactoryImplTest {
         final FacetStateImpl rootState = new FacetStateImpl();
         rootState.setRoot(true);
 
+        // property used in each state
+        Property p = ResourceFactory.createProperty(linkProperty);
+
         // get the states
         List<FacetState> states =
-                facetFactory.alphaNumericRefinements(typeProperty, linkProperty, rootState);
+                facetFactory.alphaNumericRefinements(new ValueConstraint(RDF.type,
+                        ResourceFactory.createProperty(typeProperty)), p, rootState);
 
         // check we have the expected number of elements
-
         assertEquals("Unexpected array size", MAX_ALPHANUMERIC_ITEMS,
                 states.size());
 
         // check one of the items ...
-
         FacetStateImpl state = (FacetStateImpl) states.get(10);
         assertEquals("Unexpected label", label, state.getName());
         assertEquals("Unexpected number of constraints", 2, state.getConstraints().size());
         assertFalse("The state should not assert that it is a parent", state.isRoot());
         assertTrue("The parent should assert it is the root", state.getParent().isRoot());
+        assertEquals("Unexpected param value", label, state.getParamValue());
     }
 
 

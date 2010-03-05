@@ -11,7 +11,6 @@ import org.ilrt.wf.facets.config.Configuration;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
@@ -57,23 +56,4 @@ public class FacetViewServiceImpl implements FacetViewService {
     final Configuration configuration;
 
 
-    private class FacetConstraintImpl implements FacetConstraint {
-        public FacetConstraintImpl(Map<String, String> config, Map parameters) {
-            this.config = config;
-            this.parameters = parameters;
-        }
-
-        @Override
-        public Map<String, String> getConfig() {
-            return config;
-        }
-
-        @Override
-        public Map getParameters() {
-            return parameters;
-        }
-
-        private Map<String, String> config;
-        private Map parameters;
-    }
 }
