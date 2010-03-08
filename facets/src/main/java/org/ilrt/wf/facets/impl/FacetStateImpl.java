@@ -15,6 +15,14 @@ public class FacetStateImpl implements FacetState {
     public FacetStateImpl() {
     }
 
+    public FacetStateImpl(String name, FacetState parent, String paramValue,
+                          Set<Constraint> constraint) {
+        this.name = name;
+        this.parent = parent;
+        this.paramValue = paramValue;
+        this.constraint = constraint;
+    }
+
     // ---------- getter methods defined in the interface
 
     @Override
