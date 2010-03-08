@@ -12,15 +12,19 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.sparql.algebra.Op;
+import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
 import com.hp.hpl.jena.sparql.algebra.op.OpN;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
 import com.hp.hpl.jena.sparql.algebra.op.OpTriple;
+import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
 import com.hp.hpl.jena.sparql.expr.E_LessThan;
 import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
+import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
 import com.hp.hpl.jena.sparql.expr.E_Regex;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
@@ -112,56 +116,49 @@ public class SPARQLQueryService implements FacetQueryService {
 
     protected void stateToOp(OpN ops, FacetState state) {
         for (Constraint constraint: state.getConstraints()) {
-            constraintToOps(ops, constraint);
+            ops.add(constraintToOps(constraint));
         }
     }
 
-    protected void constraintToOps(OpN ops, Constraint constraint) {
-        if (constraint instanceof UnConstraint) ops.add(OpNull.create());
-        else if (constraint instanceof ValueConstraint)
-            ops.add( new OpTriple(
-                    Triple.create(SUBJECT, constraint.getProperty().asNode(),
-                    ((ValueConstraint) constraint).getValue().asNode()))
+    protected Op constraintToOps(Constraint constraint) {
+        if (constraint instanceof UnConstraint) return OpNull.create();
+        else if (constraint instanceof ValueConstraint) {
+            return tripleToBGP(SUBJECT,
+                    constraint.getProperty().asNode(),
+                    ((ValueConstraint) constraint).getValue().asNode()
                     );
-        else if (constraint instanceof RangeConstraint) {
+        } else if (constraint instanceof RangeConstraint) {
             RangeConstraint rc = (RangeConstraint) constraint;
             Var val = Var.alloc("x"); // TODO generate
-            // create triple
-            ops.add( new OpTriple(
-                    Triple.create(SUBJECT, constraint.getProperty().asNode(),
-                    val) )
-                    );
             // create filters
-            ops.add( OpFilter.filter(
-                    new E_LessThanOrEqual(
-                      NodeValueNode.makeNode(rc.getFrom().asNode()),
-                      new ExprVar(val) ),
-                    OpNull.create()
-                    ));
-            ops.add( OpFilter.filter(
-                    new E_LessThan(
-                      new ExprVar(val),
-                      NodeValueNode.makeNode(rc.getFrom().asNode()) ),
-                    OpNull.create()
-                    ));
-        }
-        else if (constraint instanceof RegexpConstraint) {
+            return OpFilter.filter(
+                    new E_LogicalAnd(
+                        new E_LessThanOrEqual(
+                            NodeValueNode.makeNode(rc.getFrom().asNode()),
+                            new ExprVar(val) ),
+                        new E_LessThan(
+                            new ExprVar(val),
+                            NodeValueNode.makeNode(rc.getTo().asNode()) )
+                            ),
+                    tripleToBGP(SUBJECT, constraint.getProperty().asNode(), val)
+                    );
+        } else if (constraint instanceof RegexpConstraint) {
             RegexpConstraint rc = (RegexpConstraint) constraint;
             Var val = Var.alloc("x"); // TODO generate
-            // create triple
-            ops.add( new OpTriple(
-                    Triple.create(SUBJECT, constraint.getProperty().asNode(),
-                    val) )
-                    );
-            // create filters
-            ops.add( OpFilter.filter(
+            return OpFilter.filter(
                     new E_Regex(
                       new ExprVar(val),
                       rc.getRegexp(),
                       "i"
                       ),
-                    OpNull.create()
-                    ));
+                    tripleToBGP(SUBJECT, constraint.getProperty().asNode(), val)
+                    );
         } else throw new RuntimeException("Unknown constraint type");
+    }
+
+    private Op tripleToBGP(Node s, Node p, Node o) {
+        BasicPattern bgp = new BasicPattern();
+        bgp.add(Triple.create(s, p, o));
+        return new OpBGP(bgp);
     }
 }

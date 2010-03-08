@@ -10,8 +10,6 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.sparql.algebra.Algebra;
-import com.hp.hpl.jena.sparql.algebra.op.OpN;
-import com.hp.hpl.jena.sparql.algebra.op.OpSequence;
 import com.hp.hpl.jena.util.FileManager;
 import java.net.URL;
 import java.util.Collection;
@@ -20,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.constraints.Constraint;
+import org.ilrt.wf.facets.constraints.RangeConstraint;
+import org.ilrt.wf.facets.constraints.RegexpConstraint;
 import org.ilrt.wf.facets.constraints.UnConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
 import org.junit.Ignore;
@@ -70,17 +70,22 @@ public class SPARQLQueryServiceTest {
     @Test
     public void checkConstraintToOp() {
         SPARQLQueryService instance = new SPARQLQueryService(null);
+
         Constraint constraint = new UnConstraint();
-        OpN op = OpSequence.create();
-        instance.constraintToOps(op, constraint);
-        assertEquals(Algebra.parse("(sequence (null))"), op);
+        assertEquals(Algebra.parse("(null)"),
+                instance.constraintToOps(constraint));
 
         constraint = new ValueConstraint(prop, val);
-        op = OpSequence.create();
-        instance.constraintToOps(op, constraint);
-        assertEquals(Algebra.parse("(sequence (triple ?s <http://example.com/ns#prop> <http://example.com/ns#val>))"), op);
+        assertEquals(Algebra.parse("(bgp (triple ?s <http://example.com/ns#prop> <http://example.com/ns#val>))"),
+                instance.constraintToOps(constraint));
 
-        
+        constraint = new RangeConstraint(prop, ResourceFactory.createPlainLiteral("a"), ResourceFactory.createPlainLiteral("z"));
+        assertEquals(Algebra.parse("(filter (&& (<= \"a\" ?x) (< ?x \"z\") ) (bgp (triple ?s <http://example.com/ns#prop> ?x)))"),
+                instance.constraintToOps(constraint));
+
+        constraint = new RegexpConstraint(prop, "^a");
+        assertEquals(Algebra.parse("(filter (regex ?x \"^a\" \"i\") (bgp (triple ?s <http://example.com/ns#prop> ?x)))"),
+                instance.constraintToOps(constraint));
     }
 
     /**
