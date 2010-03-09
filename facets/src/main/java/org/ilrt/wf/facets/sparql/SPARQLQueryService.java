@@ -13,13 +13,16 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.algebra.Op;
+import com.hp.hpl.jena.sparql.algebra.OpAsQuery;
 import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
-import com.hp.hpl.jena.sparql.algebra.op.OpN;
+import com.hp.hpl.jena.sparql.algebra.op.OpGroupAgg;
+import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
-import com.hp.hpl.jena.sparql.algebra.op.OpTriple;
+import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.sparql.core.VarExprList;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
 import com.hp.hpl.jena.sparql.expr.E_LessThan;
@@ -27,8 +30,10 @@ import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
 import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
 import com.hp.hpl.jena.sparql.expr.E_Regex;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
+import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVar;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -48,7 +53,7 @@ import org.ilrt.wf.facets.constraints.ValueConstraint;
  */
 public class SPARQLQueryService implements FacetQueryService {
 
-    private final static Node SUBJECT = Var.alloc("s");
+    private final static Var SUBJECT = Var.alloc("s");
 
     private final QEFactory qef;
 
@@ -109,18 +114,33 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     protected int getCount(FacetState ffs, List<FacetState> otherStates) {
-        Var subject = Var.alloc("subject");
-
-        return -1;
+        return getCount(statesToConstraints(otherStates, ffs));
     }
 
-    protected void stateToOp(OpN ops, FacetState state) {
-        for (Constraint constraint: state.getConstraints()) {
-            ops.add(constraintToOps(constraint));
+    protected int getCount(Collection<Constraint> constraints) {
+        Op op = constraintsToOp(constraints);
+
+        op = new OpProject(op, Collections.singletonList(SUBJECT));
+
+        Query q = OpAsQuery.asQuery(op);
+        QueryExecution qe = qef.get(q);
+
+        int count = 0;
+        ResultSet r = qe.execSelect();
+        while (r.hasNext()) { count++; r.next(); }
+        return count;
+    }
+
+    protected Op constraintsToOp(Collection<Constraint> cons) {
+        Op op = null;
+        for (Constraint con: cons) {
+            if (op == null) op = constraintToOp(con);
+            else op = OpJoin.create(op, constraintToOp(con));
         }
+        return op;
     }
 
-    protected Op constraintToOps(Constraint constraint) {
+    protected Op constraintToOp(Constraint constraint) {
         if (constraint instanceof UnConstraint) return OpNull.create();
         else if (constraint instanceof ValueConstraint) {
             return tripleToBGP(SUBJECT,
@@ -160,5 +180,12 @@ public class SPARQLQueryService implements FacetQueryService {
         BasicPattern bgp = new BasicPattern();
         bgp.add(Triple.create(s, p, o));
         return new OpBGP(bgp);
+    }
+
+    private Collection<Constraint> statesToConstraints(Collection<FacetState> states, FacetState... moreStates) {
+        Collection<Constraint> cs = new LinkedList<Constraint>();
+        for (FacetState s: states) cs.addAll(s.getConstraints());
+        for (FacetState s: moreStates) cs.addAll(s.getConstraints());
+        return cs;
     }
 }

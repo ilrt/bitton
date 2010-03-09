@@ -5,6 +5,7 @@
 
 package org.ilrt.wf.facets.sparql;
 
+import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -14,6 +15,7 @@ import com.hp.hpl.jena.util.FileManager;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.ilrt.wf.facets.FacetState;
@@ -73,19 +75,32 @@ public class SPARQLQueryServiceTest {
 
         Constraint constraint = new UnConstraint();
         assertEquals(Algebra.parse("(null)"),
-                instance.constraintToOps(constraint));
+                instance.constraintToOp(constraint));
 
         constraint = new ValueConstraint(prop, val);
         assertEquals(Algebra.parse("(bgp (triple ?s <http://example.com/ns#prop> <http://example.com/ns#val>))"),
-                instance.constraintToOps(constraint));
+                instance.constraintToOp(constraint));
 
         constraint = new RangeConstraint(prop, ResourceFactory.createPlainLiteral("a"), ResourceFactory.createPlainLiteral("z"));
         assertEquals(Algebra.parse("(filter (&& (<= \"a\" ?x) (< ?x \"z\") ) (bgp (triple ?s <http://example.com/ns#prop> ?x)))"),
-                instance.constraintToOps(constraint));
+                instance.constraintToOp(constraint));
 
         constraint = new RegexpConstraint(prop, "^a");
         assertEquals(Algebra.parse("(filter (regex ?x \"^a\" \"i\") (bgp (triple ?s <http://example.com/ns#prop> ?x)))"),
-                instance.constraintToOps(constraint));
+                instance.constraintToOp(constraint));
+    }
+
+    @Test
+    public void checkCount() {
+        SPARQLQueryService instance = new SPARQLQueryService(null);
+
+        Collection<Constraint> cos = new LinkedList<Constraint>();
+        Collections.addAll(cos,
+                new ValueConstraint(prop, val),
+                new RangeConstraint(prop, ResourceFactory.createPlainLiteral("a"), ResourceFactory.createPlainLiteral("z"))
+                );
+
+
     }
 
     /**
