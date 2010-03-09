@@ -149,7 +149,7 @@ public class SPARQLQueryService implements FacetQueryService {
                     );
         } else if (constraint instanceof RangeConstraint) {
             RangeConstraint rc = (RangeConstraint) constraint;
-            Var val = Var.alloc("x"); // TODO generate
+            Var val = genVar(); // TODO generate
             // create filters
             return OpFilter.filter(
                     new E_LogicalAnd(
@@ -164,7 +164,7 @@ public class SPARQLQueryService implements FacetQueryService {
                     );
         } else if (constraint instanceof RegexpConstraint) {
             RegexpConstraint rc = (RegexpConstraint) constraint;
-            Var val = Var.alloc("x"); // TODO generate
+            Var val = genVar(); // TODO generate
             return OpFilter.filter(
                     new E_Regex(
                       new ExprVar(val),
@@ -188,4 +188,7 @@ public class SPARQLQueryService implements FacetQueryService {
         for (FacetState s: moreStates) cs.addAll(s.getConstraints());
         return cs;
     }
+
+    private int varCount = 0;
+    private Var genVar() { varCount++; return Var.alloc("v" + varCount); }
 }

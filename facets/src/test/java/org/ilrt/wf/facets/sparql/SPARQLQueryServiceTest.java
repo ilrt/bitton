@@ -82,17 +82,17 @@ public class SPARQLQueryServiceTest {
                 instance.constraintToOp(constraint));
 
         constraint = new RangeConstraint(prop, ResourceFactory.createPlainLiteral("a"), ResourceFactory.createPlainLiteral("z"));
-        assertEquals(Algebra.parse("(filter (&& (<= \"a\" ?x) (< ?x \"z\") ) (bgp (triple ?s <http://example.com/ns#prop> ?x)))"),
+        assertEquals(Algebra.parse("(filter (&& (<= \"a\" ?v1) (< ?v1 \"z\") ) (bgp (triple ?s <http://example.com/ns#prop> ?v1)))"),
                 instance.constraintToOp(constraint));
 
         constraint = new RegexpConstraint(prop, "^a");
-        assertEquals(Algebra.parse("(filter (regex ?x \"^a\" \"i\") (bgp (triple ?s <http://example.com/ns#prop> ?x)))"),
+        assertEquals(Algebra.parse("(filter (regex ?v2 \"^a\" \"i\") (bgp (triple ?s <http://example.com/ns#prop> ?v2)))"),
                 instance.constraintToOp(constraint));
     }
 
     @Test
     public void checkCount() {
-        SPARQLQueryService instance = new SPARQLQueryService(null);
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
 
         Collection<Constraint> cos = new LinkedList<Constraint>();
         Collections.addAll(cos,
