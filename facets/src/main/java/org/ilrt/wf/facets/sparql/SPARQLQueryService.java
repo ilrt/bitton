@@ -96,7 +96,7 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     @Override
-    public Map<FacetState, Integer> getCounts(List<FacetState> currentFacetStates) {
+    public Map<FacetState, Integer> getCounts(List<? extends FacetState> currentFacetStates) {
         // Inefficient first pass
         Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
         for (FacetState state: currentFacetStates) {
@@ -106,7 +106,7 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     protected void getStateCounts(FacetState state,
-            List<FacetState> currentFacetStates, Map<FacetState, Integer> counts) {
+            List<? extends FacetState> currentFacetStates, Map<FacetState, Integer> counts) {
         // Get contrast state
         List<FacetState> otherStates = new LinkedList<FacetState>(currentFacetStates);
         otherStates.remove(state);
@@ -138,8 +138,10 @@ public class SPARQLQueryService implements FacetQueryService {
     protected Op constraintsToOp(Collection<Constraint> cons) {
         Op op = null;
         for (Constraint con: cons) {
-            if (op == null) op = constraintToOp(con);
-            else op = OpJoin.create(op, constraintToOp(con));
+            Op newOp = constraintToOp(con);
+            if (newOp instanceof OpNull) continue;
+            else if (op == null) op = newOp;
+            else op = OpJoin.create(op, newOp);
         }
         return op;
     }

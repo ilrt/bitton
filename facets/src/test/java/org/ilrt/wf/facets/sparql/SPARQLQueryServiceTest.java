@@ -12,6 +12,8 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.sparql.algebra.Algebra;
 import com.hp.hpl.jena.util.FileManager;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -98,7 +100,7 @@ public class SPARQLQueryServiceTest {
         Collection<Constraint> cos = new LinkedList<Constraint>();
         Collections.addAll(cos,
                 new ValueConstraint(prop, val),
-                new RangeConstraint(range, ResourceFactory.createTypedLiteral(0), ResourceFactory.createTypedLiteral(5))
+                makeRangeCon(0, 5)
                 );
 
         assertEquals(3, instance.getCount(cos));
@@ -113,7 +115,7 @@ public class SPARQLQueryServiceTest {
 
         cos = new LinkedList<Constraint>();
         Collections.addAll(cos,
-                new RangeConstraint(range, ResourceFactory.createTypedLiteral(6), ResourceFactory.createTypedLiteral(9)),
+                makeRangeCon(6, 9),
                 new ValueConstraint(prop, val),
                 new RegexpConstraint(label, "^g")
                 );
@@ -121,11 +123,65 @@ public class SPARQLQueryServiceTest {
         assertEquals(1, instance.getCount(cos));
     }
 
+    @Test
+    public void checkFullCounts() {
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+
+        MFacetState a = new MFacetState(new UnConstraint());
+        FacetState a1 =
+                a.addRefinement( new MFacetState(new RegexpConstraint(label, "^a")) );
+        FacetState a2 =
+                a.addRefinement( new MFacetState(new RegexpConstraint(label, "^b")) );
+        FacetState a3 =
+                a.addRefinement( new MFacetState(new RegexpConstraint(label, "^g")) );
+        FacetState a4 =
+                a.addRefinement( new MFacetState(new RegexpConstraint(label, "^x")) );
+
+        Map<FacetState, Integer> counts = instance.getCounts(Collections.singletonList(a));
+
+        assertEquals((Object) 8, counts.get(a1));
+        assertEquals((Object) 4, counts.get(a2));
+        assertEquals((Object) 2, counts.get(a3));
+        assertEquals((Object) 0, counts.get(a4));
+
+        MFacetState b = new MFacetState(new ValueConstraint(prop, val));
+
+        counts = instance.getCounts(Arrays.asList(a, b));
+
+        assertEquals((Object) 4, counts.get(a1));
+        assertEquals((Object) 2, counts.get(a2));
+        assertEquals((Object) 1, counts.get(a3));
+        assertEquals((Object) 0, counts.get(a4));
+
+        MFacetState c = new MFacetState(makeRangeCon(5, 9));
+        FacetState c1 =
+                c.addRefinement( new MFacetState(makeRangeCon(5,7)) );
+        FacetState c2 =
+                c.addRefinement( new MFacetState(makeRangeCon(7,9)) );
+
+        counts = instance.getCounts(Arrays.asList(a, c));
+
+        assertEquals((Object) 2, counts.get(a1));
+        assertEquals((Object) 4, counts.get(a2));
+        assertEquals((Object) 2, counts.get(a3));
+
+        assertEquals((Object) 4, counts.get(c1));
+        assertEquals((Object) 4, counts.get(c2));
+    }
+
+    private RangeConstraint makeRangeCon(int start, int end) {
+        return new RangeConstraint(range,
+                ResourceFactory.createTypedLiteral(start),
+                ResourceFactory.createTypedLiteral(end)
+                );
+    }
+
     static class MFacetState implements FacetState {
         private final Property broader;
         private final Property narrower;
         private final RDFNode value;
-        private Collection<Constraint> constraints;
+        private final List<Constraint> constraints = new LinkedList();
+        private final List<FacetState> refinements = new LinkedList();
 
         public MFacetState(RDFNode value, Property broader, Property narrower) {
             if (broader == null ||
@@ -133,6 +189,12 @@ public class SPARQLQueryServiceTest {
             this.value = value;
             this.broader = broader;
             this.narrower = narrower;
+        }
+
+        public MFacetState(Constraint... cons) {
+            broader = narrower = null;
+            value = null;
+            Collections.addAll(constraints, cons);
         }
 
         @Override
@@ -152,7 +214,7 @@ public class SPARQLQueryServiceTest {
 
         @Override
         public List<FacetState> getRefinements() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            return refinements;
         }
 
         @Override
@@ -185,12 +247,9 @@ public class SPARQLQueryServiceTest {
             return constraints;
         }
 
-        public void setConstraint(Constraint constraint) {
-            this.constraints = Collections.singleton(constraint);
-        }
-
-        public void setConstraints(Collection<Constraint> constraints) {
-            this.constraints = constraints;
+        public FacetState addRefinement(FacetState state) {
+            refinements.add(state);
+            return state;
         }
     }
 

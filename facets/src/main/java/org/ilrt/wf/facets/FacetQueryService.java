@@ -34,5 +34,5 @@ public interface FacetQueryService {
      * @param currentFacetStates    the current state of all facets
      * @return                      the future states and their associated count.
      */
-    Map<FacetState, Integer> getCounts(List<FacetState> currentFacetStates);
+    Map<FacetState, Integer> getCounts(List<? extends FacetState> currentFacetStates);
 }
