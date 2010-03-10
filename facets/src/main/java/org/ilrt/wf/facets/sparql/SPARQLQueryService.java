@@ -14,6 +14,8 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.algebra.OpAsQuery;
+import com.hp.hpl.jena.sparql.algebra.TransformBase;
+import com.hp.hpl.jena.sparql.algebra.Transformer;
 import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
@@ -28,6 +30,8 @@ import com.hp.hpl.jena.sparql.expr.E_LessThan;
 import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
 import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
 import com.hp.hpl.jena.sparql.expr.E_Regex;
+import com.hp.hpl.jena.sparql.expr.Expr;
+import com.hp.hpl.jena.sparql.expr.ExprList;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import java.net.URL;
@@ -143,6 +147,7 @@ public class SPARQLQueryService implements FacetQueryService {
             else if (op == null) op = newOp;
             else op = OpJoin.create(op, newOp);
         }
+        op = Transformer.transform(new QueryCleaner(), op);
         return op;
     }
 
@@ -197,4 +202,25 @@ public class SPARQLQueryService implements FacetQueryService {
 
     private int varCount = 0;
     private Var genVar() { varCount++; return Var.alloc("v" + varCount); }
+
+    /**
+     * This is for cleaning up the query having created it
+     */
+    static class QueryCleaner extends TransformBase
+    {
+        @Override
+        public Op transform(OpJoin join, Op left, Op right) {
+            if (!(left instanceof OpFilter && right instanceof OpFilter)) return join;
+
+            OpFilter leftF = (OpFilter) left;
+            OpFilter rightF = (OpFilter) right;
+
+            if (!(leftF.getSubOp() instanceof OpBGP &&
+                    rightF.getSubOp() instanceof OpBGP)) return join;
+
+            ((OpBGP) leftF.getSubOp()).getPattern().addAll(((OpBGP) rightF.getSubOp()).getPattern());
+            leftF.getExprs().addAll(rightF.getExprs());
+            return leftF;
+        }
+    }
 }
