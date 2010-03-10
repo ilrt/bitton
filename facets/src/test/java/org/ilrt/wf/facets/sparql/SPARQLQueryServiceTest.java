@@ -5,7 +5,6 @@
 
 package org.ilrt.wf.facets.sparql;
 
-import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -36,7 +35,9 @@ public class SPARQLQueryServiceTest {
     private final Model model;
     private final String NS = "http://example.com/ns#";
     private final Property prop = ResourceFactory.createProperty(NS, "prop");
-    private final RDFNode val = ResourceFactory.createResource(NS + "val");
+    private final Property range = ResourceFactory.createProperty(NS, "range");
+    private final Property label = ResourceFactory.createProperty(NS, "label");
+    private final RDFNode val = ResourceFactory.createResource(NS + "value");
     private final Property broader = ResourceFactory.createProperty(NS, "broader");
     private final Property narrower = ResourceFactory.createProperty(NS, "narrower");
 
@@ -78,7 +79,7 @@ public class SPARQLQueryServiceTest {
                 instance.constraintToOp(constraint));
 
         constraint = new ValueConstraint(prop, val);
-        assertEquals(Algebra.parse("(bgp (triple ?s <http://example.com/ns#prop> <http://example.com/ns#val>))"),
+        assertEquals(Algebra.parse("(bgp (triple ?s <http://example.com/ns#prop> <http://example.com/ns#value>))"),
                 instance.constraintToOp(constraint));
 
         constraint = new RangeConstraint(prop, ResourceFactory.createPlainLiteral("a"), ResourceFactory.createPlainLiteral("z"));
@@ -97,18 +98,27 @@ public class SPARQLQueryServiceTest {
         Collection<Constraint> cos = new LinkedList<Constraint>();
         Collections.addAll(cos,
                 new ValueConstraint(prop, val),
-                new RangeConstraint(prop, ResourceFactory.createPlainLiteral("a"), ResourceFactory.createPlainLiteral("z"))
+                new RangeConstraint(range, ResourceFactory.createTypedLiteral(0), ResourceFactory.createTypedLiteral(5))
                 );
 
+        assertEquals(3, instance.getCount(cos));
 
-    }
+        cos = new LinkedList<Constraint>();
+        Collections.addAll(cos,
+                new ValueConstraint(prop, val),
+                new RegexpConstraint(label, "^A")
+                );
 
-    /**
-     * Test of getCounts method, of class SPARQLQueryService.
-     */
-    @Ignore
-    @Test
-    public void testGetCounts() {
+        assertEquals(4, instance.getCount(cos));
+
+        cos = new LinkedList<Constraint>();
+        Collections.addAll(cos,
+                new RangeConstraint(range, ResourceFactory.createTypedLiteral(6), ResourceFactory.createTypedLiteral(9)),
+                new ValueConstraint(prop, val),
+                new RegexpConstraint(label, "^g")
+                );
+
+        assertEquals(1, instance.getCount(cos));
     }
 
     static class MFacetState implements FacetState {

@@ -16,13 +16,12 @@ import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.algebra.OpAsQuery;
 import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
-import com.hp.hpl.jena.sparql.algebra.op.OpGroupAgg;
+import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.sparql.core.VarExprList;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
 import com.hp.hpl.jena.sparql.engine.binding.BindingMap;
 import com.hp.hpl.jena.sparql.expr.E_LessThan;
@@ -30,7 +29,6 @@ import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
 import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
 import com.hp.hpl.jena.sparql.expr.E_Regex;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
-import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVar;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import java.net.URL;
 import java.util.Collection;
@@ -46,12 +44,16 @@ import org.ilrt.wf.facets.constraints.RangeConstraint;
 import org.ilrt.wf.facets.constraints.RegexpConstraint;
 import org.ilrt.wf.facets.constraints.UnConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author pldms
  */
 public class SPARQLQueryService implements FacetQueryService {
+
+    private final static Logger log = LoggerFactory.getLogger(SPARQLQueryService.class);
 
     private final static Var SUBJECT = Var.alloc("s");
 
@@ -120,6 +122,8 @@ public class SPARQLQueryService implements FacetQueryService {
     protected int getCount(Collection<Constraint> constraints) {
         Op op = constraintsToOp(constraints);
 
+        // Over named graphs, just get subject
+        op = new OpGraph(Var.alloc("g"), op);
         op = new OpProject(op, Collections.singletonList(SUBJECT));
 
         Query q = OpAsQuery.asQuery(op);

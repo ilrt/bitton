@@ -11,12 +11,17 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author pldms
  */
 public class ModelQEFactory implements QEFactory {
+
+    private final static Logger log = LoggerFactory.getLogger(ModelQEFactory.class);
+
     private final DataSource d;
 
     public ModelQEFactory(Model m) {
@@ -26,6 +31,7 @@ public class ModelQEFactory implements QEFactory {
 
     @Override
     public QueryExecution get(Query query) {
+        log.info("Query:\n{}", query);
         return QueryExecutionFactory.create(query, d);
     }
 
