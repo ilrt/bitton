@@ -12,6 +12,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.algebra.OpAsQuery;
 import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
@@ -103,6 +104,17 @@ public class SPARQLQueryService implements FacetQueryService {
             getStateCounts(state, currentFacetStates, counts);
         }
         return counts;
+    }
+
+    @Override
+    public int getCount(List<? extends FacetState> currentFacentStates) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Resource> getResults(List<? extends FacetState> currentFacentStates, int offset, int number) {
+        int limit = offset + number;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     protected void getStateCounts(FacetState state,
@@ -197,4 +209,5 @@ public class SPARQLQueryService implements FacetQueryService {
 
     private int varCount = 0;
     private Var genVar() { varCount++; return Var.alloc("v" + varCount); }
+
 }
