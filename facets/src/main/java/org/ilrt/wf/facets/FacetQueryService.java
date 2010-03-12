@@ -53,5 +53,5 @@ public interface FacetQueryService {
      * @param number Get at most this many results
      * @return
      */
-    List<Resource> getResults(List<? extends FacetState> currentFacentStates, int offset, int number);
+    List<Resource> getResults(List<? extends FacetState> currentFacetStates, int offset, int number);
 }

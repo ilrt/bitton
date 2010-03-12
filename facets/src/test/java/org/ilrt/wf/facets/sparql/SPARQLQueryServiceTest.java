@@ -178,8 +178,8 @@ public class SPARQLQueryServiceTest {
         private final Property broader;
         private final Property narrower;
         private final RDFNode value;
-        private final List<Constraint> constraints = new LinkedList();
-        private final List<FacetState> refinements = new LinkedList();
+        private final List<Constraint> constraints = new LinkedList<Constraint>();
+        private final List<FacetState> refinements = new LinkedList<FacetState>();
 
         public MFacetState(RDFNode value, Property broader, Property narrower) {
             if (broader == null ||

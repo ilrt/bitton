@@ -16,6 +16,7 @@ import org.ilrt.wf.facets.constraints.ValueConstraint;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class FacetFactoryImpl implements FacetFactory {
@@ -37,9 +38,29 @@ public class FacetFactoryImpl implements FacetFactory {
     }
 
     @Override
-    public Facet calculateCount(List<Facet> facet) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public void calculateCount(List<Facet> facetList) {
+
+        // find all the states
+        List<FacetState> states = new ArrayList<FacetState>();
+
+        for (Facet facet : facetList) {
+            states.add(facet.getState());
+        }
+
+        // request counts
+
+        Map<FacetState, Integer> results = facetQueryService.getCounts(states);
+
+        // update the states with the counts
+
+        Set<FacetState> countStates = results.keySet();
+
+        for (FacetState facetState : countStates) {
+            ((FacetStateImpl)facetState).setCount(results.get(facetState));
+        }
+
     }
+
 
     private Facet createAlphaNumericFacet(FacetConstraint constraint) {
 
