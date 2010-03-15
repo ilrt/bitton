@@ -1,7 +1,7 @@
 package org.ilrt.wf.facets.impl;
 
 import org.ilrt.wf.facets.Facet;
-import org.ilrt.wf.facets.FacetConstraint;
+import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetFactory;
 import org.ilrt.wf.facets.FacetViewService;
@@ -35,12 +35,12 @@ public class FacetViewServiceImpl implements FacetViewService {
         for (String key : configuration.configKeys()) {
 
             // the facet is affected by its configuration and possibly request parameters
-            FacetConstraint constraint =
-                    new FacetConstraintImpl(configuration.getConfiguration(key),
+            FacetEnvironment environment =
+                    new FacetEnvironmentImpl(configuration.getConfiguration(key),
                             request.getParameterMap());
 
             // get the facet via the factory and add to the list
-            facetView.getFacets().add(facetFactory.create(constraint));
+            facetView.getFacets().add(facetFactory.create(environment));
 
             // get the counts
             facetFactory.calculateCount(facets);

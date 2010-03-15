@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
-public interface FacetConstraint {
+public interface FacetEnvironment {
     
     Map<String, String> getConfig();
 

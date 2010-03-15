@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface FacetFactory {
 
-    Facet create(FacetConstraint constraint) throws FacetException;
+    Facet create(FacetEnvironment environment) throws FacetException;
 
     void calculateCount(List<Facet> facetList);
 }

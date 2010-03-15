@@ -1,12 +1,12 @@
 package org.ilrt.wf.facets.impl;
 
-import org.ilrt.wf.facets.FacetConstraint;
+import org.ilrt.wf.facets.FacetEnvironment;
 
 import java.util.Map;
 
-public class FacetConstraintImpl implements FacetConstraint {
+public class FacetEnvironmentImpl implements FacetEnvironment {
 
-    public FacetConstraintImpl(Map<String, String> config, Map parameters) {
+    public FacetEnvironmentImpl(Map<String, String> config, Map parameters) {
         this.config = config;
         this.parameters = parameters;
     }

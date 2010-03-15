@@ -4,7 +4,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.ilrt.wf.facets.Facet;
-import org.ilrt.wf.facets.FacetConstraint;
+import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetFactory;
 import org.ilrt.wf.facets.FacetQueryService;
@@ -14,7 +14,7 @@ import org.ilrt.wf.facets.constraints.RegexpConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,16 +26,21 @@ public class FacetFactoryImpl implements FacetFactory {
     }
 
     @Override
-    public Facet create(FacetConstraint constraint) throws FacetException {
+    public Facet create(FacetEnvironment environment) throws FacetException {
 
-        String facetType = constraint.getConfig().get(Facet.FACET_TYPE);
+        String facetType = environment.getConfig().get(Facet.FACET_TYPE);
 
         if (facetType.equals(Facet.ALPHA_NUMERIC_FACET_TYPE)) {
-            return createAlphaNumericFacet(constraint);
+            return createAlphaNumericFacet(environment);
+        } else if (facetType.equals(Facet.HIERARCHICAL_FACET_TYPE)) {
+            return createHierarchicalFacet(environment);
         } else {
             throw new FacetException("Unrecognized facet type: " + facetType);
         }
     }
+
+
+    // ---------- methods relating to all facets
 
     @Override
     public void calculateCount(List<Facet> facetList) {
@@ -56,39 +61,86 @@ public class FacetFactoryImpl implements FacetFactory {
         Set<FacetState> countStates = results.keySet();
 
         for (FacetState facetState : countStates) {
-            ((FacetStateImpl)facetState).setCount(results.get(facetState));
+            ((FacetStateImpl) facetState).setCount(results.get(facetState));
         }
 
     }
 
 
-    private Facet createAlphaNumericFacet(FacetConstraint constraint) {
+    protected ValueConstraint createValueConstraint(String type) {
+        return new ValueConstraint(RDF.type, ResourceFactory.createProperty(type));
+    }
+
+
+    // ---------- methods relating to hierarchical facets
+
+    private Facet createHierarchicalFacet(FacetEnvironment environment) {
+
+        // the facet state to be passed to the facet
+        FacetStateImpl facetstate;
+
+        // things to do ....
+
+        // get refinements
+
+        // what constraints to send for refinements?
+
+        facetstate = new FacetStateImpl();
+
+        facetstate.setBroaderProperty(ResourceFactory
+                .createProperty(environment.getConfig().get(Facet.BROADER_PROPERTY)));
+        facetstate.setValue(ResourceFactory.createProperty(environment.getConfig().get(Facet.FACET_BASE)));
+
+
+        ValueConstraint typeConstraint = createValueConstraint(environment.getConfig().get(Facet.CONSTRAINT_TYPE));
+        ValueConstraint linkConstraint = createValueConstraint(environment.getConfig().get(Facet.LINK_PROPERTY));
+
+        //Set<Constraint> constraints = 
+
+
+        Arrays.asList(typeConstraint, linkConstraint);
+        facetstate.getConstraints().addAll(Arrays.asList(typeConstraint, linkConstraint));
+
+
+        // get counts
+
+        // get parents from cache
+
+        // get parents from service if cache is empty
+
+
+        return null;
+    }
+
+
+    // ---------- methods relating to alpha numeric facets
+
+    private Facet createAlphaNumericFacet(FacetEnvironment environment) {
 
         // the facet state to be passed to the facet
         FacetState facetState;
 
         // each state is constrained to a type, e.g. foaf:Person
-        ValueConstraint typeConstraint = new ValueConstraint(RDF.type,
-                ResourceFactory.createProperty(constraint.getConfig().get(Facet.CONSTRAINT_TYPE)));
+        ValueConstraint typeConstraint = createValueConstraint(environment.getConfig().get(Facet.CONSTRAINT_TYPE));
 
         // property used in each state
-        Property p = ResourceFactory.createProperty(constraint.getConfig().get(Facet.LINK_PROPERTY));
+        Property p = ResourceFactory.createProperty(environment.getConfig().get(Facet.LINK_PROPERTY));
 
         // create a pseudo parent
         FacetStateImpl root = new FacetStateImpl();
         root.setRoot(true);
 
         // this alpha-numeric facet has been selected via the request object
-        if (constraint.getParameters().containsKey(constraint.getConfig().get(Facet.PARAM_NAME))) {
+        if (environment.getParameters().containsKey(environment.getConfig().get(Facet.PARAM_NAME))) {
 
             // get the label from the parameter value
-            String[] values = (String[]) constraint.getParameters()
-                    .get(constraint.getConfig().get(Facet.PARAM_NAME));
+            String[] values = (String[]) environment.getParameters()
+                    .get(environment.getConfig().get(Facet.PARAM_NAME));
             String value = values[0];
 
             // create a state to represent the currently selected state
             facetState = new FacetStateImpl(value, root, value,
-                    facetStateConstraint(typeConstraint, alphaNumericConstraint(p, value)));
+                    Arrays.asList(typeConstraint, alphaNumericConstraint(p, value)));
 
         } else { // we want them all
 
@@ -97,11 +149,9 @@ public class FacetFactoryImpl implements FacetFactory {
         }
 
         // create the facet
-        return new FacetImpl(constraint.getConfig().get(Facet.FACET_TITLE), facetState,
-                constraint.getConfig().get(Facet.PARAM_NAME));
+        return new FacetImpl(environment.getConfig().get(Facet.FACET_TITLE), facetState,
+                environment.getConfig().get(Facet.PARAM_NAME));
     }
-
-    // ---------- methods relating to alpha numeric facets
 
     /**
      * @return an array of alpha-numeric characters.
@@ -154,28 +204,13 @@ public class FacetFactoryImpl implements FacetFactory {
 
             // add the potential state to the refinements
             refinementsList.add(new FacetStateImpl(alphaNumericLabel(c),
-                    rootState, alphaNumericLabel(c), facetStateConstraint(typeConstraint,
+                    rootState, alphaNumericLabel(c), Arrays.asList(typeConstraint,
                             alphaNumericConstraint(linkProperty, c))));
         }
 
         return refinementsList;
     }
 
-    /**
-     * Convenience method to create a Set of constraint
-     *
-     * @param a first constraint.
-     * @param b second constraint.
-     * @return a set of constraints
-     */
-    private Set<Constraint> facetStateConstraint(Constraint a, Constraint b) {
-
-        Set<Constraint> constraints = new HashSet<Constraint>();
-        constraints.add(a);
-        constraints.add(b);
-
-        return constraints;
-    }
 
     private final FacetQueryService facetQueryService;
 }

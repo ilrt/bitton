@@ -16,7 +16,7 @@ public interface Facet {
     String FACET_TYPE = "facetType";
     String FACET_TITLE = "facetTitle";
     String LINK_PROPERTY = "linkProperty";
-    String WIDER_PROPERTY = "widerProperty";
+    String BROADER_PROPERTY = "widerProperty";
     String FACET_BASE = "facetBase";
     String CONSTRAINT_TYPE = "constraintType";
     String PARAM_NAME = "paramName";

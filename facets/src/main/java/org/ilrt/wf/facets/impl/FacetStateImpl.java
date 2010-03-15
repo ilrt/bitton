@@ -7,9 +7,8 @@ import org.ilrt.wf.facets.constraints.Constraint;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class FacetStateImpl implements FacetState {
 
@@ -17,12 +16,12 @@ public class FacetStateImpl implements FacetState {
     }
 
     public FacetStateImpl(String name, FacetState parent, String paramValue,
-                          Set<Constraint> constraint) {
+                          List<? extends Constraint> constraint) {
 
         this.name = name;
         this.parent = parent;
         this.paramValue = paramValue;
-        this.constraint = constraint;
+        this.constraint.addAll(constraint);
     }
 
     // ---------- getter methods defined in the interface
@@ -115,9 +114,9 @@ public class FacetStateImpl implements FacetState {
         this.value = value;
     }
 
-    public void setConstraints(Set<Constraint> constraint) {
-        this.constraint = constraint;
-    }
+    //public void setConstraints(Collection<Constraint> constraint) {
+        //this.constraint = constraint;
+    //}
 
     private String name = "Untitled";
     private int count = 0;
@@ -128,5 +127,5 @@ public class FacetStateImpl implements FacetState {
     private Property broaderProperty = null;
     private Property narrowerProperty = null;
     private RDFNode value;
-    private Set<Constraint> constraint = new HashSet<Constraint>();
+    private LinkedList<Constraint> constraint = new LinkedList<Constraint>();
 }

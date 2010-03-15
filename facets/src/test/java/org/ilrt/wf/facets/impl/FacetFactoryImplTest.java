@@ -4,7 +4,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.ilrt.wf.facets.Facet;
-import org.ilrt.wf.facets.FacetConstraint;
+import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetState;
@@ -22,7 +22,6 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +51,7 @@ public class FacetFactoryImplTest {
     public void createAlphaNumericFacetWithoutParameter() throws FacetException {
 
 
-        FacetConstraintImpl facetConstraint = new FacetConstraintImpl(createAlphaNumericConfig(),
+        FacetEnvironmentImpl facetConstraint = new FacetEnvironmentImpl(createAlphaNumericConfig(),
                 new HashMap<String, String>());
 
         // testing the facet values
@@ -115,7 +114,7 @@ public class FacetFactoryImplTest {
 
         // create the constraint
 
-        FacetConstraintImpl facetConstraint = new FacetConstraintImpl(createAlphaNumericConfig(),
+        FacetEnvironmentImpl facetConstraint = new FacetEnvironmentImpl(createAlphaNumericConfig(),
                 parameters);
 
         // test the facet
@@ -164,16 +163,16 @@ public class FacetFactoryImplTest {
 
         // mock a constraint - encapsulates the configuration
 
-        final FacetConstraint mockConstraint = context.mock(FacetConstraint.class);
+        final FacetEnvironment mockEnvironment = context.mock(FacetEnvironment.class);
 
         context.checking(new Expectations() {{
-            oneOf(mockConstraint).getConfig();
+            oneOf(mockEnvironment).getConfig();
             will(returnValue(mockConfig));
         }});
 
         // test the service
 
-        facetFactory.create(mockConstraint);
+        facetFactory.create(mockEnvironment);
     }
 
     /**
@@ -254,7 +253,7 @@ public class FacetFactoryImplTest {
         // create mock states
         final FacetStateImpl mockRootState = new FacetStateImpl(null, null, null, null);
         final FacetState mockRefinementState =
-                new FacetStateImpl(label, mockRootState, label, new HashSet<Constraint>());
+                new FacetStateImpl(label, mockRootState, label, new ArrayList<Constraint>());
         mockRootState.getRefinements().add(mockRefinementState);
 
         // mock the facet and add it to the list
