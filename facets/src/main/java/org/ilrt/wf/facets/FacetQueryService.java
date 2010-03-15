@@ -1,6 +1,7 @@
 package org.ilrt.wf.facets;
 
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 import java.util.List;
 import java.util.Map;
@@ -35,4 +36,22 @@ public interface FacetQueryService {
      * @return                      the future states and their associated count.
      */
     Map<FacetState, Integer> getCounts(List<? extends FacetState> currentFacetStates);
+
+    /**
+     * Get the number of resources which fall under the given states.
+     *
+     * @param currentFacentStates
+     * @return The total number of resources which match the current state.
+     */
+    int getCount(List<? extends FacetState> currentFacentStates);
+
+    /**
+     * Get the resources that match the current states.
+     *
+     * @param currentFacentStates
+     * @param offset Start at this point in whole result list
+     * @param number Get at most this many results
+     * @return
+     */
+    List<Resource> getResults(List<? extends FacetState> currentFacetStates, int offset, int number);
 }

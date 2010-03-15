@@ -9,5 +9,5 @@ public interface FacetFactory {
 
     Facet create(FacetConstraint constraint) throws FacetException;
 
-    Facet calculateCount(List<Facet> facet);
+    void calculateCount(List<Facet> facetList);
 }
