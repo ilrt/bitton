@@ -9,8 +9,10 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.algebra.Op;
@@ -23,6 +25,7 @@ import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
+import com.hp.hpl.jena.sparql.algebra.op.OpSlice;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.engine.binding.Binding;
@@ -111,14 +114,43 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     @Override
-    public int getCount(List<? extends FacetState> currentFacentStates) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int getCount(List<? extends FacetState> currentFacetStates) {
+        return getCount(statesToConstraints(currentFacetStates));
     }
 
     @Override
-    public List<Resource> getResults(List<? extends FacetState> currentFacentStates, int offset, int number) {
-        int limit = offset + number;
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Resource> getResults(List<? extends FacetState> currentFacetStates, int offset, int number) {
+        // Remember this query. We'll use it later.
+        Op opBasic = constraintsToOp(statesToConstraints(currentFacetStates));
+        Op op = opBasic;
+        // Over named graphs, just get subject
+        op = new OpGraph(Var.alloc("g"), op);
+        op = new OpProject(op, Collections.singletonList(SUBJECT));
+        // Apply limit and offset
+        op = new OpSlice(op, offset, number);
+        Query q = OpAsQuery.asQuery(op);
+        q.addDescribeNode(SUBJECT);
+        q.setQueryDescribeType();
+
+        QueryExecution qe = qef.get(q);
+        Model m = qe.execDescribe();
+
+        // We now have a model containing the things we were interested in
+        // plus a bunch of info about them. We want to return pointer to those
+        // original things (backed by this model), so we execute the same query.
+
+        q = OpAsQuery.asQuery(opBasic);
+        q.addResultVar(SUBJECT);
+        q.setQuerySelectType();
+        qe = QueryExecutionFactory.create(q, m);
+        ResultSet res = qe.execSelect();
+
+        List<Resource> results = new LinkedList<Resource>();
+        while (res.hasNext()) {
+            results.add(res.next().getResource(SUBJECT.getVarName()));
+        }
+
+        return results;
     }
 
     protected void getStateCounts(FacetState state,
@@ -205,7 +237,7 @@ public class SPARQLQueryService implements FacetQueryService {
         return new OpBGP(bgp);
     }
 
-    private Collection<Constraint> statesToConstraints(Collection<FacetState> states, FacetState... moreStates) {
+    private Collection<Constraint> statesToConstraints(Collection<? extends FacetState> states, FacetState... moreStates) {
         Collection<Constraint> cs = new LinkedList<Constraint>();
         for (FacetState s: states) cs.addAll(s.getConstraints());
         for (FacetState s: moreStates) cs.addAll(s.getConstraints());
