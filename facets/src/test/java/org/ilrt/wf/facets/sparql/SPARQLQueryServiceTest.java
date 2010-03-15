@@ -8,6 +8,7 @@ package org.ilrt.wf.facets.sparql;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.sparql.algebra.Algebra;
 import com.hp.hpl.jena.util.FileManager;
@@ -137,19 +138,19 @@ public class SPARQLQueryServiceTest {
 
         Map<FacetState, Integer> counts = instance.getCounts(Collections.singletonList(a));
 
-        assertEquals((Object) 8, counts.get(a1));
-        assertEquals((Object) 4, counts.get(a2));
-        assertEquals((Object) 2, counts.get(a3));
-        assertEquals((Object) 0, counts.get(a4));
+        assertEquals(8, (int) counts.get(a1));
+        assertEquals(4, (int) counts.get(a2));
+        assertEquals(2, (int) counts.get(a3));
+        assertEquals(0, (int) counts.get(a4));
 
         MFacetState b = new MFacetState(new ValueConstraint(prop, val));
 
         counts = instance.getCounts(Arrays.asList(a, b));
 
-        assertEquals((Object) 4, counts.get(a1));
-        assertEquals((Object) 2, counts.get(a2));
-        assertEquals((Object) 1, counts.get(a3));
-        assertEquals((Object) 0, counts.get(a4));
+        assertEquals(4, (int) counts.get(a1));
+        assertEquals(2, (int) counts.get(a2));
+        assertEquals(1, (int) counts.get(a3));
+        assertEquals(0, (int) counts.get(a4));
 
         MFacetState c = new MFacetState(makeRangeCon(5, 9));
         FacetState c1 =
@@ -159,12 +160,53 @@ public class SPARQLQueryServiceTest {
 
         counts = instance.getCounts(Arrays.asList(a, c));
 
-        assertEquals((Object) 2, counts.get(a1));
-        assertEquals((Object) 4, counts.get(a2));
-        assertEquals((Object) 2, counts.get(a3));
+        assertEquals(2, (int) counts.get(a1));
+        assertEquals(4, (int) counts.get(a2));
+        assertEquals(2, (int) counts.get(a3));
 
-        assertEquals((Object) 4, counts.get(c1));
-        assertEquals((Object) 4, counts.get(c2));
+        assertEquals(4, (int) counts.get(c1));
+        assertEquals(4, (int) counts.get(c2));
+    }
+
+    @Test
+    public void checkResults() {
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+
+        MFacetState a = new MFacetState(new ValueConstraint(prop, val));
+        List<Resource> r = instance.getResults(Collections.singletonList(a), 0, 100);
+        assertEquals(7, r.size());
+
+        r = instance.getResults(Collections.singletonList(a), 1, 3);
+        assertEquals(3, r.size());
+
+        r = instance.getResults(Collections.singletonList(a), 2, 3);
+        assertEquals(3, r.size());
+
+        r = instance.getResults(Collections.singletonList(a), 6, 3);
+        assertEquals(1, r.size());
+
+        r = instance.getResults(Collections.singletonList(a), 9, 3);
+        assertEquals(0, r.size());
+
+        Resource res =
+                instance.getResults(Collections.singletonList(a), 1, 3).get(0);
+
+        assertTrue(res.hasProperty(prop));
+        assertTrue(res.hasProperty(prop, val));
+        assertTrue(res.hasProperty(range));
+        assertTrue(res.hasProperty(label));
+    }
+
+    @Test
+    public void checkTotalCount() {
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+
+        MFacetState a = new MFacetState(new ValueConstraint(prop, val));
+        MFacetState b = new MFacetState(new RegexpConstraint(label, "^b"));
+
+        assertEquals(7, instance.getCount(Collections.singletonList(a)));
+        assertEquals(4, instance.getCount(Collections.singletonList(b)));
+        assertEquals(2, instance.getCount(Arrays.asList(a, b)));
     }
 
     private RangeConstraint makeRangeCon(int start, int end) {
