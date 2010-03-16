@@ -13,6 +13,7 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.algebra.Op;
@@ -101,6 +102,24 @@ public class SPARQLQueryService implements FacetQueryService {
         } finally {
             qe.close();
         }
+    }
+
+    //@Override
+    public TreeNode getHierarchy(Resource base, Property prop, boolean isBroader) {
+        Query query = QueryFactory.create(
+                String.format(
+                "construct { ?s <%1$s> ?p }\n" +
+                "{ graph ?g {?s <%1$s> ?p} }",
+                    prop.getURI()
+                ));
+
+        QueryExecution qe = qef.get( query );
+
+        Model hierarchy = qe.execConstruct();
+
+
+
+        return null;
     }
 
     @Override
@@ -266,6 +285,17 @@ public class SPARQLQueryService implements FacetQueryService {
             leftF.getExprs().addAll(rightF.getExprs());
             return leftF;
         }
+    }
+
+    public static class TreeNode {
+        private final List<TreeNode> children = new LinkedList<TreeNode>();
+        private final Resource node;
+
+        public TreeNode(Resource node) { this.node = node; }
+
+        public Resource getValue() { return node; }
+        public List<TreeNode> getChildren() { return children; }
+        public TreeNode addChild(TreeNode child) { children.add(child); return this; }
     }
 
 }
