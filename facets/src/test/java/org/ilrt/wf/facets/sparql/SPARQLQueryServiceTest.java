@@ -92,13 +92,13 @@ public class SPARQLQueryServiceTest {
         assertEquals(node3, a);
 
         a = instance.getHierarchy(make("x"), broader, false);
-        assertNotSame(node3, a);
+        assertFalse(node3.equals(a));
 
         a = instance.getHierarchy(make("x"), narrower, false);
         assertEquals(node3, a);
 
         a = instance.getHierarchy(make("x"), broader, true);
-        assertNotSame(node3, a);
+        assertFalse(node3.equals(a));
     }
 
     @Test
