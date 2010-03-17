@@ -21,7 +21,10 @@ public class FacetStateImpl implements FacetState {
         this.name = name;
         this.parent = parent;
         this.paramValue = paramValue;
-        this.constraint.addAll(constraint);
+
+        if (constraint != null) {
+            this.constraint.addAll(constraint);
+        }
     }
 
     // ---------- getter methods defined in the interface
@@ -114,9 +117,6 @@ public class FacetStateImpl implements FacetState {
         this.value = value;
     }
 
-    //public void setConstraints(Collection<Constraint> constraint) {
-        //this.constraint = constraint;
-    //}
 
     private String name = "Untitled";
     private int count = 0;

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class FacetEnvironmentImpl implements FacetEnvironment {
 
-    public FacetEnvironmentImpl(Map<String, String> config, Map parameters) {
+    public FacetEnvironmentImpl(Map<String, String> config, Map<String, String[]> parameters) {
         this.config = config;
         this.parameters = parameters;
     }
@@ -17,10 +17,10 @@ public class FacetEnvironmentImpl implements FacetEnvironment {
     }
 
     @Override
-    public Map getParameters() {
+    public Map<String, String[]> getParameters() {
         return parameters;
     }
 
     private Map<String, String> config;
-    private Map parameters;
+    private Map<String, String[]> parameters;
 }

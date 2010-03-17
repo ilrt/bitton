@@ -1,6 +1,8 @@
 package org.ilrt.wf.facets.impl;
 
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.ilrt.wf.facets.Facet;
@@ -77,7 +79,7 @@ public class FacetFactoryImpl implements FacetFactory {
     private Facet createHierarchicalFacet(FacetEnvironment environment) {
 
         // the facet state to be passed to the facet
-        FacetStateImpl facetstate;
+        FacetStateImpl currentFacetState;
 
         // things to do ....
 
@@ -85,21 +87,41 @@ public class FacetFactoryImpl implements FacetFactory {
 
         // what constraints to send for refinements?
 
-        facetstate = new FacetStateImpl();
+        currentFacetState = new FacetStateImpl();
 
-        facetstate.setBroaderProperty(ResourceFactory
+        currentFacetState.setBroaderProperty(ResourceFactory
                 .createProperty(environment.getConfig().get(Facet.BROADER_PROPERTY)));
-        facetstate.setValue(ResourceFactory.createProperty(environment.getConfig().get(Facet.FACET_BASE)));
 
 
         ValueConstraint typeConstraint = createValueConstraint(environment.getConfig().get(Facet.CONSTRAINT_TYPE));
         ValueConstraint linkConstraint = createValueConstraint(environment.getConfig().get(Facet.LINK_PROPERTY));
 
-        //Set<Constraint> constraints = 
+        currentFacetState.getConstraints().addAll(Arrays.asList(typeConstraint, linkConstraint));
+
+        Property valueProperty;
+
+        if (environment.getParameters().containsKey(environment.getConfig().get(Facet.PARAM_NAME))) {
+
+            // get the value of the parameter
+            valueProperty = null;
+
+        } else {
+            valueProperty = ResourceFactory.createProperty(environment.getConfig().get(Facet.FACET_BASE));
+        }
 
 
-        Arrays.asList(typeConstraint, linkConstraint);
-        facetstate.getConstraints().addAll(Arrays.asList(typeConstraint, linkConstraint));
+       // currentFacetState.setValue(valueProperty);
+
+        //Map<FacetState, List<RDFNode>> refinements = facetQueryService.getRefinements(currentFacetState);
+
+
+
+//        for (RDFNode node : refinements.get(currentFacetState)) {
+
+
+//            ((Resource) node).getURI();
+
+//        }
 
 
         // get counts
@@ -134,7 +156,7 @@ public class FacetFactoryImpl implements FacetFactory {
         if (environment.getParameters().containsKey(environment.getConfig().get(Facet.PARAM_NAME))) {
 
             // get the label from the parameter value
-            String[] values = (String[]) environment.getParameters()
+            String[] values = environment.getParameters()
                     .get(environment.getConfig().get(Facet.PARAM_NAME));
             String value = values[0];
 

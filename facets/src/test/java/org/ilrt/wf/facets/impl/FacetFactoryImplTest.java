@@ -52,7 +52,7 @@ public class FacetFactoryImplTest {
 
 
         FacetEnvironmentImpl facetConstraint = new FacetEnvironmentImpl(createAlphaNumericConfig(),
-                new HashMap<String, String>());
+                new HashMap<String, String[]>());
 
         // testing the facet values
 
