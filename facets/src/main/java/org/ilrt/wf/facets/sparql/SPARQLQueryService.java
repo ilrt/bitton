@@ -15,7 +15,9 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.algebra.OpAsQuery;
 import com.hp.hpl.jena.sparql.algebra.TransformBase;
@@ -35,17 +37,17 @@ import com.hp.hpl.jena.sparql.expr.E_LessThan;
 import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
 import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
 import com.hp.hpl.jena.sparql.expr.E_Regex;
-import com.hp.hpl.jena.sparql.expr.Expr;
-import com.hp.hpl.jena.sparql.expr.ExprList;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.constraints.Constraint;
@@ -73,53 +75,103 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     @Override
-    public Map<FacetState, List<RDFNode>> getRefinements(FacetState currentFacetState) {
-        URL refinementsQ = this.getClass().getResource("/sparql/refinements.rq");
-        Query query = QueryFactory.read(refinementsQ.toExternalForm());
-
-        /**
-         * Rejig refinements query, binding the bits we need
-         */
-        Binding binding = new BindingMap();
-        query.setQueryResultStar(false);
-        if (currentFacetState.getBroaderProperty() != FacetState.NONE) {
-            binding.add(Var.alloc("p"), currentFacetState.getBroaderProperty().asNode());
-            binding.add(Var.alloc("o"), currentFacetState.getValue().asNode());
-            query.addResultVar("s");
-        } else {
-            binding.add(Var.alloc("p"), currentFacetState.getNarrowerProperty().asNode());
-            binding.add(Var.alloc("s"), currentFacetState.getValue().asNode());
-            query.addResultVar("o");
+    public Map<FacetState, List<RDFNode>> getRefinements(FacetState currFS) {
+        Tree<Resource> refinements =
+                (currFS.getBroaderProperty() == FacetState.NONE) ?
+                getHierarchy((Resource) currFS.getValue(), currFS.getNarrowerProperty(), false, true) :
+                getHierarchy((Resource) currFS.getValue(), currFS.getBroaderProperty(), true, true) ;
+        List<RDFNode> toReturn = new LinkedList<RDFNode>();
+        for (Tree<Resource> refs: refinements.getChildren()) {
+            toReturn.add(refs.getValue());
         }
-
-        QueryExecution qe = qef.get( QueryRebinder.rebind(query, binding) );
-
-        try {
-            List<RDFNode> toReturn = new LinkedList<RDFNode>();
-            ResultSet results = qe.execSelect();
-            while (results.hasNext()) toReturn.add(results.next().get("o"));
-            return Collections.singletonMap(currentFacetState, toReturn);
-        } finally {
-            qe.close();
-        }
+        return Collections.singletonMap(currFS, toReturn);
     }
 
-    //@Override
-    public TreeNode getHierarchy(Resource base, Property prop, boolean isBroader) {
+    @Override
+    public Tree<Resource> getHierarchy(Resource base, Property prop,
+            boolean isBroader) {
+        return getHierarchy(base, prop, isBroader, false);
+    }
+
+    /**
+     * Common code for refinements and hierarchy. This is a bit confusing, but
+     * essentially we use the same basic query, but fill in some values for the
+     * only children case (which is anchored at base).
+     * @param base Where to begin
+     * @param prop Property relating elements in the hierarchy
+     * @param isBroader If true go from objects to subjects.
+     * @param onlyChildren Only get immediate children of base
+     * @return
+     */
+    protected Tree<Resource> getHierarchy(Resource base, Property prop,
+            boolean isBroader, boolean onlyChildren) {
+        // If we are only getting immediate children anchor accordingly
+        String s = (onlyChildren && !isBroader) ? "<" + base.getURI() + ">" : "?s";
+        String o = (onlyChildren && isBroader) ? "<" + base.getURI() + ">" : "?o";
+        // Get label for children, according to which will be the child
+        String labelFor = (isBroader) ? "?s" : "?o";
+
         Query query = QueryFactory.create(
                 String.format(
-                "construct { ?s <%1$s> ?p }\n" +
-                "{ graph ?g {?s <%1$s> ?p} }",
-                    prop.getURI()
+                "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "construct " +
+                "{ " +
+                "%1$s <%2$s> %3$s ." +
+                "%4$s rdfs:label ?label . " +
+                "}\n" +
+                "{\n" +
+                "  graph ?g  { %1$s <%2$s> %3$s \n" +
+                "  optional { %4$s rdfs:label ?label } }\n" +
+                "}",
+                   s, prop.getURI(), o, labelFor
                 ));
 
         QueryExecution qe = qef.get( query );
 
         Model hierarchy = qe.execConstruct();
 
+        // Make local base, so we don't have to pass model about
+        Resource baseL = hierarchy.getResource(base.getURI());
 
+        Set<Resource> visited = new HashSet<Resource>(); // avoid loops
+        if (isBroader) return makeBroaderTreeStartingAt(baseL, prop, visited);
+        else return makeNarrowerTreeStartingAt(baseL, prop, visited);
+    }
 
-        return null;
+    /**
+     * Make a tree starting at base and going up broader relations
+     * @param base
+     * @param prop
+     * @return
+     */
+    private Tree<Resource> makeBroaderTreeStartingAt(Resource base, Property prop, Set visited) {
+        if (visited.contains(base)) throw new RuntimeException("Loop in hierarchy");
+        visited.add(base);
+        Tree<Resource> t = new Tree<Resource>(base);
+        ResIterator r = base.getModel().listSubjectsWithProperty(prop, base);
+        while (r.hasNext()) {
+            t.addChild( makeBroaderTreeStartingAt(r.next(), prop, visited) );
+        }
+        r.close();
+        return t;
+    }
+
+    /**
+     * Make a tree starting at base and moving down narrower relations
+     * @param base
+     * @param prop
+     * @return
+     */
+    private Tree<Resource> makeNarrowerTreeStartingAt(Resource base, Property prop, Set visited) {
+        if (visited.contains(base)) throw new RuntimeException("Loop in hierarchy");
+        visited.add(base);
+        Tree<Resource> t = new Tree<Resource>(base);
+        StmtIterator r = base.listProperties(prop);
+        while (r.hasNext()) {
+            t.addChild( makeNarrowerTreeStartingAt(r.next().getResource(), prop, visited) );
+        }
+        r.close();
+        return t;
     }
 
     @Override
@@ -287,15 +339,5 @@ public class SPARQLQueryService implements FacetQueryService {
         }
     }
 
-    public static class TreeNode {
-        private final List<TreeNode> children = new LinkedList<TreeNode>();
-        private final Resource node;
-
-        public TreeNode(Resource node) { this.node = node; }
-
-        public Resource getValue() { return node; }
-        public List<TreeNode> getChildren() { return children; }
-        public TreeNode addChild(TreeNode child) { children.add(child); return this; }
-    }
 
 }

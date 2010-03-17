@@ -26,10 +26,10 @@ public class QueryRebinder extends TransformCopy {
 
     public static Query rebind(Query query, Binding binding) {
         Op q = Transformer.transform(new QueryRebinder(binding), Algebra.compile(query));
-        Query bound = OpAsQuery.asQuery(q);
+        /*Query bound = OpAsQuery.asQuery(q);
         if (bound.isConstructType()) {
             bound.setConstructTemplate(bind(bound.getConstructTemplate(), binding));
-        }
+        }*/
         return OpAsQuery.asQuery(q);
     }
 
@@ -50,10 +50,11 @@ public class QueryRebinder extends TransformCopy {
         return new OpBGP(newPattern);
     }
 
+    /*
     @Override
     public Op transform(OpGraph op, Op x) {
         return new OpGraph(bind(op.getNode()), op.getSubOp());
-    }
+    }*/
 
     private Node bind(Node node) {
         if (node instanceof Var && bindings.contains((Var) node)) {

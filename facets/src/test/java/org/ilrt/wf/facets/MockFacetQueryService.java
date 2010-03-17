@@ -1,5 +1,6 @@
 package org.ilrt.wf.facets;
 
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -38,6 +39,11 @@ public class MockFacetQueryService implements FacetQueryService{
 
     @Override
     public List<Resource> getResults(List<? extends FacetState> currentFacetStates, int offset, int number) {
+        return null;
+    }
+
+    @Override
+    public Tree<Resource> getHierarchy(Resource base, Property prop, boolean isBroader) {
         return null;
     }
 }
