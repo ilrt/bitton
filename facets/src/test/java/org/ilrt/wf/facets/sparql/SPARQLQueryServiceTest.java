@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.ilrt.wf.facets.FacetQueryService.Tree;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.RangeConstraint;
@@ -42,6 +43,10 @@ public class SPARQLQueryServiceTest {
     private final Property broader = ResourceFactory.createProperty(NS, "broader");
     private final Property narrower = ResourceFactory.createProperty(NS, "narrower");
 
+
+    private Resource make(String n) {
+        return ResourceFactory.createResource(NS + n);
+    }
 
     public SPARQLQueryServiceTest() {
         URL data = this.getClass().getResource("/sparql/testdata.ttl");
@@ -69,6 +74,31 @@ public class SPARQLQueryServiceTest {
         Map<FacetState, List<RDFNode>> a = instance.getRefinements(fs);
 
         assertEquals("Got correct narrower refinements", 4, a.get(fs).size());
+    }
+
+    @Test
+    public void testGetHierarchy() {
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+        Tree<Resource> node1, node2, node3;
+        node1 = new Tree<Resource>(make("y2"));
+        node1.addChild(new Tree<Resource>(make("z1"))).
+                addChild(new Tree<Resource>(make("z2")));
+        node2 = new Tree<Resource>(make("y1"));
+        node2.addChild(new Tree<Resource>(make("z3")));
+        node3 = new Tree<Resource>(make("x"));
+        node3.addChild(new Tree<Resource>(make("y3"))).
+                addChild(node1).addChild(node2);
+        Tree<Resource> a = instance.getHierarchy(make("x"), broader, true);
+        assertEquals(node3, a);
+
+        a = instance.getHierarchy(make("x"), broader, false);
+        assertNotSame(node3, a);
+
+        a = instance.getHierarchy(make("x"), narrower, false);
+        assertEquals(node3, a);
+
+        a = instance.getHierarchy(make("x"), broader, true);
+        assertNotSame(node3, a);
     }
 
     @Test

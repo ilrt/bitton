@@ -140,9 +140,18 @@ public interface FacetQueryService {
             // Due to hash ordering this isn't perfect, however we won't touch the
             // problem cases (multiple children with same value)
             for (int i = 0; i < children.size(); i++) {
-                if (!children.get(0).equals(ochildren.get(i))) return false;
+                if (!children.get(i).equals(ochildren.get(i))) return false;
             }
             return true;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append("(").append(node).append(" ");
+            for (Tree<T> x: children) sb.append(x);
+            sb.append(" )");
+            return sb.toString();
         }
     }
 }

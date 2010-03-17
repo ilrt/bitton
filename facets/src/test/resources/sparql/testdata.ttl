@@ -20,3 +20,14 @@ ns:a ns:narrower ns:n1, ns:n2, ns:n3, ns:n4 .
 [] ns:prop ns:novalue ; ns:range 7 ; ns:label "beta" .
 [] ns:prop ns:value ; ns:range 8 ; ns:label "gamma" .
 [] ns:prop ns:novalue ; ns:range 8 ; ns:label "gamma" .
+
+ns:y1 ns:broader ns:x .
+ns:y2 ns:broader ns:x .
+ns:y3 ns:broader ns:x .
+ns:z1 ns:broader ns:y2 .
+ns:z2 ns:broader ns:y2 .
+ns:z3 ns:broader ns:y1 .
+
+ns:x ns:narrower ns:y1 , ns:y2 , ns:y3 .
+ns:y2 ns:narrower ns:z1 , ns:z2 .
+ns:y1 ns:narrower ns:z3 .
