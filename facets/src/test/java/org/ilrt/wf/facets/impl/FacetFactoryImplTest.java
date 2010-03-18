@@ -41,6 +41,12 @@ public class FacetFactoryImplTest {
         facetFactory = new FacetFactoryImpl(mockQueryService);
     }
 
+    @Test
+    public void createHierarchicalFacetWithoutParameter() throws FacetException {
+
+    }
+
+
     /**
      * Test to generate an alphanumeric facet with a full set of refinements - this means
      * having no alphanumeric parameter value.
@@ -279,6 +285,21 @@ public class FacetFactoryImplTest {
 
     // ---------- private helper methods
 
+    private Map<String, String> createHierarchicalConfig() {
+
+        Map<String, String> config = new HashMap<String, String>();
+        config.put(Facet.FACET_TYPE, Facet.HIERARCHICAL_FACET_TYPE);
+        config.put(Facet.FACET_TITLE, alphaNumericTestName);
+        config.put(Facet.LINK_PROPERTY, alphaNumericTestLinkProperty);
+        config.put(Facet.CONSTRAINT_TYPE, alphaNumericTestConstraintType);
+        config.put(Facet.PARAM_NAME, alphaNumericTestParamName);
+        return config;
+    }
+
+
+    /**
+     * @return a map of configuration details needed for an alphanumeric facet
+     */
     private Map<String, String> createAlphaNumericConfig() {
 
         Map<String, String> config = new HashMap<String, String>();
@@ -309,6 +330,9 @@ public class FacetFactoryImplTest {
     private final String alphaNumericTestLinkProperty = "http://xmlns.com/foaf/0.1/family_name";
     private final String alphaNumericTestConstraintType = "http://xmlns.com/foaf/0.1/Person";
     private final String alphaNumericTestParamName = "personName";
+
+    private final String hierarchicalTestName = "Subjects";
+    //private final String hierarchical
 
     private FacetFactoryImpl facetFactory;
     final FacetQueryService mockQueryService = new MockFacetQueryService();
