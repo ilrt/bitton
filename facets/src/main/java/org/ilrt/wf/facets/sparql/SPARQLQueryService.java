@@ -72,16 +72,14 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     @Override
-    public Map<FacetState, List<RDFNode>> getRefinements(FacetState currFS) {
+    public List<Resource> getRefinements(Resource base, Property prop, boolean isBroader) {
         Tree<Resource> refinements =
-                (currFS.getBroaderProperty() == FacetState.NONE) ?
-                getHierarchy((Resource) currFS.getValue(), currFS.getNarrowerProperty(), false, true) :
-                getHierarchy((Resource) currFS.getValue(), currFS.getBroaderProperty(), true, true) ;
-        List<RDFNode> toReturn = new LinkedList<RDFNode>();
+                getHierarchy(base, prop, isBroader, true) ;
+        List<Resource> toReturn = new LinkedList<Resource>();
         for (Tree<Resource> refs: refinements.getChildren()) {
             toReturn.add(refs.getValue());
         }
-        return Collections.singletonMap(currFS, toReturn);
+        return toReturn;
     }
 
     @Override

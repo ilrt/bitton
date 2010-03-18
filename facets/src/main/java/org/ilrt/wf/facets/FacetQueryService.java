@@ -1,7 +1,6 @@
 package org.ilrt.wf.facets;
 
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -34,10 +33,12 @@ public interface FacetQueryService {
      * United Kingdom, we would expect refinements for England, Northern Ireland, Scotland and
      * Wales.
      *
-     * @param currentFacetState     the current state of a facet.
+     * @param base Where to start building the tree.
+     * @param prop The property relating nodes in the hierarchy
+     * @param isBroader If true traverse prop object to subject, otherwise subject to object
      * @return                      the possible further refinements to a facet,
      */
-    Map<FacetState, List<RDFNode>> getRefinements(FacetState currentFacetState);
+    List<Resource> getRefinements(Resource base, Property prop, boolean isBroader);
 
     /**
      * Return the number of matches for future facet states - for example, there my be

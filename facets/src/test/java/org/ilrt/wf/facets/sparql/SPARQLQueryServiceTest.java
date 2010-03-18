@@ -58,22 +58,18 @@ public class SPARQLQueryServiceTest {
      */
     @Test
     public void testGetBroaderRefinements() {
-        FacetState fs = new MFacetState(ResourceFactory.createResource(NS + "a"),
-                broader, FacetState.NONE);
         SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
-        Map<FacetState, List<RDFNode>> a = instance.getRefinements(fs);
+        List<Resource> a = instance.getRefinements(make("a"), broader, true);
 
-        assertEquals("Got correct broader refinements", 3, a.get(fs).size());
+        assertEquals("Got correct broader refinements", 3, a.size());
     }
 
     @Test
     public void testGetNarrowerRefinements() {
-        FacetState fs = new MFacetState(ResourceFactory.createResource(NS + "a"),
-                FacetState.NONE, narrower);
         SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
-        Map<FacetState, List<RDFNode>> a = instance.getRefinements(fs);
+        List<Resource> a = instance.getRefinements(make("a"), narrower, false);
 
-        assertEquals("Got correct narrower refinements", 4, a.get(fs).size());
+        assertEquals("Got correct narrower refinements", 4, a.size());
     }
 
     @Test
@@ -98,7 +94,7 @@ public class SPARQLQueryServiceTest {
         assertEquals(node3, a);
 
         a = instance.getHierarchy(make("x"), broader, true);
-        assertFalse(node3.equals(a));
+        assertTrue(node3.equals(a));
     }
 
     @Test

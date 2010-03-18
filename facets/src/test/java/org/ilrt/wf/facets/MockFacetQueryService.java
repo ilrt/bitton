@@ -12,7 +12,7 @@ import java.util.Map;
 public class MockFacetQueryService implements FacetQueryService{
 
     @Override
-    public Map<FacetState, List<RDFNode>> getRefinements(FacetState currentFacetState) {
+    public List<Resource> getRefinements(Resource base, Property prop, boolean isBroader) {
         return null;
     }
 
