@@ -36,12 +36,15 @@ import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
 import com.hp.hpl.jena.sparql.expr.E_Regex;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
+import java.util.AbstractList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import org.ilrt.wf.facets.FacetQueryService;
@@ -74,11 +77,7 @@ public class SPARQLQueryService implements FacetQueryService {
     public List<Resource> getRefinements(Resource base, Property prop, boolean isBroader) {
         Tree<Resource> refinements =
                 getHierarchy(base, prop, isBroader, true) ;
-        List<Resource> toReturn = new LinkedList<Resource>();
-        for (Tree<Resource> refs: refinements.getChildren()) {
-            toReturn.add(refs.getValue());
-        }
-        return toReturn;
+        return new TreeChildrenList<Resource>(refinements);
     }
 
     @Override
@@ -333,5 +332,27 @@ public class SPARQLQueryService implements FacetQueryService {
         }
     }
 
+    /**
+     * Convenience wrapper to avoid copying
+     * @param <T>
+     */
+    public static class TreeChildrenList<T> extends AbstractList<T> {
+        private final Tree<T> tree;
 
+        public TreeChildrenList(Tree<T> tree) {
+            super();
+            this.tree = tree;
+        }
+
+        @Override
+        public T get(int i) {
+            return tree.getChildren().get(i).getValue();
+        }
+
+        @Override
+        public int size() {
+            return tree.getChildren().size();
+        }
+
+    }
 }
