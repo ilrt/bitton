@@ -1,8 +1,5 @@
 package org.ilrt.wf.facets;
 
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import java.util.Collection;
 import java.util.List;
 import org.ilrt.wf.facets.constraints.Constraint;
