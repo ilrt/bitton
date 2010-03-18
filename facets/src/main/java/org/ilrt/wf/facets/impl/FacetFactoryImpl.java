@@ -1,8 +1,6 @@
 package org.ilrt.wf.facets.impl;
 
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.ilrt.wf.facets.Facet;
@@ -78,8 +76,6 @@ public class FacetFactoryImpl implements FacetFactory {
 
     private Facet createHierarchicalFacet(FacetEnvironment environment) {
 
-        // the facet state to be passed to the facet
-        FacetStateImpl currentFacetState;
 
         // things to do ....
 
@@ -87,33 +83,37 @@ public class FacetFactoryImpl implements FacetFactory {
 
         // what constraints to send for refinements?
 
-        currentFacetState = new FacetStateImpl();
-
-        currentFacetState.setBroaderProperty(ResourceFactory
-                .createProperty(environment.getConfig().get(Facet.BROADER_PROPERTY)));
+/**
+        Property broaderProperty = ResourceFactory
+                .createProperty(environment.getConfig().get(Facet.BROADER_PROPERTY));
 
 
         ValueConstraint typeConstraint = createValueConstraint(environment.getConfig().get(Facet.CONSTRAINT_TYPE));
         ValueConstraint linkConstraint = createValueConstraint(environment.getConfig().get(Facet.LINK_PROPERTY));
-
-        currentFacetState.getConstraints().addAll(Arrays.asList(typeConstraint, linkConstraint));
+        List<? extends Constraint> constraints = Arrays.asList(typeConstraint, linkConstraint);
 
         Property valueProperty;
 
         if (environment.getParameters().containsKey(environment.getConfig().get(Facet.PARAM_NAME))) {
-
             // get the value of the parameter
             valueProperty = null;
-
         } else {
             valueProperty = ResourceFactory.createProperty(environment.getConfig().get(Facet.FACET_BASE));
         }
 
 
-       // currentFacetState.setValue(valueProperty);
+        // construct the facet state - TODO: look to making this a constructor
+**/
+        FacetStateImpl currentFacetState = new FacetStateImpl();
+/**
+        currentFacetState.setBroaderProperty(broaderProperty);
+        currentFacetState.setValue(valueProperty);
+        currentFacetState.getConstraints().addAll(constraints);
+**/
+
+        // currentFacetState.setValue(valueProperty);
 
         //Map<FacetState, List<RDFNode>> refinements = facetQueryService.getRefinements(currentFacetState);
-
 
 
 //        for (RDFNode node : refinements.get(currentFacetState)) {
@@ -131,7 +131,9 @@ public class FacetFactoryImpl implements FacetFactory {
         // get parents from service if cache is empty
 
 
-        return null;
+        // create the facet
+        return new FacetImpl(environment.getConfig().get(Facet.FACET_TITLE), currentFacetState,
+                environment.getConfig().get(Facet.PARAM_NAME));
     }
 
 
