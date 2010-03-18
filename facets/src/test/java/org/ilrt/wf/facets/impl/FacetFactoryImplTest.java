@@ -77,8 +77,6 @@ public class FacetFactoryImplTest {
         assertEquals("Unexpected number of refinements", MAX_ALPHANUMERIC_ITEMS,
                 facetState.getRefinements().size());
         assertEquals("Unexpected count value", 0, facetState.getCount());
-        assertNull("There should be no broaderProperty", facetState.getBroaderProperty());
-        assertNull("There should be no narrowerProperty", facetState.getNarrowerProperty());
         assertEquals("There should be no constraints", 0, facetState.getConstraints().size());
 
 
@@ -91,8 +89,6 @@ public class FacetFactoryImplTest {
             assertNotNull("The parameter value should not be null", state.getParamValue());
             assertEquals("Unexpected count value", 0, state.getCount());
             assertEquals("There should be no refinements", 0, state.getRefinements().size());
-            assertNull("There should be no broaderProperty", state.getBroaderProperty());
-            assertNull("There should be no narrowerProperty", state.getNarrowerProperty());
             assertEquals("Unexpected number of constraints", 2, state.getConstraints().size());
         }
 
@@ -139,8 +135,6 @@ public class FacetFactoryImplTest {
         assertEquals("Unexpected number of refinements", 0,
                 facetState.getRefinements().size());
         assertEquals("Unexpected count value", 0, facetState.getCount());
-        assertNull("There should be no broaderProperty", facetState.getBroaderProperty());
-        assertNull("There should be no narrowerProperty", facetState.getNarrowerProperty());
         assertEquals("There should be no constraints", 2, facetState.getConstraints().size());
         assertEquals("Unexpected name", label, facetState.getName());
         assertEquals("Unexpected parameter value", label, facetState.getParamValue());

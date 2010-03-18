@@ -60,21 +60,6 @@ public class FacetStateImpl implements FacetState {
     }
 
     @Override
-    public Property getBroaderProperty() {
-        return broaderProperty;
-    }
-
-    @Override
-    public Property getNarrowerProperty() {
-        return narrowerProperty;
-    }
-
-    @Override
-    public RDFNode getValue() {
-        return value;
-    }
-
-    @Override
     public Collection<Constraint> getConstraints() {
         return constraint;
     }
@@ -105,27 +90,11 @@ public class FacetStateImpl implements FacetState {
         this.paramValue = paramValue;
     }
 
-    public void setBroaderProperty(Property broaderProperty) {
-        this.broaderProperty = broaderProperty;
-    }
-
-    public void setNarrowerProperty(Property narrowerProperty) {
-        this.narrowerProperty = narrowerProperty;
-    }
-
-    public void setValue(RDFNode value) {
-        this.value = value;
-    }
-
-
     private String name = "Untitled";
     private int count = 0;
     private boolean isRoot = false;
     private List<FacetState> refinements = new ArrayList<FacetState>();
     private FacetState parent = null;
     private String paramValue = null;
-    private Property broaderProperty = null;
-    private Property narrowerProperty = null;
-    private RDFNode value;
     private LinkedList<Constraint> constraint = new LinkedList<Constraint>();
 }

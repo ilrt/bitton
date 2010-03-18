@@ -243,23 +243,10 @@ public class SPARQLQueryServiceTest {
     }
 
     static class MFacetState implements FacetState {
-        private final Property broader;
-        private final Property narrower;
-        private final RDFNode value;
         private final List<Constraint> constraints = new LinkedList<Constraint>();
         private final List<FacetState> refinements = new LinkedList<FacetState>();
 
-        public MFacetState(RDFNode value, Property broader, Property narrower) {
-            if (broader == null ||
-                    narrower == null) throw new IllegalArgumentException("No nulls");
-            this.value = value;
-            this.broader = broader;
-            this.narrower = narrower;
-        }
-
         public MFacetState(Constraint... cons) {
-            broader = narrower = null;
-            value = null;
             Collections.addAll(constraints, cons);
         }
 
@@ -275,7 +262,7 @@ public class SPARQLQueryServiceTest {
 
         @Override
         public boolean isRoot() {
-            return value == null;
+            return false;
         }
 
         @Override
@@ -291,21 +278,6 @@ public class SPARQLQueryServiceTest {
         @Override
         public String getParamValue() {
             throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public Property getBroaderProperty() {
-            return broader;
-        }
-
-        @Override
-        public Property getNarrowerProperty() {
-            return narrower;
-        }
-
-        @Override
-        public RDFNode getValue() {
-            return value;
         }
 
         @Override

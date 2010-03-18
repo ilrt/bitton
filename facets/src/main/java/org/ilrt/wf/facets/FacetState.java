@@ -26,24 +26,6 @@ public interface FacetState {
 
     String getParamValue();
 
-    public final static Property NONE =
-            ResourceFactory.createProperty("urn:x-ilrt:none");
-
-    /**
-     * @return broader relation for facet, or NONE.
-     */
-    Property getBroaderProperty();
-
-    /**
-     * @return narrower relation for facet, or NONE.
-     */
-    Property getNarrowerProperty();
-
-    /**
-     * @return Current value of this state. May be NONE for 'top' state (?)
-     */
-    RDFNode getValue();
-
     /**
      * @return How this state constrains values
      */
