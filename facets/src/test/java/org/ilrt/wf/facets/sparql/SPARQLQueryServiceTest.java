@@ -235,6 +235,22 @@ public class SPARQLQueryServiceTest {
         assertEquals(2, instance.getCount(Arrays.asList(a, b)));
     }
 
+    @Test
+    public void checkSafety() {
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+
+        try {
+            instance.constraintsToOp(Arrays.<Constraint>asList(
+                new UnConstraint(),
+                new UnConstraint()
+                ));
+        } catch (RuntimeException e) {
+            return;
+        }
+
+        fail();
+    }
+
     private RangeConstraint makeRangeCon(int start, int end) {
         return new RangeConstraint(range,
                 ResourceFactory.createTypedLiteral(start),

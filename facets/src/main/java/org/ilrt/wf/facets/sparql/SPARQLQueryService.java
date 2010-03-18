@@ -255,6 +255,8 @@ public class SPARQLQueryService implements FacetQueryService {
             else if (op == null) op = newOp;
             else op = OpJoin.create(op, newOp);
         }
+        // Completelty unconstrained is not permitted
+        if (op == null) throw new RuntimeException("Operation is completely unconstrained");
         op = Transformer.transform(new QueryCleaner(), op);
         return op;
     }
@@ -314,7 +316,7 @@ public class SPARQLQueryService implements FacetQueryService {
     /**
      * This is for cleaning up the query having created it
      */
-    static class QueryCleaner extends TransformBase
+    private static class QueryCleaner extends TransformBase
     {
         @Override
         public Op transform(OpJoin join, Op left, Op right) {
@@ -336,7 +338,7 @@ public class SPARQLQueryService implements FacetQueryService {
      * Convenience wrapper to avoid copying
      * @param <T>
      */
-    public static class TreeChildrenList<T> extends AbstractList<T> {
+    private static class TreeChildrenList<T> extends AbstractList<T> {
         private final Tree<T> tree;
 
         public TreeChildrenList(Tree<T> tree) {
@@ -354,5 +356,32 @@ public class SPARQLQueryService implements FacetQueryService {
             return tree.getChildren().size();
         }
 
+        @Override
+        public Iterator<T> iterator() {
+            return new TreeIterator<T>(tree.getChildren().iterator());
+        }
+
+    }
+
+    /**
+     * Helper for the above, to avoid thrashing linked list
+     *
+     * @param <T>
+     */
+    private static class TreeIterator<T> implements Iterator<T> {
+        private Iterator<Tree<T>> it;
+
+        public TreeIterator(Iterator<Tree<T>> wrappedIt) {
+            this.it = wrappedIt;
+        }
+
+        @Override
+        public boolean hasNext() { return it.hasNext(); }
+
+        @Override
+        public T next() { return it.next().getValue(); }
+
+        @Override
+        public void remove() { throw new UnsupportedOperationException("Not supported"); }
     }
 }
