@@ -13,4 +13,6 @@ public interface FacetEnvironment {
     Map<String, String> getConfig();
 
     Map<String, String[]> getParameters();
+
+    Map<String, String> getPrefix();
 }

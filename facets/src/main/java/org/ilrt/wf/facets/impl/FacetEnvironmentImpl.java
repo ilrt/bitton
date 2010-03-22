@@ -6,9 +6,11 @@ import java.util.Map;
 
 public class FacetEnvironmentImpl implements FacetEnvironment {
 
-    public FacetEnvironmentImpl(Map<String, String> config, Map<String, String[]> parameters) {
+    public FacetEnvironmentImpl(Map<String, String> config, Map<String, String[]> parameters,
+                                Map<String, String> prefixes) {
         this.config = config;
         this.parameters = parameters;
+        this.prefixes = prefixes;
     }
 
     @Override
@@ -21,6 +23,12 @@ public class FacetEnvironmentImpl implements FacetEnvironment {
         return parameters;
     }
 
+    @Override
+    public Map<String, String> getPrefix() {
+        return prefixes;
+    }
+
     private Map<String, String> config;
     private Map<String, String[]> parameters;
+    private Map<String, String> prefixes;
 }

@@ -56,7 +56,7 @@ public class HierarchicalFacetTest {
 
         // create a mock environment for the facet
         FacetEnvironment environment = new FacetEnvironmentImpl(createHierarchicalConfig(),
-                new HashMap<String, String[]>());
+                new HashMap<String, String[]>(), new HashMap<String, String>());
 
         // create the facet
         Facet facet = facetFactory.create(environment);

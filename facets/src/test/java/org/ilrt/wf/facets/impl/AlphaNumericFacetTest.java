@@ -158,7 +158,7 @@ public class AlphaNumericFacetTest {
 
 
         FacetEnvironment environment = new FacetEnvironmentImpl(createAlphaNumericConfig(),
-                new HashMap<String, String[]>());
+                new HashMap<String, String[]>(), new HashMap<String, String>());
 
         // testing the facet values
 
@@ -217,7 +217,7 @@ public class AlphaNumericFacetTest {
         // create the constraint
 
         FacetEnvironmentImpl facetConstraint = new FacetEnvironmentImpl(createAlphaNumericConfig(),
-                parameters);
+                parameters, new HashMap<String, String>());
 
         // test the facet
 

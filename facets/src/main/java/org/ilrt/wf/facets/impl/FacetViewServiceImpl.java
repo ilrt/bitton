@@ -11,15 +11,17 @@ import org.ilrt.wf.facets.config.Configuration;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
 public class FacetViewServiceImpl implements FacetViewService {
 
-    public FacetViewServiceImpl(FacetFactory facetFactory, Configuration configuration) {
+    public FacetViewServiceImpl(FacetFactory facetFactory, Configuration configuration, Map<String, String> prefixes) {
         this.facetFactory = facetFactory;
         this.configuration = configuration;
+        this.prefixes = prefixes;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class FacetViewServiceImpl implements FacetViewService {
             // the facet is affected by its configuration and possibly request parameters
             FacetEnvironment environment =
                     new FacetEnvironmentImpl(configuration.getConfiguration(key),
-                            request.getParameterMap());
+                            request.getParameterMap(), prefixes);
 
             // get the facet via the factory and add to the list
             facetView.getFacets().add(facetFactory.create(environment));
@@ -54,6 +56,7 @@ public class FacetViewServiceImpl implements FacetViewService {
 
     final FacetFactory facetFactory;
     final Configuration configuration;
+    final Map<String, String> prefixes;
 
 
 }
