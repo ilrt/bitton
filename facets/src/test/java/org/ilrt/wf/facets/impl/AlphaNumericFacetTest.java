@@ -30,13 +30,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+/**
+ * @author Mike Jones (mike.a.jones@bristol.ac.uk)
+ */
 @RunWith(JMock.class)
-public class AlphaNumericFacetTest {
+public class AlphaNumericFacetTest extends AbstractFacetTest {
 
     @Before
     public void setUp() {
         mockFacetQueryService = context.mock(FacetQueryService.class);
-        facetFactory = new FacetFactoryImpl(mockFacetQueryService);
+        facetFactory = new FacetFactoryImpl(mockFacetQueryService, getPrefixMap());
     }
 
     /**

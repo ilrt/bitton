@@ -11,6 +11,7 @@ import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetFactory;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetState;
+import org.ilrt.wf.facets.QNameUtility;
 import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.RegexpConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
@@ -23,8 +24,9 @@ import java.util.Set;
 
 public class FacetFactoryImpl implements FacetFactory {
 
-    public FacetFactoryImpl(FacetQueryService facetQueryService) {
+    public FacetFactoryImpl(FacetQueryService facetQueryService, Map<String, String> prefixMap) {
         this.facetQueryService = facetQueryService;
+        this.qNameUtility = new QNameUtility(prefixMap);
     }
 
     @Override
@@ -100,8 +102,14 @@ public class FacetFactoryImpl implements FacetFactory {
 
         if (environment.getParameters().containsKey(environment.getConfig()
                 .get(Facet.PARAM_NAME))) {
-            // get baseResource value of the parameter
-            baseResource = null;
+
+            String[] paramStrings = environment.getParameters()
+                    .get(environment.getConfig().get(Facet.PARAM_NAME));
+            String shortenedUri = paramStrings[0];
+
+
+            baseResource = ResourceFactory.createResource(qNameUtility.expandQName(shortenedUri));
+
         } else {
             baseResource = ResourceFactory.createResource(environment.getConfig()
                     .get(Facet.FACET_BASE));
@@ -137,8 +145,8 @@ public class FacetFactoryImpl implements FacetFactory {
                 label = resource.getProperty(RDFS.label).getLiteral().getLexicalForm();
             }
 
-            // TODO - use prefixes for the URI
-            refinementList.add(new FacetStateImpl(label, parentState, uri, constraints));
+            refinementList.add(new FacetStateImpl(label, parentState,
+                    qNameUtility.getQName(uri), constraints));
         }
 
         return refinementList;
@@ -248,4 +256,5 @@ public class FacetFactoryImpl implements FacetFactory {
 
 
     private final FacetQueryService facetQueryService;
+    private QNameUtility qNameUtility;
 }

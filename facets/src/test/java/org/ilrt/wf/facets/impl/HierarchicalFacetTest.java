@@ -11,6 +11,7 @@ import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetState;
+import org.ilrt.wf.facets.QNameUtility;
 import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
 import org.jmock.Expectations;
@@ -31,13 +32,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * @author Mike Jones (mike.a.jones@bristol.ac.uk)
+ */
 @RunWith(JMock.class)
-public class HierarchicalFacetTest {
+public class HierarchicalFacetTest extends AbstractFacetTest {
 
     @Before
     public void setUp() {
         mockFacetQueryService = context.mock(FacetQueryService.class);
-        facetFactory = new FacetFactoryImpl(mockFacetQueryService);
+        facetFactory = new FacetFactoryImpl(mockFacetQueryService, getPrefixMap());
+        qNameUtility = new QNameUtility(getPrefixMap());
     }
 
     @Test
@@ -72,7 +77,8 @@ public class HierarchicalFacetTest {
 
         FacetState facetState = facet.getState().getRefinements().get(0);
         assertEquals("Unexpected label", subjectLabel, facetState.getName());
-        assertEquals("unexpected value", subjectUri, facetState.getParamValue());
+        assertEquals("unexpected value", qNameUtility.getQName(subjectUri),
+                facetState.getParamValue());
         assertEquals("Unexpected parent state", facet.getState(), facetState.getParent());
         assertFalse("State is not root", facetState.isRoot());
     }
@@ -105,7 +111,8 @@ public class HierarchicalFacetTest {
         FacetState state = refinements.get(0);
         assertFalse("Should not be root", state.isRoot());
         assertEquals("Unexpected name", subjectLabel, state.getName());
-        assertEquals("Unexpected parameter value", subjectUri, state.getParamValue());
+        assertEquals("Unexpected parameter value", qNameUtility.getQName(subjectUri),
+                state.getParamValue());
         assertEquals("Unexpected parent", mockParentState, state.getParent());
     }
 
@@ -158,4 +165,5 @@ public class HierarchicalFacetTest {
 
     private FacetQueryService mockFacetQueryService;
     private FacetFactoryImpl facetFactory;
+    private QNameUtility qNameUtility;
 }

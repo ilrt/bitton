@@ -14,13 +14,16 @@ import org.junit.runner.RunWith;
 
 import java.util.Map;
 
+/**
+ * @author Mike Jones (mike.a.jones@bristol.ac.uk)
+ */
 @RunWith(JMock.class)
-public class FacetFactoryImplTest {
+public class FacetFactoryImplTest extends AbstractFacetTest {
 
     @Before
     public void setUp() {
         FacetQueryService mockQueryService = context.mock(FacetQueryService.class);
-        facetFactory = new FacetFactoryImpl(mockQueryService);
+        facetFactory = new FacetFactoryImpl(mockQueryService, getPrefixMap());
     }
 
     /**
