@@ -2,7 +2,6 @@ package org.ilrt.wf.facets.impl;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import org.ilrt.wf.facets.FacetQueryService.Tree;
@@ -41,123 +40,123 @@ public class HierarchicalParentTest {
         // ---------- check node A
 
         assertFalse("Node A is not a leaf", node_A.isLeaf());
-        assertEquals("Unexpected URI for Node A", URI_A, ((Resource) node_A.getValue()).getURI());
-        assertEquals("Unexpected label for Node A", label_A, ((Resource) node_A.getValue())
+        assertEquals("Unexpected URI for Node A", URI_A, node_A.getValue().getURI());
+        assertEquals("Unexpected label for Node A", label_A, node_A.getValue()
                 .getProperty(RDFS.label).getLiteral().getLexicalForm());
 
-        List<Tree<RDFNode>> node_A_children = node_A.getChildren();
+        List<Tree<Resource>> node_A_children = node_A.getChildren();
 
         assertEquals("There should be two children - B1 and B2", 2, node_A_children.size());
 
 
         // ---------- check node B1
 
-        Tree<RDFNode> node_B1 = node_A_children.get(0);
+        Tree<Resource> node_B1 = node_A_children.get(0);
 
         assertFalse("Node B1 is not a leaf", node_B1.isLeaf());
-        assertEquals("Unexpected URI for Node B1", URI_B1, ((Resource) node_B1.getValue()).getURI());
-        assertEquals("Unexpected label for Node B1", label_B1, ((Resource) node_B1.getValue())
+        assertEquals("Unexpected URI for Node B1", URI_B1, node_B1.getValue().getURI());
+        assertEquals("Unexpected label for Node B1", label_B1, node_B1.getValue()
                 .getProperty(RDFS.label).getLiteral().getLexicalForm());
 
-        List<Tree<RDFNode>> node_B1_children = node_B1.getChildren();
+        List<Tree<Resource>> node_B1_children = node_B1.getChildren();
 
         assertEquals("There should be two children - C1 and C2", 2, node_B1_children.size());
 
 
         // ---------- check node B2
 
-        Tree<RDFNode> node_B2 = node_A_children.get(1);
+        Tree<Resource> node_B2 = node_A_children.get(1);
 
         assertFalse("Node B2 is not a leaf", node_B2.isLeaf());
-        assertEquals("Unexpected URI for Node B2", URI_B2, ((Resource) node_B2.getValue()).getURI());
-        assertEquals("Unexpected label for Node B2", label_B2, ((Resource) node_B2.getValue())
+        assertEquals("Unexpected URI for Node B2", URI_B2, node_B2.getValue().getURI());
+        assertEquals("Unexpected label for Node B2", label_B2, node_B2.getValue()
                 .getProperty(RDFS.label).getLiteral().getLexicalForm());
 
-        List<Tree<RDFNode>> node_B2_children = node_B2.getChildren();
+        List<Tree<Resource>> node_B2_children = node_B2.getChildren();
 
         assertEquals("There should be two children - C3 and C4", 2, node_B2_children.size());
 
 
         // ---------- check node C1
 
-        Tree<RDFNode> node_C1 = node_B1_children.get(0);
+        Tree<Resource> node_C1 = node_B1_children.get(0);
 
         assertFalse("Node C1 is not a leaf", node_C1.isLeaf());
-        assertEquals("Unexpected URI for Node C1", URI_C1, ((Resource) node_C1.getValue()).getURI());
-        assertEquals("Unexpected label for Node C1", label_C1, ((Resource) node_C1.getValue())
+        assertEquals("Unexpected URI for Node C1", URI_C1, node_C1.getValue().getURI());
+        assertEquals("Unexpected label for Node C1", label_C1, node_C1.getValue()
                 .getProperty(RDFS.label).getLiteral().getLexicalForm());
 
-        List<Tree<RDFNode>> node_C1_children = node_C1.getChildren();
+        List<Tree<Resource>> node_C1_children = node_C1.getChildren();
 
         assertEquals("There should be one child - D1", 1, node_C1_children.size());
 
 
         // ---------- check node C2
 
-        Tree<RDFNode> node_C2 = node_B1_children.get(1);
+        Tree<Resource> node_C2 = node_B1_children.get(1);
 
         assertTrue("Node C2 is a leaf", node_C2.isLeaf());
-        assertEquals("Unexpected URI for Node C2", URI_C2, ((Resource) node_C2.getValue()).getURI());
-        assertEquals("Unexpected label for Node C2", label_C2, ((Resource) node_C2.getValue())
+        assertEquals("Unexpected URI for Node C2", URI_C2, node_C2.getValue().getURI());
+        assertEquals("Unexpected label for Node C2", label_C2, node_C2.getValue()
                 .getProperty(RDFS.label).getLiteral().getLexicalForm());
 
-        List<Tree<RDFNode>> node_C2_children = node_C2.getChildren();
+        List<Tree<Resource>> node_C2_children = node_C2.getChildren();
 
         assertEquals("There should be no children", 0, node_C2_children.size());
 
 
         // ---------- check node C3
 
-        Tree<RDFNode> node_C3 = node_B2_children.get(0);
+        Tree<Resource> node_C3 = node_B2_children.get(0);
 
         assertTrue("Node C3 is a leaf", node_C3.isLeaf());
-        assertEquals("Unexpected URI for Node C3", URI_C3, ((Resource) node_C3.getValue()).getURI());
-        assertEquals("Unexpected label for Node C3", label_C3, ((Resource) node_C3.getValue())
+        assertEquals("Unexpected URI for Node C3", URI_C3, node_C3.getValue().getURI());
+        assertEquals("Unexpected label for Node C3", label_C3, node_C3.getValue()
                 .getProperty(RDFS.label).getLiteral().getLexicalForm());
 
-        List<Tree<RDFNode>> node_C3_children = node_C3.getChildren();
+        List<Tree<Resource>> node_C3_children = node_C3.getChildren();
 
         assertEquals("There should be no children", 0, node_C3_children.size());
 
 
         // ---------- check node C4
 
-        Tree<RDFNode> node_C4 = node_B2_children.get(1);
+        Tree<Resource> node_C4 = node_B2_children.get(1);
 
         assertFalse("Node C4 is not a leaf", node_C4.isLeaf());
-        assertEquals("Unexpected URI for Node C4", URI_C4, ((Resource) node_C4.getValue()).getURI());
-        assertEquals("Unexpected label for Node C4", label_C4, ((Resource) node_C4.getValue())
+        assertEquals("Unexpected URI for Node C4", URI_C4, node_C4.getValue().getURI());
+        assertEquals("Unexpected label for Node C4", label_C4, node_C4.getValue()
                 .getProperty(RDFS.label).getLiteral().getLexicalForm());
 
-        List<Tree<RDFNode>> node_C4_children = node_C4.getChildren();
+        List<Tree<Resource>> node_C4_children = node_C4.getChildren();
 
         assertEquals("There should be one child - D2", 1, node_C4_children.size());
 
 
         // ---------- check node D1
 
-        Tree<RDFNode> node_D1 = node_C1_children.get(0);
+        Tree<Resource> node_D1 = node_C1_children.get(0);
 
         assertTrue("Node D1 is a leaf", node_D1.isLeaf());
-        assertEquals("Unexpected URI for Node D1", URI_D1, ((Resource) node_D1.getValue()).getURI());
-        assertEquals("Unexpected label for Node D1", label_D1, ((Resource) node_D1.getValue())
+        assertEquals("Unexpected URI for Node D1", URI_D1, node_D1.getValue().getURI());
+        assertEquals("Unexpected label for Node D1", label_D1, node_D1.getValue()
                 .getProperty(RDFS.label).getLiteral().getLexicalForm());
 
-        List<Tree<RDFNode>> node_D1_children = node_D1.getChildren();
+        List<Tree<Resource>> node_D1_children = node_D1.getChildren();
 
         assertEquals("There should be no children", 0, node_D1_children.size());
 
 
         // ---------- check node D2
 
-        Tree<RDFNode> node_D2 = node_C4_children.get(0);
+        Tree<Resource> node_D2 = node_C4_children.get(0);
 
         assertTrue("Node D2 is a leaf", node_D2.isLeaf());
-        assertEquals("Unexpected URI for Node D2", URI_D2, ((Resource) node_D2.getValue()).getURI());
-        assertEquals("Unexpected label for Node D2", label_D2, ((Resource) node_D2.getValue())
+        assertEquals("Unexpected URI for Node D2", URI_D2, node_D2.getValue().getURI());
+        assertEquals("Unexpected label for Node D2", label_D2, node_D2.getValue()
                 .getProperty(RDFS.label).getLiteral().getLexicalForm());
 
-        List<Tree<RDFNode>> node_D2_children = node_D2.getChildren();
+        List<Tree<Resource>> node_D2_children = node_D2.getChildren();
 
         assertEquals("There should be no children", 0, node_D2_children.size());
 
@@ -170,7 +169,7 @@ public class HierarchicalParentTest {
         assertFalse(node_A.isLeaf());
     }
 
-    private Tree<RDFNode> createTestTree() {
+    private Tree<Resource> createTestTree() {
 
         Model model = ModelFactory.createDefaultModel();
 
@@ -204,15 +203,15 @@ public class HierarchicalParentTest {
         Resource resource_D2 = model.createResource(URI_D2);
         resource_D2.addLiteral(RDFS.label, label_D2);
 
-        Tree<RDFNode> tree_A = new Tree<RDFNode>(resource_A);
-        Tree<RDFNode> tree_B1 = new Tree<RDFNode>(resource_B1);
-        Tree<RDFNode> tree_B2 = new Tree<RDFNode>(resource_B2);
-        Tree<RDFNode> tree_C1 = new Tree<RDFNode>(resource_C1);
-        Tree<RDFNode> tree_C2 = new Tree<RDFNode>(resource_C2);
-        Tree<RDFNode> tree_C3 = new Tree<RDFNode>(resource_C3);
-        Tree<RDFNode> tree_C4 = new Tree<RDFNode>(resource_C4);
-        Tree<RDFNode> tree_D1 = new Tree<RDFNode>(resource_D1);
-        Tree<RDFNode> tree_D2 = new Tree<RDFNode>(resource_D2);
+        Tree<Resource> tree_A = new Tree<Resource>(resource_A);
+        Tree<Resource> tree_B1 = new Tree<Resource>(resource_B1);
+        Tree<Resource> tree_B2 = new Tree<Resource>(resource_B2);
+        Tree<Resource> tree_C1 = new Tree<Resource>(resource_C1);
+        Tree<Resource> tree_C2 = new Tree<Resource>(resource_C2);
+        Tree<Resource> tree_C3 = new Tree<Resource>(resource_C3);
+        Tree<Resource> tree_C4 = new Tree<Resource>(resource_C4);
+        Tree<Resource> tree_D1 = new Tree<Resource>(resource_D1);
+        Tree<Resource> tree_D2 = new Tree<Resource>(resource_D2);
 
         tree_A.addChild(tree_B1);
         tree_A.addChild(tree_B2);
@@ -250,5 +249,5 @@ public class HierarchicalParentTest {
     final private String label_D1 = "Node D1";
     final private String label_D2 = "Node D2";
 
-    private Tree<RDFNode> node_A;
+    private Tree<Resource> node_A;
 }
