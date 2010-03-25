@@ -24,10 +24,14 @@ import java.util.Set;
 
 public class FacetFactoryImpl implements FacetFactory {
 
+    // ---------- public constructors
+
     public FacetFactoryImpl(FacetQueryService facetQueryService, Map<String, String> prefixMap) {
         this.facetQueryService = facetQueryService;
         this.qNameUtility = new QNameUtility(prefixMap);
     }
+
+    // ---------- public methods implementing the interface
 
     @Override
     public Facet create(FacetEnvironment environment) throws FacetException {
@@ -43,117 +47,30 @@ public class FacetFactoryImpl implements FacetFactory {
         }
     }
 
-
-    // ---------- methods relating to all facets
-
-    @Override
-    public void calculateCount(List<Facet> facetList) {
-
-        // find all the states
-        List<FacetState> states = new ArrayList<FacetState>();
-
-        for (Facet facet : facetList) {
-            states.add(facet.getState());
-        }
-
-        // request counts
-
-        Map<FacetState, Integer> results = facetQueryService.getCounts(states);
-
-        // update the states with the counts
-
-        Set<FacetState> countStates = results.keySet();
-
-        for (FacetState facetState : countStates) {
-            ((FacetStateImpl) facetState).setCount(results.get(facetState));
-        }
-
-    }
-
-
-    protected ValueConstraint createValueConstraint(String type) {
-        return new ValueConstraint(RDF.type, ResourceFactory.createProperty(type));
-    }
-
-
-    // ---------- methods relating to hierarchical facets
+    // ---------- high level methods relating to the construction of different facet types
 
     private Facet createHierarchicalFacet(FacetEnvironment environment) {
 
-        FacetStateImpl currentFacetState = new FacetStateImpl();
+        // TODO - get the name of the current facet
+        // TODO - get the parents
 
-        // things to do ....
+        // constraints used in the facet states of this facet
+        List<? extends Constraint> constraints = createHierarchicalConstraintList(environment);
 
-        // get parents (cache or query)
+        // base resource representing the currently selected uri in the hierarchy
+        Resource baseResource = createBaseResource(environment);
 
-        // get refinements (cache? or query)
+        // broader property
+        Property broaderProperty = createBroaderProperty(environment);
 
-        // get counts for refinements
-
-        // set the constraints used in this type
-        ValueConstraint typeConstraint = createValueConstraint(environment.getConfig()
-                .get(Facet.CONSTRAINT_TYPE));
-        ValueConstraint linkConstraint = createValueConstraint(environment.getConfig()
-                .get(Facet.LINK_PROPERTY));
-        List<? extends Constraint> constraints = Arrays.asList(typeConstraint, linkConstraint);
-        currentFacetState.getConstraints().addAll(constraints);
-
-        Resource baseResource;
-
-        if (environment.getParameters().containsKey(environment.getConfig()
-                .get(Facet.PARAM_NAME))) {
-
-            String[] paramStrings = environment.getParameters()
-                    .get(environment.getConfig().get(Facet.PARAM_NAME));
-            String shortenedUri = paramStrings[0];
-
-
-            baseResource = ResourceFactory.createResource(qNameUtility.expandQName(shortenedUri));
-
-        } else {
-            baseResource = ResourceFactory.createResource(environment.getConfig()
-                    .get(Facet.FACET_BASE));
-        }
-
-        Property broaderProperty = ResourceFactory
-                .createProperty(environment.getConfig().get(Facet.BROADER_PROPERTY));
-
-        List<Resource> resources = facetQueryService.getRefinements(baseResource,
-                broaderProperty, true);
-
-        currentFacetState.setRefinements(hierarchicalRefinements(resources, constraints,
-                currentFacetState));
+        // create the current state - will include refinements and parents
+        FacetState currentFacetState = currentHierarchicalState(constraints, baseResource,
+                broaderProperty);
 
         // create the facet
-        return new FacetImpl(environment.getConfig().get(Facet.FACET_TITLE), currentFacetState,
-                environment.getConfig().get(Facet.PARAM_NAME));
+        return new FacetImpl(getFacetTitle(environment), currentFacetState,
+                getParameterName(environment));
     }
-
-
-    protected List<FacetState> hierarchicalRefinements(List<Resource> resources,
-                                                       List<? extends Constraint> constraints,
-                                                       FacetState parentState) {
-
-        List<FacetState> refinementList = new ArrayList<FacetState>();
-
-        for (Resource resource : resources) {
-
-            String uri = resource.getURI();
-            String label = null;
-
-            if (resource.hasProperty(RDFS.label)) {
-                label = resource.getProperty(RDFS.label).getLiteral().getLexicalForm();
-            }
-
-            refinementList.add(new FacetStateImpl(label, parentState,
-                    qNameUtility.getQName(uri), constraints));
-        }
-
-        return refinementList;
-    }
-
-
-    // ---------- methods relating to alpha numeric facets
 
     private Facet createAlphaNumericFacet(FacetEnvironment environment) {
 
@@ -192,9 +109,134 @@ public class FacetFactoryImpl implements FacetFactory {
         }
 
         // create the facet
-        return new FacetImpl(environment.getConfig().get(Facet.FACET_TITLE), facetState,
-                environment.getConfig().get(Facet.PARAM_NAME));
+        return new FacetImpl(getFacetTitle(environment), facetState, getParameterName(environment));
     }
+
+    // ---------- methods relating to all facets
+
+    @Override
+    public void calculateCount(List<Facet> facetList) {
+
+        // find all the states
+        List<FacetState> states = new ArrayList<FacetState>();
+
+        for (Facet facet : facetList) {
+            states.add(facet.getState());
+        }
+
+        // request counts
+
+        Map<FacetState, Integer> results = facetQueryService.getCounts(states);
+
+        // update the states with the counts
+
+        Set<FacetState> countStates = results.keySet();
+
+        for (FacetState facetState : countStates) {
+            ((FacetStateImpl) facetState).setCount(results.get(facetState));
+        }
+
+    }
+
+    protected ValueConstraint createValueConstraint(String type) {
+        return new ValueConstraint(RDF.type, ResourceFactory.createProperty(type));
+    }
+
+    protected String getFacetTitle(FacetEnvironment environment) {
+        return environment.getConfig().get(Facet.FACET_TITLE);
+    }
+
+    protected String getParameterName(FacetEnvironment environment) {
+        return environment.getConfig().get(Facet.PARAM_NAME);
+    }
+
+    // ---------- methods relating to hierarchical facets
+
+    protected FacetState currentHierarchicalState(List<? extends Constraint> constraints,
+                                                  Resource baseResource, Property broaderProperty) {
+
+        FacetStateImpl currentFacetState = new FacetStateImpl();
+        currentFacetState.getConstraints().addAll(constraints);
+
+        List<Resource> resources = facetQueryService.getRefinements(baseResource,
+                broaderProperty, true);
+
+        currentFacetState.setRefinements(hierarchicalRefinements(resources, constraints,
+                currentFacetState));
+
+        return currentFacetState;
+    }
+
+    protected List<FacetState> hierarchicalRefinements(List<Resource> resources,
+                                                       List<? extends Constraint> constraints,
+                                                       FacetState parentState) {
+
+        List<FacetState> refinementList = new ArrayList<FacetState>();
+
+        for (Resource resource : resources) {
+
+            String uri = resource.getURI();
+            String label = null;
+
+            if (resource.hasProperty(RDFS.label)) {
+                label = resource.getProperty(RDFS.label).getLiteral().getLexicalForm();
+            }
+
+            refinementList.add(new FacetStateImpl(label, parentState,
+                    qNameUtility.getQName(uri), constraints));
+        }
+
+        return refinementList;
+    }
+
+    protected List<FacetState> findParents(Resource base, Property property, boolean isBroader) {
+
+        FacetQueryService.Tree results = facetQueryService.getHierarchy(base, property, isBroader);
+
+        //results.
+
+        return null;
+    }
+
+    protected boolean hasUriParameterValue(FacetEnvironment environment) {
+
+        return environment.getParameters().containsKey(environment.getConfig()
+                .get(Facet.PARAM_NAME));
+    }
+
+    protected String getUriFromParameterValue(FacetEnvironment environment) {
+
+        String[] paramStrings = environment.getParameters()
+                .get(environment.getConfig().get(Facet.PARAM_NAME));
+        String uri = paramStrings[0];
+
+        return qNameUtility.expandQName(uri);
+    }
+
+    protected List<? extends Constraint> createHierarchicalConstraintList(FacetEnvironment environment) {
+
+        ValueConstraint typeConstraint = createValueConstraint(environment.getConfig()
+                .get(Facet.CONSTRAINT_TYPE));
+        ValueConstraint linkConstraint = createValueConstraint(environment.getConfig()
+                .get(Facet.LINK_PROPERTY));
+        return Arrays.asList(typeConstraint, linkConstraint);
+    }
+
+    protected Resource createBaseResource(FacetEnvironment environment) {
+        if (hasUriParameterValue(environment)) {
+            String uri = getUriFromParameterValue(environment);
+            return ResourceFactory.createResource(uri);
+        } else {
+            return ResourceFactory.createResource(environment.getConfig()
+                    .get(Facet.FACET_BASE));
+        }
+    }
+
+    protected Property createBroaderProperty(FacetEnvironment environment) {
+        return ResourceFactory.createProperty(environment.getConfig().get(Facet.BROADER_PROPERTY));
+    }
+
+    // ---------- methods relating to alpha numeric facets
 
     /**
      * @return an array of alpha-numeric characters.
@@ -256,5 +298,5 @@ public class FacetFactoryImpl implements FacetFactory {
 
 
     private final FacetQueryService facetQueryService;
-    private QNameUtility qNameUtility;
+    private final QNameUtility qNameUtility;
 }

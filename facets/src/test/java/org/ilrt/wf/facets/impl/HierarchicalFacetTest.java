@@ -149,6 +149,7 @@ public class HierarchicalFacetTest extends AbstractFacetTest {
     }
 
 
+
     // ---------- private variables
 
     private final String testName = "Subjects";

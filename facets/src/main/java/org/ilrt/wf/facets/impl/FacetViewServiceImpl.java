@@ -4,8 +4,8 @@ import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetFactory;
-import org.ilrt.wf.facets.FacetViewService;
 import org.ilrt.wf.facets.FacetView;
+import org.ilrt.wf.facets.FacetViewService;
 import org.ilrt.wf.facets.config.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,10 +43,10 @@ public class FacetViewServiceImpl implements FacetViewService {
 
             // get the facet via the factory and add to the list
             facetView.getFacets().add(facetFactory.create(environment));
-
-            // get the counts
-            facetFactory.calculateCount(facets);
         }
+
+        // get the counts
+        facetFactory.calculateCount(facets);
 
         // add the facets to the view
         facetView.getFacets().addAll(facets);
