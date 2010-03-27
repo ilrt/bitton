@@ -1,12 +1,15 @@
 package org.ilrt.wf.facets.impl;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetQueryService.Tree;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.List;
 
@@ -28,11 +31,15 @@ import static org.junit.Assert.assertTrue;
  *                    D1              D2
  * </pre>
  */
-public class HierarchicalParentTest {
+@RunWith(JMock.class)
+public class HierarchicalParentTest extends AbstractFacetTest {
 
 
     @Before
     public void setUp() {
+
+        FacetQueryService mockFacetQueryService = context.mock(FacetQueryService.class);
+        facetFactory = new FacetFactoryImpl(mockFacetQueryService, getPrefixMap());
 
         node_A = createTestTree();
 
@@ -164,90 +171,104 @@ public class HierarchicalParentTest {
     }
 
     @Test
-    public void willPutTestsHere() {
+    public void searchForNodeA() {
 
-        assertFalse(node_A.isLeaf());
+        List<Resource> path = facetFactory.findChildren(node_A, URI_A);
+
+        assertEquals("Incorrect path size", 1, path.size());
+        assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
     }
 
-    private Tree<Resource> createTestTree() {
+    @Test
+    public void searchForNodeB1() {
 
-        Model model = ModelFactory.createDefaultModel();
+        List<Resource> path = facetFactory.findChildren(node_A, URI_B1);
 
-
-        // create the resources
-
-        Resource resource_A = model.createResource(URI_A);
-        resource_A.addLiteral(RDFS.label, label_A);
-
-        Resource resource_B1 = model.createResource(URI_B1);
-        resource_B1.addLiteral(RDFS.label, label_B1);
-
-        Resource resource_B2 = model.createResource(URI_B2);
-        resource_B2.addLiteral(RDFS.label, label_B2);
-
-        Resource resource_C1 = model.createResource(URI_C1);
-        resource_C1.addLiteral(RDFS.label, label_C1);
-
-        Resource resource_C2 = model.createResource(URI_C2);
-        resource_C2.addLiteral(RDFS.label, label_C2);
-
-        Resource resource_C3 = model.createResource(URI_C3);
-        resource_C3.addLiteral(RDFS.label, label_C3);
-
-        Resource resource_C4 = model.createResource(URI_C4);
-        resource_C4.addLiteral(RDFS.label, label_C4);
-
-        Resource resource_D1 = model.createResource(URI_D1);
-        resource_D1.addLiteral(RDFS.label, label_D1);
-
-        Resource resource_D2 = model.createResource(URI_D2);
-        resource_D2.addLiteral(RDFS.label, label_D2);
-
-        Tree<Resource> tree_A = new Tree<Resource>(resource_A);
-        Tree<Resource> tree_B1 = new Tree<Resource>(resource_B1);
-        Tree<Resource> tree_B2 = new Tree<Resource>(resource_B2);
-        Tree<Resource> tree_C1 = new Tree<Resource>(resource_C1);
-        Tree<Resource> tree_C2 = new Tree<Resource>(resource_C2);
-        Tree<Resource> tree_C3 = new Tree<Resource>(resource_C3);
-        Tree<Resource> tree_C4 = new Tree<Resource>(resource_C4);
-        Tree<Resource> tree_D1 = new Tree<Resource>(resource_D1);
-        Tree<Resource> tree_D2 = new Tree<Resource>(resource_D2);
-
-        tree_A.addChild(tree_B1);
-        tree_A.addChild(tree_B2);
-
-        tree_B1.addChild(tree_C1);
-        tree_B1.addChild(tree_C2);
-
-        tree_B2.addChild(tree_C3);
-        tree_B2.addChild(tree_C4);
-
-        tree_C1.addChild(tree_D1);
-
-        tree_C4.addChild(tree_D2);
-
-        return tree_A;
+        assertEquals("Incorrect path size", 2, path.size());
+        assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
+        assertEquals("Unexpected URI for element", URI_B1, path.get(1).getURI());
     }
 
-    final private String URI_A = "http://example.org/A";
-    final private String URI_B1 = "http://example.org/B1";
-    final private String URI_B2 = "http://example.org/B2";
-    final private String URI_C1 = "http://example.org/C1";
-    final private String URI_C2 = "http://example.org/C2";
-    final private String URI_C3 = "http://example.org/C3";
-    final private String URI_C4 = "http://example.org/C4";
-    final private String URI_D1 = "http://example.org/D1";
-    final private String URI_D2 = "http://example.org/D2";
+    @Test
+    public void searchForNodeC1() {
 
-    final private String label_A = "Node A";
-    final private String label_B1 = "Node B1";
-    final private String label_B2 = "Node B2";
-    final private String label_C1 = "Node C1";
-    final private String label_C2 = "Node C2";
-    final private String label_C3 = "Node C3";
-    final private String label_C4 = "Node C4";
-    final private String label_D1 = "Node D1";
-    final private String label_D2 = "Node D2";
+        List<Resource> path = facetFactory.findChildren(node_A, URI_C1);
+
+        assertEquals("Incorrect path size", 3, path.size());
+        assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
+        assertEquals("Unexpected URI for element", URI_B1, path.get(1).getURI());
+        assertEquals("Unexpected URI for element", URI_C1, path.get(2).getURI());
+    }
+
+    @Test
+    public void searchForNodeD1() {
+
+        List<Resource> path = facetFactory.findChildren(node_A, URI_D1);
+
+        assertEquals("Incorrect path size", 4, path.size());
+        assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
+        assertEquals("Unexpected URI for element", URI_B1, path.get(1).getURI());
+        assertEquals("Unexpected URI for element", URI_C1, path.get(2).getURI());
+        assertEquals("Unexpected URI for element", URI_D1, path.get(3).getURI());
+    }
+
+    @Test
+    public void searchForNodeC2() {
+
+        List<Resource> path = facetFactory.findChildren(node_A, URI_C2);
+
+        assertEquals("Incorrect path size", 3, path.size());
+        assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
+        assertEquals("Unexpected URI for element", URI_B1, path.get(1).getURI());
+        assertEquals("Unexpected URI for element", URI_C2, path.get(2).getURI());
+    }
+
+    @Test
+    public void searchForNodeB2() {
+
+        List<Resource> path = facetFactory.findChildren(node_A, URI_B2);
+
+        assertEquals("Incorrect path size", 2, path.size());
+        assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
+        assertEquals("Unexpected URI for element", URI_B2, path.get(1).getURI());
+    }
+
+    @Test
+    public void searchForNodeC3() {
+
+        List<Resource> path = facetFactory.findChildren(node_A, URI_C3);
+
+        assertEquals("Incorrect path size", 3, path.size());
+        assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
+        assertEquals("Unexpected URI for element", URI_B2, path.get(1).getURI());
+        assertEquals("Unexpected URI for element", URI_C3, path.get(2).getURI());
+    }
+
+    @Test
+    public void searchForNodeC4() {
+
+        List<Resource> path = facetFactory.findChildren(node_A, URI_C4);
+
+        assertEquals("Incorrect path size", 3, path.size());
+        assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
+        assertEquals("Unexpected URI for element", URI_B2, path.get(1).getURI());
+        assertEquals("Unexpected URI for element", URI_C4, path.get(2).getURI());
+    }
+
+    @Test
+    public void searchForNodeD2() {
+
+        List<Resource> path = facetFactory.findChildren(node_A, URI_D2);
+
+        assertEquals("Incorrect path size", 4, path.size());
+        assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
+        assertEquals("Unexpected URI for element", URI_B2, path.get(1).getURI());
+        assertEquals("Unexpected URI for element", URI_C4, path.get(2).getURI());
+        assertEquals("Unexpected URI for element", URI_D2, path.get(3).getURI());
+    }
 
     private Tree<Resource> node_A;
+
+    private FacetFactoryImpl facetFactory;
+    private final Mockery context = new JUnit4Mockery();
 }

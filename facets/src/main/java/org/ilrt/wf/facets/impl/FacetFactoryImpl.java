@@ -10,6 +10,7 @@ import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetFactory;
 import org.ilrt.wf.facets.FacetQueryService;
+import org.ilrt.wf.facets.FacetQueryService.Tree;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.QNameUtility;
 import org.ilrt.wf.facets.constraints.Constraint;
@@ -19,6 +20,7 @@ import org.ilrt.wf.facets.constraints.ValueConstraint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,9 +53,6 @@ public class FacetFactoryImpl implements FacetFactory {
 
     private Facet createHierarchicalFacet(FacetEnvironment environment) {
 
-        // TODO - get the name of the current facet
-        // TODO - get the parents
-
         // constraints used in the facet states of this facet
         List<? extends Constraint> constraints = createHierarchicalConstraintList(environment);
 
@@ -63,9 +62,13 @@ public class FacetFactoryImpl implements FacetFactory {
         // broader property
         Property broaderProperty = createBroaderProperty(environment);
 
-        // create the current state - will include refinements and parents
-        FacetState currentFacetState = currentHierarchicalState(constraints, baseResource,
-                broaderProperty);
+        // TODO - hard coded true = isBroader -> should be derived from configuration?
+        // create the current state - will include refinements
+        FacetStateImpl currentFacetState = currentHierarchicalState(constraints, baseResource,
+                broaderProperty, true);
+
+        findParents(currentFacetState, ResourceFactory.createResource(environment.getConfig()
+                .get(Facet.FACET_BASE)), baseResource, broaderProperty, true);
 
         // create the facet
         return new FacetImpl(getFacetTitle(environment), currentFacetState,
@@ -152,14 +155,16 @@ public class FacetFactoryImpl implements FacetFactory {
 
     // ---------- methods relating to hierarchical facets
 
-    protected FacetState currentHierarchicalState(List<? extends Constraint> constraints,
-                                                  Resource baseResource, Property broaderProperty) {
+    protected FacetStateImpl currentHierarchicalState(List<? extends Constraint> constraints,
+                                                  Resource resource, Property property,
+                                                  boolean isBroader) {
 
         FacetStateImpl currentFacetState = new FacetStateImpl();
+        currentFacetState.setParamValue(qNameUtility.getQName(resource.getURI()));
         currentFacetState.getConstraints().addAll(constraints);
 
-        List<Resource> resources = facetQueryService.getRefinements(baseResource,
-                broaderProperty, true);
+        List<Resource> resources = facetQueryService.getRefinements(resource,
+                property, isBroader);
 
         currentFacetState.setRefinements(hierarchicalRefinements(resources, constraints,
                 currentFacetState));
@@ -189,14 +194,101 @@ public class FacetFactoryImpl implements FacetFactory {
         return refinementList;
     }
 
-    protected List<FacetState> findParents(Resource base, Property property, boolean isBroader) {
+    protected void findParents(FacetStateImpl currentState,
+                               Resource base, Resource current, Property property, boolean isBroader) {
 
-        FacetQueryService.Tree results = facetQueryService.getHierarchy(base, property, isBroader);
+        Tree<Resource> results = facetQueryService.getHierarchy(base, property, isBroader);
 
-        //results.
+        List<Resource> familyHistory = findChildren(results, current.getURI());
 
-        return null;
+        FacetStateImpl parentState = null;
+
+        ListIterator<Resource> iter = familyHistory.listIterator();
+
+        while (iter.hasNext()) {
+
+            // get the next resource in the path
+            Resource resource = iter.next();
+
+            // get the URIs and label
+            String uri = resource.getURI();
+            String label = null;
+
+            if (resource.hasProperty(RDFS.label)) {
+                label = resource.getProperty(RDFS.label).getLiteral().getLexicalForm();
+            }
+
+            // end of the line - so is actually the current state
+            if (!iter.hasNext()) {
+
+                currentState.setName(label);
+                //currentState.setParamValue(qNameUtility.getQName(uri));
+
+                // does the current state have a parent? if not, it's the root
+                if (parentState != null) {
+                    currentState.setParent(parentState);
+                } else {
+                    currentState.setRoot(true);
+                }
+
+            } else { // we are dealing with the parent of the current state
+
+                FacetStateImpl aState = new FacetStateImpl();
+                aState.setName(label);
+                aState.setParamValue(qNameUtility.getQName(uri));
+
+                if (parentState != null) {
+                    aState.setParent(parentState);
+                } else {
+                    aState.setRoot(true);
+                }
+
+                parentState = aState;
+
+            }
+        }
+
     }
+
+    protected List<Resource> findChildren(Tree<Resource> hierarchy, String currentUri) {
+        List<Resource> familyHistory = new ArrayList<Resource>();
+        findChildren(familyHistory, hierarchy, currentUri, 0, true);
+        return familyHistory;
+    }
+
+
+    protected boolean findChildren(List<Resource> path, Tree<Resource> hierarchy, String currentUri,
+                                   int level, boolean follow) {
+
+        if (follow) {
+
+            // anything on the path greater than the current level
+            // is a failed search and can be removed
+            if (path.size() > level) {
+                for (int i = level; i <= path.size(); i++) {
+                    path.remove(level);
+                }
+            }
+
+            // add the current node to the path
+            path.add(level, hierarchy.getValue());
+
+            // have we reached our goal?
+            if (hierarchy.getValue().getURI().equals(currentUri)) {
+                return false;
+            }
+
+            // recursively follow the children ...
+            for (Tree<Resource> tree : hierarchy.getChildren()) {
+                level++;
+                follow = findChildren(path, tree, currentUri, level, follow);
+                level--;
+            }
+        }
+
+        return follow;
+    }
+
 
     protected boolean hasUriParameterValue(FacetEnvironment environment) {
 
