@@ -10,6 +10,7 @@
     <url>http://maven.apache.org</url>
     <modules>
         <module>facets</module>
+        <module>facets-spring3-freemarker</module>
     </modules>
     <properties>
         <junit.version>4.4</junit.version>
