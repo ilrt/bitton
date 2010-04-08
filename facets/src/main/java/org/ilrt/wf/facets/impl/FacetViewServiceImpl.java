@@ -6,7 +6,6 @@ import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetFactory;
 import org.ilrt.wf.facets.FacetView;
 import org.ilrt.wf.facets.FacetViewService;
-import org.ilrt.wf.facets.config.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -18,9 +17,11 @@ import java.util.Map;
  */
 public class FacetViewServiceImpl implements FacetViewService {
 
-    public FacetViewServiceImpl(FacetFactory facetFactory, Configuration configuration, Map<String, String> prefixes) {
+    public FacetViewServiceImpl(FacetFactory facetFactory,
+                                List<Map<String, String>> configurationList,
+                                Map<String, String> prefixes) {
         this.facetFactory = facetFactory;
-        this.configuration = configuration;
+        this.configurationList = configurationList;
         this.prefixes = prefixes;
     }
 
@@ -34,12 +35,10 @@ public class FacetViewServiceImpl implements FacetViewService {
         List<Facet> facets = new ArrayList<Facet>();
 
         // iterate through facet configurations
-        for (String key : configuration.configKeys()) {
+        for (Map<String, String> configuration : configurationList) {
 
             // the facet is affected by its configuration and possibly request parameters
-            FacetEnvironment environment =
-                    new FacetEnvironmentImpl(configuration.getConfiguration(key),
-                            request.getParameterMap(), prefixes);
+            FacetEnvironment environment = environment(configuration, request);
 
             // get the facet via the factory and add to the list
             facetView.getFacets().add(facetFactory.create(environment));
@@ -54,9 +53,13 @@ public class FacetViewServiceImpl implements FacetViewService {
         return facetView;
     }
 
+    @SuppressWarnings(value = "unchecked")
+    private FacetEnvironment environment(Map<String, String> configuration,
+                                         HttpServletRequest request) {
+        return new FacetEnvironmentImpl(configuration, request.getParameterMap(), prefixes);
+    }
+
     final FacetFactory facetFactory;
-    final Configuration configuration;
+    final List<Map<String, String>> configurationList;
     final Map<String, String> prefixes;
-
-
 }

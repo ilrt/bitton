@@ -252,13 +252,10 @@ public class HierarchicalFacetTest extends AbstractFacetTest {
     private final String testName = "Subjects";
     private final String testLinkProperty = "http://xmlns.com/foaf/0.1/topic_interest";
     private final String testBroaderProperty = "http://www.w3.org/2004/02/skos/core#broader";
-    //private final String testFacetBase = "http://www.ilrt.bristol.ac.uk/iugo/subjects/#disciplines";
     private final String testFacetBase = URI_A;
     private final String testConstraintType = "http://www.ilrt.bristol.ac.uk/iugo#MainEvent";
     private final String testParamName = "subjects";
     private final String testPrefix = "iugosubs";
-    private final String subjectUri = "http://example.org/#Subject";
-    private final String subjectLabel = "A Thing";
 
     private final Mockery context = new JUnit4Mockery();
 

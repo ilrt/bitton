@@ -13,10 +13,12 @@
         <module>facets-spring3-freemarker</module>
     </modules>
     <properties>
+        <facets.version>0.1-SNAPSHOT</facets.version>
         <junit.version>4.4</junit.version>
         <facets.version>0.1-SNAPSHOT</facets.version>
         <jena.version>2.6.2</jena.version>
         <spring.version>3.0.1.RELEASE</spring.version>
+        <jmock.version>2.5.1</jmock.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <build>

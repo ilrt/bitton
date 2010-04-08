@@ -1,10 +1,5 @@
 package org.ilrt.wf.facets.impl;
 
-import org.ilrt.wf.facets.FacetFactory;
-import org.ilrt.wf.facets.FacetViewService;
-import org.ilrt.wf.facets.config.Configuration;
-import org.ilrt.wf.facets.impl.FacetViewServiceImpl;
-import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;

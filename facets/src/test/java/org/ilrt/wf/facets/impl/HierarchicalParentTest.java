@@ -30,6 +30,8 @@ import static org.junit.Assert.assertTrue;
  *                     /              \
  *                    D1              D2
  * </pre>
+ *
+ * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
 @RunWith(JMock.class)
 public class HierarchicalParentTest extends AbstractFacetTest {
