@@ -13,7 +13,7 @@
     <!-- Freemarker configuration -->
 
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-        <property name="templateLoaderPath" value="/WEB-INF/templates/"/>
+        <property name="templateLoaderPath" value="/WEB-INF/classes/templates/"/>
     </bean>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">

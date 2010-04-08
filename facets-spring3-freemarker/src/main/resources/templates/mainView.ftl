@@ -1,6 +1,5 @@
 <#include "includes/header.ftl"/>
 
-<p>YES!</p>
-<p>WOOT!</p>
+<p>${message}</p>
 
 <#include "includes/footer.ftl"/>

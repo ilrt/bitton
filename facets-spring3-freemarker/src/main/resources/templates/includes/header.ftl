@@ -7,8 +7,6 @@
 <head>
     <title>Research Revealed</title>
 
-    ${message}
-
     <link rel="stylesheet" href="${contextPath}/style/style.css"/>
     
 </head>
