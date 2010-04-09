@@ -4,6 +4,7 @@ import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetView;
 import org.ilrt.wf.facets.SearchFilter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +51,6 @@ public class FacetViewImpl implements FacetView {
     }
 
     private int total;
-    private List<Facet> facets;
+    private List<Facet> facets = new ArrayList<Facet>();
     private SearchFilter searchFilter;
 }

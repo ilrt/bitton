@@ -4,6 +4,9 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.ilrt.wf.facets.impl.FacetImpl;
+import org.ilrt.wf.facets.impl.FacetStateImpl;
+import org.ilrt.wf.facets.impl.FacetViewImpl;
 import org.ilrt.wf.facets.web.spring.controllers.AbstractController;
 import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
@@ -26,21 +29,30 @@ public class FreeMarkerTest {
     public void test() throws IOException, TemplateException {
 
         Configuration configuration = new Configuration();
-        configuration.setDirectoryForTemplateLoading(new File(getClass().getResource("/templates/")
-                .getFile()));
+        configuration.setDirectoryForTemplateLoading(new File(getClass().getResource(TEMPLATES_PATH).getFile()));
         configuration.setObjectWrapper(new DefaultObjectWrapper());
 
+        ModelAndView mav = new ModelAndView(TEST_VIEW_NAME);
+        mav.addObject(AbstractController.CONTEXT_PATH_KEY, TEST_CONTEXT_PATH);
 
-        ModelAndView mav = new ModelAndView("mainView");
-        mav.addObject(AbstractController.CONTEXT_PATH_KEY, "/resrev");
-        //mav.addObject(FACET_VIEW_KEY, facetView);
-        mav.addObject("message", "Hello World!");
-        //return mav;
+        FacetViewImpl facetView = new FacetViewImpl();
 
-        //Map<String, String> mav = new HashMap<String, String>();
-        //mav.put("message", "Hello!");
 
-        Template template = configuration.getTemplate("mainView.ftl");
+        //FacetStateImpl facetOneRootState = new FacetStateImpl();
+        //facetOneRootState.setRoot(true);
+
+        FacetImpl facetOne = new FacetImpl("Departments", null, "depts");
+        FacetImpl facetTwo = new FacetImpl("Subject Areas", null, "subject");
+        FacetImpl facetThree = new FacetImpl("Staff Names", null, "names");
+
+        facetView.getFacets().add(facetOne);
+        facetView.getFacets().add(facetTwo);
+        facetView.getFacets().add(facetThree);
+
+
+        mav.addObject("facetView", facetView);
+
+        Template template = configuration.getTemplate(TEMPLATE_NAME);
 
         Writer writer = new OutputStreamWriter(System.out);
 
@@ -49,5 +61,10 @@ public class FreeMarkerTest {
 
         assertTrue(true);
     }
+
+    private final String TEMPLATES_PATH = "/templates/";
+    private final String TEMPLATE_NAME = "includes/facet.ftl";
+    private final String TEST_VIEW_NAME = "mainView";
+    private final String TEST_CONTEXT_PATH = "/resrev";
 
 }
