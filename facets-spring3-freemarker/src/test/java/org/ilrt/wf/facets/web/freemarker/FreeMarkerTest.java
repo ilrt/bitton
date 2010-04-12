@@ -4,6 +4,7 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.impl.FacetImpl;
 import org.ilrt.wf.facets.impl.FacetStateImpl;
 import org.ilrt.wf.facets.impl.FacetViewImpl;
@@ -41,7 +42,25 @@ public class FreeMarkerTest {
         //FacetStateImpl facetOneRootState = new FacetStateImpl();
         //facetOneRootState.setRoot(true);
 
-        FacetImpl facetOne = new FacetImpl("Departments", null, "depts");
+
+        FacetStateImpl facetOneRootState = new FacetStateImpl();
+        facetOneRootState.setRoot(true);
+
+        FacetState facetOneRefinementOne = createTestState(false, "History", "http://example.org/subjects#history",
+                10, facetOneRootState);
+        facetOneRootState.getRefinements().add(facetOneRefinementOne);
+
+        FacetState facetOneRefinementTwo = createTestState(false, "Geography", "http://example.org/subjects#geography",
+                10, facetOneRootState);
+        facetOneRootState.getRefinements().add(facetOneRefinementTwo);
+
+
+
+        FacetImpl facetOne = new FacetImpl("Departments", facetOneRootState, "depts");
+
+
+
+
         FacetImpl facetTwo = new FacetImpl("Subject Areas", null, "subject");
         FacetImpl facetThree = new FacetImpl("Staff Names", null, "names");
 
@@ -61,6 +80,17 @@ public class FreeMarkerTest {
 
         assertTrue(true);
     }
+
+    private FacetState createTestState(boolean isRoot, String name, String paramValue, int count, FacetState parent) {
+        FacetStateImpl state = new FacetStateImpl();
+        state.setRoot(isRoot);
+        state.setName(name);
+        state.setParamValue(paramValue);
+        state.setCount(count);
+        state.setParent(parent);
+        return state;
+    }
+
 
     private final String TEMPLATES_PATH = "/templates/";
     private final String TEMPLATE_NAME = "includes/facet.ftl";
