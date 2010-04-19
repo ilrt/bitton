@@ -34,8 +34,13 @@ public class FacetStateUrlMethodTest {
 
         MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
-        List<MockHttpServletRequest> args = new ArrayList<MockHttpServletRequest>();
+        String key = "subjects";
+        String value = "subjects:history";
+
+        List<Object> args = new ArrayList<Object>();
         args.add(httpServletRequest);
+        args.add(key);
+        args.add(value);
 
         FacetStateUrlMethod facetStateUrlMethod = new FacetStateUrlMethod();
         SimpleScalar scalar = (SimpleScalar) facetStateUrlMethod.exec(args);
