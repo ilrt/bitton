@@ -19,9 +19,9 @@ public class FacetStateUrlMethodTest {
     @Before
     public void setUp() {
         args = new ArrayList<Object>();
-        facetStateUrlMethod = new FacetStateUrlMethod();
-        httpServletRequest = new MockHttpServletRequest();
-        httpRequestHashModel = new HttpRequestHashModel(httpServletRequest,
+        method = new FacetStateUrlMethod();
+        request = new MockHttpServletRequest();
+        requestHashModel = new HttpRequestHashModel(request,
                 new DefaultObjectWrapper());
     }
 
@@ -29,27 +29,27 @@ public class FacetStateUrlMethodTest {
     public void invalidNoArguments() throws TemplateModelException {
 
         // execute with no arguments
-        facetStateUrlMethod.exec(args);
+        method.exec(args);
     }
 
     @Test(expected = TemplateModelException.class)
     public void invalidIncorrectArgumentSize() throws TemplateModelException {
 
         // execute with the incorrect number of arguments
-        args.add(httpRequestHashModel);
+        args.add(requestHashModel);
         args.add("arg1");
-        facetStateUrlMethod.exec(args);
+        method.exec(args);
     }
 
     @Test(expected = TemplateModelException.class)
     public void invalidIncorrectArgumentSize2() throws TemplateModelException {
 
         // execute with the incorrect number of arguments
-        args.add(httpRequestHashModel);
+        args.add(requestHashModel);
         args.add(new SimpleScalar("arg1"));
         args.add(new SimpleScalar("arg2"));
         args.add(new SimpleScalar("arg3"));  // one too many
-        facetStateUrlMethod.exec(args);
+        method.exec(args);
     }
 
 
@@ -58,27 +58,27 @@ public class FacetStateUrlMethodTest {
 
         // execute with incorrect argument type
         args.add(new Object()); // incorrect
-        facetStateUrlMethod.exec(args);
+        method.exec(args);
     }
 
     @Test(expected = TemplateModelException.class)
     public void invalidIncorrectArgument2() throws TemplateModelException {
 
         // execute with incorrect argument type
-        args.add(httpRequestHashModel);
+        args.add(requestHashModel);
         args.add(new SimpleScalar("arg1"));
         args.add(new Object()); // incorrect
-        facetStateUrlMethod.exec(args);
+        method.exec(args);
     }
 
     @Test
     public void testNoParameterValues() throws TemplateModelException {
 
-        httpServletRequest.setRequestURI(baseUri);
+        request.setRequestURI(baseUri);
 
-        args.add(httpRequestHashModel);
+        args.add(requestHashModel);
 
-        SimpleScalar scalar = (SimpleScalar) facetStateUrlMethod.exec(args);
+        SimpleScalar scalar = (SimpleScalar) method.exec(args);
 
         assertEquals("Unexpected url", baseUri, scalar.getAsString());
     }
@@ -88,13 +88,13 @@ public class FacetStateUrlMethodTest {
 
         final String expectedUrl = baseUri + "?" + key + "=" + historyValue;
 
-        httpServletRequest.setRequestURI(baseUri);
+        request.setRequestURI(baseUri);
 
-        args.add(httpRequestHashModel);
+        args.add(requestHashModel);
         args.add(new SimpleScalar(key));
         args.add(new SimpleScalar(historyValue));
 
-        SimpleScalar scalar = (SimpleScalar) facetStateUrlMethod.exec(args);
+        SimpleScalar scalar = (SimpleScalar) method.exec(args);
 
         assertEquals("Unexpected url", expectedUrl, scalar.getAsString());
     }
@@ -105,14 +105,14 @@ public class FacetStateUrlMethodTest {
         final String expectedUrl = baseUri + "?" + fooKey + "=" + barValue + "&amp;"
                 + key + "=" + historyValue;
 
-        httpServletRequest.setRequestURI(baseUri);
-        httpServletRequest.addParameter(fooKey, barValue);
+        request.setRequestURI(baseUri);
+        request.addParameter(fooKey, barValue);
 
-        args.add(httpRequestHashModel);
+        args.add(requestHashModel);
         args.add(new SimpleScalar(key));
         args.add(new SimpleScalar(historyValue));
 
-        SimpleScalar scalar = (SimpleScalar) facetStateUrlMethod.exec(args);
+        SimpleScalar scalar = (SimpleScalar) method.exec(args);
 
         assertEquals("Unexpected url", expectedUrl, scalar.getAsString());
     }
@@ -125,15 +125,15 @@ public class FacetStateUrlMethodTest {
         final String expectedUrl = baseUri + "?" + key + "=" + replacementValue;
 
         // set the request with an initial replacementValue
-        httpServletRequest.setRequestURI(baseUri);
-        httpServletRequest.addParameter(key, historyValue);
-        args.add(httpRequestHashModel);
+        request.setRequestURI(baseUri);
+        request.addParameter(key, historyValue);
+        args.add(requestHashModel);
 
         // key/value that should replace the value above in the new URL
         args.add(new SimpleScalar(key));
         args.add(new SimpleScalar(replacementValue));
 
-        SimpleScalar scalar = (SimpleScalar) facetStateUrlMethod.exec(args);
+        SimpleScalar scalar = (SimpleScalar) method.exec(args);
 
         assertEquals("Unexpected url", expectedUrl, scalar.getAsString());
     }
@@ -148,30 +148,30 @@ public class FacetStateUrlMethodTest {
                 + key + "=" + replacementValue;
 
         // set the request with an initial replacementValue
-        httpServletRequest.setRequestURI(baseUri);
-        httpServletRequest.addParameter(key, historyValue);
-        httpServletRequest.addParameter(fooKey, barValue);
-        args.add(httpRequestHashModel);
+        request.setRequestURI(baseUri);
+        request.addParameter(key, historyValue);
+        request.addParameter(fooKey, barValue);
+        args.add(requestHashModel);
 
         // key/value that should replace the value above in the new URL
         args.add(new SimpleScalar(key));
         args.add(new SimpleScalar(replacementValue));
 
-        SimpleScalar scalar = (SimpleScalar) facetStateUrlMethod.exec(args);
+        SimpleScalar scalar = (SimpleScalar) method.exec(args);
 
         assertEquals("Unexpected url", expectedUrl, scalar.getAsString());
     }
 
 
-    final String baseUri = "/list.do";
-    final String key = "subjects";
-    final String historyValue = "subjects:History";
+    private final String baseUri = "/list.do";
+    private final String key = "subjects";
+    private final String historyValue = "subjects:History";
 
-    final String fooKey = "foo";
-    final String barValue = "bar";
+    private final String fooKey = "foo";
+    private final String barValue = "bar";
 
-    List<Object> args;
-    FacetStateUrlMethod facetStateUrlMethod;
-    MockHttpServletRequest httpServletRequest;
-    HttpRequestHashModel httpRequestHashModel;
+    private List<Object> args;
+    private FacetStateUrlMethod method;
+    private MockHttpServletRequest request;
+    private HttpRequestHashModel requestHashModel;
 }
