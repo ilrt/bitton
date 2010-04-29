@@ -1,4 +1,4 @@
-package org.ilrt.wf.facets.web.freemarker;
+package org.ilrt.wf.facets.web.freemarker.templates;
 
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.template.Configuration;
@@ -13,16 +13,13 @@ import org.ilrt.wf.facets.freemarker.FacetStateUrlMethod;
 import org.ilrt.wf.facets.impl.FacetImpl;
 import org.ilrt.wf.facets.impl.FacetStateImpl;
 import org.ilrt.wf.facets.impl.FacetViewImpl;
-import org.ilrt.wf.facets.web.spring.controllers.AbstractController;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.xml.sax.InputSource;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -30,33 +27,35 @@ import java.io.StringWriter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class FacetTemplateTest {
+/**
+ * A test to check the FreeMarker template for rendering facet states. We don't check all facets, just a
+ * few key templates.
+ * <p/>
+ * The facets are displayed in nested lists - we create mock data that represent different possible states
+ * and use XPath to check we have the expected results.
+ *
+ * @author Mike Jones (mike.a.jones@bristol.ac.uk)
+ */
+public class FacetTemplateTest extends AbstractTemplateTest {
 
     @Test
     public void test() throws IOException, TemplateException, XPathExpressionException {
 
-        // wrapper used by freemarker
+        // wrapper used by FreeMarker
         ObjectWrapper wrapper = new DefaultObjectWrapper();
 
         // configure to find templates
-        Configuration configuration = new Configuration();
-        configuration.setDirectoryForTemplateLoading(new File(getClass()
-                .getResource(TEMPLATES_PATH).getFile()));
-        configuration.setObjectWrapper(wrapper);
+        Configuration configuration = createTestConfiguration(wrapper);
 
         // mock the http request
-        MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
-        httpServletRequest.setRequestURI(baseUri);
-        HttpRequestHashModel requestHashModel = new HttpRequestHashModel(httpServletRequest,
-                wrapper);
+        HttpRequestHashModel requestHashModel = createHttpRequestHashModel(wrapper);
+
 
         // create a model and view
-        ModelAndView mav = new ModelAndView(TEST_VIEW_NAME);
-        mav.addObject(AbstractController.CONTEXT_PATH_KEY, TEST_CONTEXT_PATH);
+        ModelAndView mav = createModelAndView();
 
         // should be added by the framework?
         mav.addObject("Request", requestHashModel);
-
 
         // mock view object
         FacetViewImpl facetView = new FacetViewImpl();
@@ -64,8 +63,7 @@ public class FacetTemplateTest {
 
         // ---------- departments facet
 
-        FacetStateImpl facetOneRootState = new FacetStateImpl();
-        facetOneRootState.setRoot(true);
+        FacetState facetOneRootState = createTestState(true, null, null, 0, null);
 
         FacetState facetOneRefinementOne = createTestState(false, "History and Archeology", "depts:history",
                 10, facetOneRootState);
@@ -80,8 +78,7 @@ public class FacetTemplateTest {
 
         // ----------- subjects facet
 
-        FacetStateImpl facetTwoParentState = new FacetStateImpl();
-        facetTwoParentState.setRoot(true);
+        FacetState facetTwoParentState = createTestState(true, null, null, 0, null);
 
         FacetState parentState = createTestState(false, "History", "subjects:history", 0,
                 facetTwoParentState);
@@ -100,26 +97,24 @@ public class FacetTemplateTest {
         currentState.getRefinements().add(refinementTwo);
         currentState.getRefinements().add(refinementThree);
 
-        Facet facetTwo = new FacetImpl("Subject Areas", currentState, "subjects");
+        Facet facetTwo = new FacetImpl(subjects_title, currentState, "subjects");
 
 
         // ------------ alpha numeric
 
-        FacetStateImpl facetThreeParentState = new FacetStateImpl();
-        facetThreeParentState.setRoot(true);
+        FacetState facetThreeParentState = createTestState(true, null, null, 0, null);
 
         FacetState facetThreeCurrentState = createTestState(false, "Z*", "z*", 0,
                 facetThreeParentState);
 
-        Facet facetThree = new FacetImpl("Staff", facetThreeCurrentState, "staff");
+        Facet facetThree = new FacetImpl(staff_title, facetThreeCurrentState, "staff");
 
 
         // ------------- a completely selected hierarchical facet
 
-        FacetStateImpl facetFourRootState = new FacetStateImpl();
-        facetFourRootState.setRoot(true);
+        FacetState facetFourRootState = createTestState(true, null, null, 0, null);
 
-        FacetState facetFourGreatGrandparentState = createTestState(false, "Europe", "loc:europe",
+        FacetState facetFourGreatGrandparentState = createTestState(false, europe_title, "loc:europe",
                 0, facetFourRootState);
 
         FacetState facetFourGrandparentState = createTestState(false, "United Kingdom", "loc:uk",
@@ -128,10 +123,10 @@ public class FacetTemplateTest {
         FacetState facetFourParentState = createTestState(false, "England", "loc:england",
                 0, facetFourGrandparentState);
 
-        FacetState facetFourCurrentState = createTestState(false, "Bristol", "loc:bristol",
+        FacetState facetFourCurrentState = createTestState(false, bristol_label, "loc:bristol",
                 0, facetFourParentState);
 
-        Facet facetFour = new FacetImpl("Location", facetFourCurrentState, "location");
+        Facet facetFour = new FacetImpl(location_title, facetFourCurrentState, "location");
 
 
         // ---------- add to view
@@ -157,7 +152,7 @@ public class FacetTemplateTest {
 
         writer.flush();
 
-        //System.out.println(output);
+        System.out.println(output);
 
         XPath engine = XPathFactory.newInstance().newXPath();
 
@@ -183,7 +178,7 @@ public class FacetTemplateTest {
                         new InputSource(new StringReader(output))));
 
         // check title of the second div - subjects
-        assertEquals("Unexpected title", "Subject Areas", engine.evaluate("/div/div[2]/h3/text()",
+        assertEquals("Unexpected title", subjects_title, engine.evaluate("/div/div[2]/h3/text()",
                 new InputSource(new StringReader(output))));
 
         // check the selected subject
@@ -196,7 +191,7 @@ public class FacetTemplateTest {
                         new InputSource(new StringReader(output))));
 
         // check title of the third div - staff
-        assertEquals("Unexpected title", "Staff", engine.evaluate("/div/div[3]/h3/text()",
+        assertEquals("Unexpected title", staff_title, engine.evaluate("/div/div[3]/h3/text()",
                 new InputSource(new StringReader(output))));
 
         // check the selected letter for staff
@@ -204,18 +199,18 @@ public class FacetTemplateTest {
                 new InputSource(new StringReader(output))).startsWith("Z*"));
 
         // check title of the fourth div - location
-        assertEquals("Unexpected title", "Location", engine.evaluate("/div/div[4]/h3/text()",
+        assertEquals("Unexpected title", location_title, engine.evaluate("/div/div[4]/h3/text()",
                 new InputSource(new StringReader(output))));
 
 
         // check the top selected location
         assertTrue(engine.evaluate("/div/div[4]/ul/li/text()",
-                new InputSource(new StringReader(output))).startsWith("Europe"));
+                new InputSource(new StringReader(output))).startsWith(europe_title));
 
 
         // check the latest selected location
         assertTrue(engine.evaluate("/div/div[4]/ul/li/ul/li/ul/li/ul/li/text()",
-                new InputSource(new StringReader(output))).startsWith("Bristol"));
+                new InputSource(new StringReader(output))).startsWith(bristol_label));
 
     }
 
@@ -230,14 +225,13 @@ public class FacetTemplateTest {
         return state;
     }
 
-
-    private final String TEMPLATES_PATH = "/templates/";
     private final String TEMPLATE_NAME = "includes/facet.ftl";
-    private final String TEST_VIEW_NAME = "mainView";
-    private final String TEST_CONTEXT_PATH = "/resrev";
-
-    private final String baseUri = "/list.do";
 
     private final String departments_title = "Departments";
+    private final String subjects_title = "Subject Areas";
+    private final String staff_title = "Staff";
+    private final String location_title = "Location";
+    private final String europe_title = "Europe";
+    private final String bristol_label = "Bristol";
 
 }

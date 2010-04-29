@@ -31,6 +31,8 @@ public class FacetViewServiceImpl implements FacetViewService {
         // the view that will be returned
         FacetView facetView = new FacetViewImpl();
 
+        // ---------- facet creation
+
         // holds facets to be displayed for the request
         List<Facet> facets = new ArrayList<Facet>();
 
@@ -49,6 +51,10 @@ public class FacetViewServiceImpl implements FacetViewService {
 
         // add the facets to the view
         facetView.getFacets().addAll(facets);
+
+        // ---------- results list
+
+        
 
         return facetView;
     }

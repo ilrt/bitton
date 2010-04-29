@@ -15,6 +15,11 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Test the FreeMarker method used to determine any parents for a facet state.
+ *
+ * @author Mike Jones (mike.a.jones@bristol.ac.uk)
+ */
 public class FacetParentListMethodTest {
 
     @Before

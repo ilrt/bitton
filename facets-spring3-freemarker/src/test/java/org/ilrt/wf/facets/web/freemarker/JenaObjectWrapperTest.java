@@ -11,6 +11,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test the custom object for wrapping Jena objects.
+ *
+ * @author Mike Jones (mike.a.jones@bristol.ac.uk)
+ */
 public class JenaObjectWrapperTest {
 
     @Test

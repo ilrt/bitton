@@ -14,6 +14,11 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Test the FreeMarker method used to create URLs within a facet.
+ *
+ * @author Mike Jones (mike.a.jones@bristol.ac.uk)
+ */
 public class FacetStateUrlMethodTest {
 
     @Before

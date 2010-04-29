@@ -19,6 +19,11 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+/**
+ * Test the FreeMarker template class used to wrap a resource in a hash.
+ *
+ * @author Mike Jones (mike.a.jones@bristol.ac.uk)
+ */
 public class ResourceHashModelTest {
 
     @Before
