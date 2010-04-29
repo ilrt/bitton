@@ -9,6 +9,8 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import freemarker.template.SimpleCollection;
+import freemarker.template.SimpleDate;
+import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
@@ -17,21 +19,22 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Class to help display a Jena Resource in a freemarker template. For example, for the
  * following triple:
- *
+ * <p/>
  * &lt;http://example.org/1/&gt; &lt;http://www.w3.org/2000/01/rdf-schema#label&gt; "Example Label" .
- *
+ * <p/>
  * The following freemarker syntax:
- *
+ * <p/>
  * &lt;p&gt;${resource}&lt;p&gt;
  * &lt;p&gt;${resource['http://www.w3.org/2000/01/rdf-schema#label']}&lt;p&gt;
  * &lt;p&gt;${resource['rdfs#label']}&lt;p&gt;
- *
+ * <p/>
  * Would produce:
- *
+ * <p/>
  * &lt;p&gt;http://example.org/1/&lt;p&gt;
  * &lt;p&gt;Example Label&lt;p&gt;
  * &lt;p&gt;Example Label&lt;p&gt;
@@ -97,7 +100,8 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
     @Override
     public TemplateModel get(String s) throws TemplateModelException {
 
-        //System.out.println(s);
+        System.out.println(">> " + resource.getURI());
+        System.out.println("> " + s);
 
         if (s.equals("uri")) {
             return new SimpleScalar(resource.getURI());
@@ -112,9 +116,23 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
         RDFNode node = stmt.getObject();
 
         if (node.isLiteral()) {
+
+            Object value = ((Literal) node).getValue();
+
+            if (value instanceof Integer) {
+                return new SimpleNumber((Integer) value);
+            } else if (value instanceof Float) {
+                return new SimpleNumber((Float) value);
+            } else if (value instanceof Short) {
+                return new SimpleNumber((Short) value);
+            } else if (value instanceof Long) {
+                return new SimpleNumber((Long) value);
+            } else if (value instanceof Double) {
+                return new SimpleNumber((Double) value);
+            } 
             return new SimpleScalar(((Literal) node).getLexicalForm());
         } else if (node.isResource()) {
-            return new SimpleScalar(((Resource) node).getURI());
+            return new ResourceHashModel(((Resource) node));
         }
 
         return null;

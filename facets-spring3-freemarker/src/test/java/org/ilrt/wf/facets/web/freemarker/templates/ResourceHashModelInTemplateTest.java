@@ -2,7 +2,9 @@ package org.ilrt.wf.facets.web.freemarker.templates;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
@@ -41,8 +43,25 @@ public class ResourceHashModelInTemplateTest {
         ModelAndView mav = new ModelAndView();
 
         Model model = ModelFactory.createDefaultModel();
+
+        // resources
         Resource resource = model.createResource("http://example.org/1/");
-        resource.addLiteral(RDFS.label, "Example Label");
+        Resource person = model.createResource("http://example.org/person/1");
+
+        // properties
+        Property hasPersonProperty = model.createProperty(hasPersonUri);
+        Property foafNameProperty = model.createProperty(foafName);
+
+        // statements
+        Statement stmtOne = model.createStatement(resource, RDFS.label, "Example Label");
+        Statement stmtTwo = model.createStatement(resource, hasPersonProperty, person);
+        Statement stmtThree = model.createStatement(person, foafNameProperty, "Fred Smith");
+
+        model.add(stmtOne);
+        model.add(stmtTwo);
+        model.add(stmtThree);
+
+        System.out.println(model.toString());
 
         mav.addObject("resource", resource);
 
@@ -63,4 +82,7 @@ public class ResourceHashModelInTemplateTest {
 
     private final String TEMPLATES_PATH = "/templates/";
     private final String TEMPLATE_NAME = "resourceTest.ftl";
+
+    private String hasPersonUri = "http://example.org/schema#hasPerson";
+    private String foafName = "http://xmlns.com/foaf/0.1/name";
 }
