@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Abstract class with helper methods for running tests with FreeMarker templates.
+ * Abstract class with helper methods for running tests with FreeMarker test_templates.
  *
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
@@ -25,10 +25,15 @@ public abstract class AbstractTemplateTest {
      * @throws IOException if the template directory cannot be found.
      */
     Configuration createTestConfiguration(ObjectWrapper wrapper) throws IOException {
+        return createTestConfiguration(wrapper, TEMPLATES_PATH);
+    }
+
+    Configuration createTestConfiguration(ObjectWrapper wrapper, String templatePath)
+            throws IOException {
 
         Configuration configuration = new Configuration();
         configuration.setDirectoryForTemplateLoading(new File(getClass()
-                .getResource(TEMPLATES_PATH).getFile()));
+                .getResource(templatePath).getFile()));
         configuration.setObjectWrapper(wrapper);
         return configuration;
     }
@@ -57,8 +62,8 @@ public abstract class AbstractTemplateTest {
         return mav;
     }
 
-    final String TEMPLATES_PATH = "/templates/";
-    final String TEST_CONTEXT_PATH = "/resrev";
+    private final String TEMPLATES_PATH = "/templates/";
+    private final String TEST_CONTEXT_PATH = "/resrev";
     private final String TEST_VIEW_NAME = "mainView";
     private final String baseUri = "/list.do";
 }

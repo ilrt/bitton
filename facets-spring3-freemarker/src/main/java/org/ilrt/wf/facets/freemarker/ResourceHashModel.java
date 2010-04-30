@@ -1,5 +1,6 @@
 package org.ilrt.wf.facets.freemarker;
 
+import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -13,12 +14,14 @@ import freemarker.template.SimpleDate;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateCollectionModel;
+import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -100,13 +103,6 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
     @Override
     public TemplateModel get(String s) throws TemplateModelException {
 
-        System.out.println(">> " + resource.getURI());
-        System.out.println("> " + s);
-
-        if (s.equals("uri")) {
-            return new SimpleScalar(resource.getURI());
-        }
-
         String uri = prefixMapping.expandPrefix(s);
 
         Property property = ResourceFactory.createProperty(uri);
@@ -119,7 +115,9 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
 
             Object value = ((Literal) node).getValue();
 
-            if (value instanceof Integer) {
+            if (value instanceof String) {
+                return new SimpleScalar((String) value);
+            } else if (value instanceof Integer) {
                 return new SimpleNumber((Integer) value);
             } else if (value instanceof Float) {
                 return new SimpleNumber((Float) value);
@@ -129,8 +127,18 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
                 return new SimpleNumber((Long) value);
             } else if (value instanceof Double) {
                 return new SimpleNumber((Double) value);
-            } 
+            } else if (value instanceof Date) {
+                return new SimpleDate((Date) value, TemplateDateModel.UNKNOWN);
+            } else if (value instanceof Calendar) {
+                return new SimpleDate(((Calendar) value).getTime(), TemplateDateModel.UNKNOWN);
+            } else if (value instanceof XSDDateTime) {
+                return new SimpleDate(((XSDDateTime) value).asCalendar().getTime(),
+                        TemplateDateModel.DATETIME);
+            }
+
             return new SimpleScalar(((Literal) node).getLexicalForm());
+
+
         } else if (node.isResource()) {
             return new ResourceHashModel(((Resource) node));
         }

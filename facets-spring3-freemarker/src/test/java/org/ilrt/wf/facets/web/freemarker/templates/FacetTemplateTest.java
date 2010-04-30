@@ -2,7 +2,6 @@ package org.ilrt.wf.facets.web.freemarker.templates;
 
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -10,6 +9,7 @@ import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.freemarker.FacetParentListMethod;
 import org.ilrt.wf.facets.freemarker.FacetStateUrlMethod;
+import org.ilrt.wf.facets.freemarker.JenaObjectWrapper;
 import org.ilrt.wf.facets.impl.FacetImpl;
 import org.ilrt.wf.facets.impl.FacetStateImpl;
 import org.ilrt.wf.facets.impl.FacetViewImpl;
@@ -20,6 +20,7 @@ import org.xml.sax.InputSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -29,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * A test to check the FreeMarker template for rendering facet states. We don't check all facets, just a
- * few key templates.
+ * few key test_templates.
  * <p/>
  * The facets are displayed in nested lists - we create mock data that represent different possible states
  * and use XPath to check we have the expected results.
@@ -42,14 +43,13 @@ public class FacetTemplateTest extends AbstractTemplateTest {
     public void test() throws IOException, TemplateException, XPathExpressionException {
 
         // wrapper used by FreeMarker
-        ObjectWrapper wrapper = new DefaultObjectWrapper();
+        ObjectWrapper wrapper = new JenaObjectWrapper();
 
-        // configure to find templates
+        // configure to find test_templates
         Configuration configuration = createTestConfiguration(wrapper);
 
         // mock the http request
         HttpRequestHashModel requestHashModel = createHttpRequestHashModel(wrapper);
-
 
         // create a model and view
         ModelAndView mav = createModelAndView();
@@ -152,7 +152,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
 
         writer.flush();
 
-        System.out.println(output);
+        //System.out.println(output);
 
         XPath engine = XPathFactory.newInstance().newXPath();
 

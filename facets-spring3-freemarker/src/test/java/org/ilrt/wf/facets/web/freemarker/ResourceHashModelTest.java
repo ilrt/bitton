@@ -2,7 +2,6 @@ package org.ilrt.wf.facets.web.freemarker;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import freemarker.template.SimpleScalar;
@@ -109,7 +108,6 @@ public class ResourceHashModelTest {
 
     private String uri = "http://example.org/1/";
     private String label = "This is a label";
-
 
 
     private ResourceHashModel resourceHashModel;

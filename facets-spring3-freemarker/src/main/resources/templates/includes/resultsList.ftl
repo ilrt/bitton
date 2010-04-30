@@ -1,9 +1,5 @@
-<#-- @ftlvariable name="results" type="java.util.List" -->
-
-<p>Hello</p>
-
-<p>${results?size}</p>
-
+<div id="results">
 <#list results as result>
-${result.label}
+    <p class="result">${result['rdfs:label']}</p>
 </#list>
+</div>

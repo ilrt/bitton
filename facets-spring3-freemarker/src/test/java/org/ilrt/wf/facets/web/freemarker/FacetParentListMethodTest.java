@@ -68,7 +68,7 @@ public class FacetParentListMethodTest {
     }
 
 
-        @Test
+    @Test
     public void testParents() throws TemplateModelException {
 
         final String grandParentLabel = "Grandparent";

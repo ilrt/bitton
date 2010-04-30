@@ -4,40 +4,39 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import org.ilrt.wf.facets.freemarker.JenaObjectWrapper;
 import org.junit.Test;
 import org.springframework.web.servlet.ModelAndView;
+import org.xml.sax.InputSource;
 
-import java.io.File;
-import java.io.IOException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test for the objects that wrap Jena objects so they can be rendered in a FreeMarker template.
  *
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
-public class ResourceHashModelInTemplateTest {
+public class ResourceHashModelInTemplateTest extends AbstractTemplateTest {
 
     @Test
-    public void test() throws IOException, TemplateException {
+    public void test() throws Exception {
 
         // wrapper used by FreeMarker
         ObjectWrapper wrapper = new JenaObjectWrapper();
 
-        // configure to find templates
-        Configuration configuration = new Configuration();
-        configuration.setDirectoryForTemplateLoading(new File(getClass()
-                .getResource(TEMPLATES_PATH).getFile()));
-        configuration.setObjectWrapper(wrapper);
+        // configure to find test_templates
+        Configuration configuration = createTestConfiguration(wrapper, TEMPLATES_PATH);
 
         // create a model and view
         ModelAndView mav = new ModelAndView();
@@ -45,23 +44,27 @@ public class ResourceHashModelInTemplateTest {
         Model model = ModelFactory.createDefaultModel();
 
         // resources
-        Resource resource = model.createResource("http://example.org/1/");
-        Resource person = model.createResource("http://example.org/person/1");
+        Resource resource = model.createResource(resourceUri);
+        Resource person = model.createResource(personUri);
 
         // properties
         Property hasPersonProperty = model.createProperty(hasPersonUri);
         Property foafNameProperty = model.createProperty(foafName);
+        Property hasAgeInYearsProperty = model.createProperty(hasAgeInYears);
+        Property lastSeenProperty = model.createProperty(lastSeen);
 
         // statements
-        Statement stmtOne = model.createStatement(resource, RDFS.label, "Example Label");
-        Statement stmtTwo = model.createStatement(resource, hasPersonProperty, person);
-        Statement stmtThree = model.createStatement(person, foafNameProperty, "Fred Smith");
+        model.add(model.createLiteralStatement(resource, RDFS.label, label));
+        model.add(model.createStatement(resource, hasPersonProperty, person));
+        model.add(model.createLiteralStatement(person, foafNameProperty, name));
+        int age = 38;
+        model.add(model.createLiteralStatement(person, hasAgeInYearsProperty, age));
 
-        model.add(stmtOne);
-        model.add(stmtTwo);
-        model.add(stmtThree);
+        GregorianCalendar calendar = new GregorianCalendar(Locale.UK);
+        calendar.set(2010, 3, 29, 11, 30, 5);
 
-        System.out.println(model.toString());
+        model.add(model.createLiteralStatement(person, lastSeenProperty,
+                model.createTypedLiteral(calendar)));
 
         mav.addObject("resource", resource);
 
@@ -75,14 +78,60 @@ public class ResourceHashModelInTemplateTest {
 
         writer.flush();
 
-        System.out.println(output);
+        XPath engine = XPathFactory.newInstance().newXPath();
 
-        assertTrue(true);
+        // check we have the expected uri
+        assertEquals("Unexpected uri", resourceUri, engine.evaluate("/div/p[1]/text()",
+                new InputSource(new StringReader(output))));
+
+        // check we have the expected label
+        assertEquals("Unexpected label", label, engine.evaluate("/div/p[2]/text()",
+                new InputSource(new StringReader(output))));
+
+        // check we have the expected label via prefix
+        assertEquals("Unexpected label", label, engine.evaluate("/div/p[3]/text()",
+                new InputSource(new StringReader(output))));
+
+        // check we have the expected label
+        assertEquals("Unexpected label", name, engine.evaluate("/div/p[4]/text()",
+                new InputSource(new StringReader(output))));
+
+        // check we have the expected age
+        assertEquals("Unexpected label", String.valueOf(age), engine.evaluate("/div/p[5]/text()",
+                new InputSource(new StringReader(output))));
+
+        // check the full date
+        assertEquals("Unexpected label", fullDate, engine.evaluate("/div/p[6]/text()",
+                new InputSource(new StringReader(output))));
+
+        // check the short date
+        assertEquals("Unexpected label", shortDate, engine.evaluate("/div/p[7]/text()",
+                new InputSource(new StringReader(output))));
+
+        // check the custom date
+        assertEquals("Unexpected label", customDate, engine.evaluate("/div/p[8]/text()",
+                new InputSource(new StringReader(output))));
+
     }
 
-    private final String TEMPLATES_PATH = "/templates/";
-    private final String TEMPLATE_NAME = "resourceTest.ftl";
+    // uris
+    private final String resourceUri = "http://example.org/1/";
+    private final String personUri = "http://example.org/person/1";
 
-    private String hasPersonUri = "http://example.org/schema#hasPerson";
-    private String foafName = "http://xmlns.com/foaf/0.1/name";
+    // properties
+    private final String hasPersonUri = "http://example.org/schema#hasPerson";
+    private final String hasAgeInYears = "http://example.org/schema#hasAgeInYears";
+    private final String lastSeen = "http://example.org/schema#lastSeen";
+    private final String foafName = "http://xmlns.com/foaf/0.1/name";
+
+    // literals
+    private final String label = "Example Label";
+    private final String name = "Fred Smith";
+
+    private final String fullDate = "Thursday, April 29, 2010 11:30:05 AM BST";
+    private final String shortDate = "4/29/10 11:30 AM";
+    private final String customDate = "2010-04-29 11:30:05 British Summer Time";
+
+    private final String TEMPLATES_PATH = "/test_templates/";
+    private final String TEMPLATE_NAME = "resourceTest.ftl";
 }
