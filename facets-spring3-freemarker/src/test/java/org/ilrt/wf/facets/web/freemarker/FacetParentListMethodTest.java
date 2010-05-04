@@ -46,7 +46,7 @@ public class FacetParentListMethodTest {
         method.exec(args);
     }
 
-    @Test(expected = ClassCastException.class)
+    @Test(expected = TemplateModelException.class)
     public void invalidIncorrectArgument() throws TemplateModelException {
 
         // execute with incorrect argument type

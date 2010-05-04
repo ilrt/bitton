@@ -36,12 +36,12 @@ public class FacetParentListMethod implements TemplateMethodModelEx {
                     + args.size() + ". Expected org.ilrt.wf.facets.Facet");
         }
 
-        Object o = ((StringModel) args.get(0)).getAdaptedObject(Facet.class);
+        try {
+            ((StringModel) args.get(0)).getAdaptedObject(Facet.class);
 
-        if (!(o instanceof Facet)) {
+        } catch (ClassCastException ex) {
             throw new TemplateModelException("Expected an instance of org.ilrt.wf.facets.Facet, "
-                    + " but actually received " + o);
-
+                    + " but actually received " + args.get(0).getClass());
         }
 
     }
