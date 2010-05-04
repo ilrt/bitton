@@ -1,5 +1,6 @@
 package org.ilrt.wf.facets.impl;
 
+import com.hp.hpl.jena.rdf.model.Resource;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetView;
 import org.ilrt.wf.facets.SearchFilter;
@@ -17,10 +18,10 @@ public class FacetViewImpl implements FacetView {
     public FacetViewImpl() {
     }
 
-    public FacetViewImpl(int total, List<Facet> facets, SearchFilter searchFilter) {
+    public FacetViewImpl(int total, List<Facet> facets, List<Resource> results) {
         this.total = total;
         this.facets = facets;
-        this.searchFilter = searchFilter;
+        this.results = results;
     }
 
     @Override
@@ -34,8 +35,8 @@ public class FacetViewImpl implements FacetView {
     }
 
     @Override
-    public SearchFilter getSearchFilter() {
-        return searchFilter;
+    public List<Resource> getResults() {
+        return results;
     }
 
     public void setTotal(int total) {
@@ -46,11 +47,12 @@ public class FacetViewImpl implements FacetView {
         this.facets = facets;
     }
 
-    public void setSearchFilter(SearchFilter searchFilter) {
-        this.searchFilter = searchFilter;
+    public void setResults(List<Resource> results) {
+        this.results = results;
     }
+
 
     private int total;
     private List<Facet> facets = new ArrayList<Facet>();
-    private SearchFilter searchFilter;
+    private List<Resource> results = new ArrayList<Resource>();
 }

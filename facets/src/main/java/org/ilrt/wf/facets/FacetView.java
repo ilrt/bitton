@@ -1,5 +1,7 @@
 package org.ilrt.wf.facets;
 
+import com.hp.hpl.jena.rdf.model.Resource;
+
 import java.util.List;
 
 /**
@@ -12,5 +14,5 @@ public interface FacetView {
 
     List<Facet> getFacets();
 
-    SearchFilter getSearchFilter();
+    List<Resource> getResults();
 }

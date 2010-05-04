@@ -150,12 +150,12 @@ public class AlphaNumericFacetTest extends AbstractFacetTest {
                 facets.get(0).getState().getRefinements().get(0));
 
         // update the count
-        facetFactory.calculateCount(facets);
+        facetFactory.calculateCount(currentStates(facets));
 
         assertEquals("Unexpected count", 5,
                 facets.get(0).getState().getRefinements().get(0).getCount());
     }
-    
+
     @Test
     public void createAlphaNumericFacetWithoutParameter() throws FacetException {
 
@@ -274,6 +274,17 @@ public class AlphaNumericFacetTest extends AbstractFacetTest {
         }
 
         return results;
+    }
+
+    private List<FacetState> currentStates(List<Facet> facetList) {
+
+        List<FacetState> states = new ArrayList<FacetState>();
+
+        for (Facet facet : facetList) {
+            states.add(facet.getState());
+        }
+
+        return states;
     }
 
     // ---------- private variables

@@ -1,9 +1,11 @@
 package org.ilrt.wf.facets.impl;
 
+import com.hp.hpl.jena.rdf.model.Resource;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetFactory;
+import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.FacetView;
 import org.ilrt.wf.facets.FacetViewService;
 
@@ -29,7 +31,7 @@ public class FacetViewServiceImpl implements FacetViewService {
     public FacetView generate(HttpServletRequest request) throws FacetException {
 
         // the view that will be returned
-        FacetView facetView = new FacetViewImpl();
+        FacetViewImpl facetView = new FacetViewImpl();
 
         // ---------- facet creation
 
@@ -46,17 +48,45 @@ public class FacetViewServiceImpl implements FacetViewService {
             facetView.getFacets().add(facetFactory.create(environment));
         }
 
+        // get all of the current states
+        List<FacetState> states = currentStates(facets);
+
         // get the counts
-        facetFactory.calculateCount(facets);
+        facetFactory.calculateCount(states);
 
         // add the facets to the view
-        facetView.getFacets().addAll(facets);
+        facetView.setFacets(facets);
 
         // ---------- results list
 
-        
+        // TODO handle index and off set from parameter values
+        List<Resource> results = facetFactory.results(states, 0, 10);
+        facetView.setResults(results);
+
+        // ---------- add the total count
+
+        int total = facetFactory.totalResults(states);
+        facetView.setTotal(total);
 
         return facetView;
+    }
+
+    /**
+     * Query Service wants the current facet states from all of the facets - we decompose the
+     * list of facets to get the states.
+     *
+     * @param facetList list of facets
+     * @return a list of facet states from the facets
+     */
+    private List<FacetState> currentStates(List<Facet> facetList) {
+
+        List<FacetState> states = new ArrayList<FacetState>();
+
+        for (Facet facet : facetList) {
+            states.add(facet.getState());
+        }
+
+        return states;
     }
 
     @SuppressWarnings(value = "unchecked")

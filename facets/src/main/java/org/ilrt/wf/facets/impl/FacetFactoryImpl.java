@@ -118,14 +118,7 @@ public class FacetFactoryImpl implements FacetFactory {
     // ---------- methods relating to all facets
 
     @Override
-    public void calculateCount(List<Facet> facetList) {
-
-        // find all the states
-        List<FacetState> states = new ArrayList<FacetState>();
-
-        for (Facet facet : facetList) {
-            states.add(facet.getState());
-        }
+    public void calculateCount(List<FacetState> states) {
 
         // request counts
 
@@ -139,6 +132,16 @@ public class FacetFactoryImpl implements FacetFactory {
             ((FacetStateImpl) facetState).setCount(results.get(facetState));
         }
 
+    }
+
+    @Override
+    public List<Resource> results(List<FacetState> states, int offset, int number) {
+        return facetQueryService.getResults(states, offset, number);
+    }
+
+    @Override
+    public int totalResults(List<FacetState> states) {
+        return facetQueryService.getCount(states);
     }
 
     protected ValueConstraint createValueConstraint(String type) {

@@ -1,5 +1,7 @@
 package org.ilrt.wf.facets;
 
+import com.hp.hpl.jena.rdf.model.Resource;
+
 import java.util.List;
 
 /**
@@ -9,5 +11,9 @@ public interface FacetFactory {
 
     Facet create(FacetEnvironment environment) throws FacetException;
 
-    void calculateCount(List<Facet> facetList);
+    List<Resource> results(List<FacetState> states, int offset, int number);
+
+    int totalResults(List<FacetState> states);
+
+    void calculateCount(List<FacetState> states);
 }
