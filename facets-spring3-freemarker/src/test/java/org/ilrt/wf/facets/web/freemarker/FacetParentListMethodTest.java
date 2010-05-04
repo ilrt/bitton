@@ -1,5 +1,7 @@
 package org.ilrt.wf.facets.web.freemarker;
 
+import freemarker.ext.beans.StringModel;
+import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import org.ilrt.wf.facets.Facet;
@@ -44,7 +46,7 @@ public class FacetParentListMethodTest {
         method.exec(args);
     }
 
-    @Test(expected = TemplateModelException.class)
+    @Test(expected = ClassCastException.class)
     public void invalidIncorrectArgument() throws TemplateModelException {
 
         // execute with incorrect argument type
@@ -58,9 +60,10 @@ public class FacetParentListMethodTest {
         FacetStateImpl rootState = new FacetStateImpl();
         rootState.setRoot(true);
 
+        // freemarker will wrap the Facet class in a StringModel
         Facet facet = new FacetImpl(null, rootState, null);
-
-        args.add(facet);
+        StringModel m = new StringModel(facet, new DefaultObjectWrapper());
+        args.add(m);
 
         List results = (List) method.exec(args);
 
@@ -87,9 +90,10 @@ public class FacetParentListMethodTest {
         childState.setRoot(false);
         childState.setParent(parentState);
 
+        // freemarker will wrap the Facet class in a StringModel
         Facet facet = new FacetImpl(null, childState, null);
-
-        args.add(facet);
+        StringModel m = new StringModel(facet, new DefaultObjectWrapper());
+        args.add(m);
 
         List results = (List) method.exec(args);
 

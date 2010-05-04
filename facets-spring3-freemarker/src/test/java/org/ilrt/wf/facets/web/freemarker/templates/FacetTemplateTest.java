@@ -20,7 +20,6 @@ import org.xml.sax.InputSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -73,7 +72,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
                 10, facetOneRootState);
         facetOneRootState.getRefinements().add(facetOneRefinementTwo);
 
-        FacetImpl facetOne = new FacetImpl("Departments", facetOneRootState, "depts");
+        Facet facetOne = new FacetImpl("Departments", facetOneRootState, "depts");
 
 
         // ----------- subjects facet

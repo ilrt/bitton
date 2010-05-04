@@ -5,7 +5,6 @@ import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetState;
-import org.ilrt.wf.facets.impl.FacetImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +16,7 @@ public class FacetParentListMethod implements TemplateMethodModelEx {
 
         checkArguments(args);
 
-        Object o =  ((StringModel) args.get(0)).getWrappedObject();
-
-        Facet facet = (Facet) o;
+        Facet facet = (Facet) ((StringModel) args.get(0)).getAdaptedObject(Facet.class);
 
         List<FacetState> results = null;
 
@@ -39,11 +36,12 @@ public class FacetParentListMethod implements TemplateMethodModelEx {
                     + args.size() + ". Expected org.ilrt.wf.facets.Facet");
         }
 
-        Object o =  ((StringModel) args.get(0)).getWrappedObject();
+        Object o = ((StringModel) args.get(0)).getAdaptedObject(Facet.class);
 
         if (!(o instanceof Facet)) {
             throw new TemplateModelException("Expected an instance of org.ilrt.wf.facets.Facet, "
-                    + " but actually received " + (args.get(0)));
+                    + " but actually received " + o);
+
         }
 
     }
