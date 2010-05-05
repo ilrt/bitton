@@ -25,6 +25,17 @@
         <entry key="foaf" value="http://xmlns.com/foaf/0.1/"/>
     </util:map>
 
+    <!-- Facet configurations -->
+
+    <util:map id="aFacet" map-class="java.util.HashMap">
+        <entry key="facetType" value="Hierarchical"/>
+        <entry key="facetTitle" value="Something or other"/>
+    </util:map>
+
+    <util:list id="facetList" list-class="java.util.ArrayList">
+        <ref bean="aFacet"/>
+    </util:list>
+
     <!-- SPARQL Endpoint Service -->
 
     <bean id="sparqlQEFactory" class="org.ilrt.wf.facets.sparql.RemoteQEFactory">
@@ -40,6 +51,14 @@
     <bean id="facetFactory" class="org.ilrt.wf.facets.impl.FacetFactoryImpl">
         <constructor-arg index="0" ref="sparqlQueryService"/>
         <constructor-arg index="1" ref="prefixes"/>
+    </bean>
+
+    <!-- Facet View Service -->
+
+    <bean id="facetViewService" class="org.ilrt.wf.facets.impl.FacetViewServiceImpl">
+        <constructor-arg index="0" ref="facetFactory"/>
+        <constructor-arg index="1" ref="facetList"/>
+        <constructor-arg index="2" ref="prefixes" />
     </bean>
 
     <!-- FreeMarker configuration -->
