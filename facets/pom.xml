@@ -10,7 +10,7 @@
     </parent>
     <groupId>org.ilrt.wf.facets</groupId>
     <artifactId>facets</artifactId>
-    <name>facets</name>
+    <name>Facets Module</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>

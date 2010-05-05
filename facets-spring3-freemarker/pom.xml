@@ -13,7 +13,7 @@
     <artifactId>facets-spring3-freemarker</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>facets-spring3-freemarker Maven Webapp</name>
+    <name>Web Application Module</name>
     <url>http://maven.apache.org</url>
     <build>
         <finalName>facets-spring3-freemarker</finalName>

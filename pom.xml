@@ -6,7 +6,7 @@
     <artifactId>facets-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.1-SNAPSHOT</version>
-    <name>Facets Parent</name>
+    <name>Facets Parent Module</name>
     <url>http://maven.apache.org</url>
     <modules>
         <module>facets</module>
