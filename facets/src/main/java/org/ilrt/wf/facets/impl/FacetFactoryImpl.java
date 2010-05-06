@@ -109,6 +109,7 @@ public class FacetFactoryImpl implements FacetFactory {
 
         } else { // we want them all
 
+            root.getConstraints().addAll(Arrays.asList(typeConstraint));
             root.setRefinements(alphaNumericRefinements(typeConstraint, p, root));
             facetState = root;
         }

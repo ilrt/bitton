@@ -1,5 +1,7 @@
 <#include "includes/header.ftl"/>
 
-<p>${message}</p>
+<#include "includes/facet.ftl"/>
+
+<#include "includes/resultsList.ftl"/>
 
 <#include "includes/footer.ftl"/>

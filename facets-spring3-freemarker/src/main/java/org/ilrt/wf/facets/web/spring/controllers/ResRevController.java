@@ -4,6 +4,8 @@ import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetView;
 import org.ilrt.wf.facets.FacetViewService;
 import org.ilrt.wf.facets.FacetViewServiceException;
+import org.ilrt.wf.facets.freemarker.FacetParentListMethod;
+import org.ilrt.wf.facets.freemarker.FacetStateUrlMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +32,9 @@ public class ResRevController extends AbstractController {
 
         ModelAndView mav = new ModelAndView(VIEW_NAME);
         mav.addObject(CONTEXT_PATH_KEY, request.getContextPath());
-        //mav.addObject(FACET_VIEW_KEY, facetView);
+        mav.addObject(FACET_VIEW_KEY, facetView);
+                mav.addObject("facetStateUrl", new FacetStateUrlMethod());
+        mav.addObject("facetParentList", new FacetParentListMethod());
         mav.addObject("message", "Hello World!");
         return mav;
     }

@@ -59,19 +59,13 @@ public class FacetViewServiceImpl implements FacetViewService {
             }
         }
 
-        log.debug("We have " + facets.size() + " configured");
-
         // get all of the current states
         
         List<FacetState> states = currentStates(facets);
 
-        log.debug("We have " + states.size() + " current states configured");
-
         // get the counts
 
-        log.debug("Calculating counts");
-
-        facetFactory.calculateCount(states);
+        //facetFactory.calculateCount(states);
 
         // add the facets to the view
         facetView.setFacets(facets);
@@ -79,20 +73,14 @@ public class FacetViewServiceImpl implements FacetViewService {
         // ---------- results list
 
         // TODO handle index and off set from parameter values
-
-        log.debug("Calculating results");
-
+        log.debug("Results...");
         List<Resource> results = facetFactory.results(states, 0, 10);
         facetView.setResults(results);
 
         // ---------- add the total count
 
-        log.debug("Calculating total results");
-
         int total = facetFactory.totalResults(states);
         facetView.setTotal(total);
-
-        log.debug("Returning view");
 
         return facetView;
     }
