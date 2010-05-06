@@ -1,6 +1,7 @@
 package org.ilrt.wf.facets.impl;
 
 import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.log4j.Logger;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
@@ -8,6 +9,7 @@ import org.ilrt.wf.facets.FacetFactory;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.FacetView;
 import org.ilrt.wf.facets.FacetViewService;
+import org.ilrt.wf.facets.FacetViewServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -28,7 +30,11 @@ public class FacetViewServiceImpl implements FacetViewService {
     }
 
     @Override
-    public FacetView generate(HttpServletRequest request) throws FacetException {
+    public FacetView generate(HttpServletRequest request) throws FacetViewServiceException {
+
+        if (configurationList.size() == 0) {
+            throw new FacetViewServiceException("There is no registered configuration");
+        }
 
         // the view that will be returned
         FacetViewImpl facetView = new FacetViewImpl();
@@ -45,13 +51,26 @@ public class FacetViewServiceImpl implements FacetViewService {
             FacetEnvironment environment = environment(configuration, request);
 
             // get the facet via the factory and add to the list
-            facetView.getFacets().add(facetFactory.create(environment));
+            try {
+                Facet facet = facetFactory.create(environment);
+                facets.add(facet);
+            } catch (FacetException ex) {
+                throw new FacetViewServiceException(ex);
+            }
         }
 
+        log.debug("We have " + facets.size() + " configured");
+
         // get all of the current states
+        
         List<FacetState> states = currentStates(facets);
 
+        log.debug("We have " + states.size() + " current states configured");
+
         // get the counts
+
+        log.debug("Calculating counts");
+
         facetFactory.calculateCount(states);
 
         // add the facets to the view
@@ -60,13 +79,20 @@ public class FacetViewServiceImpl implements FacetViewService {
         // ---------- results list
 
         // TODO handle index and off set from parameter values
+
+        log.debug("Calculating results");
+
         List<Resource> results = facetFactory.results(states, 0, 10);
         facetView.setResults(results);
 
         // ---------- add the total count
 
+        log.debug("Calculating total results");
+
         int total = facetFactory.totalResults(states);
         facetView.setTotal(total);
+
+        log.debug("Returning view");
 
         return facetView;
     }
@@ -98,4 +124,6 @@ public class FacetViewServiceImpl implements FacetViewService {
     final FacetFactory facetFactory;
     final List<Map<String, String>> configurationList;
     final Map<String, String> prefixes;
+
+    final private Logger log = Logger.getLogger(FacetViewServiceImpl.class);
 }

@@ -1,32 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xml="http://www.w3.org/XML/1998/namespace"
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xml="http://www.w3.org/XML/1998/namespace"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-    <display-name>Research Revealed Demonstrator - using Spring 3 and Freemarker</display-name>
+    <display-name>Research Revealed Demonstrator</display-name>
 
-    <!--
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+
+    <!-- ========== CONTEXT PARAMETERS ========== -->
+
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            /WEB-INF/spring/root.xml
+            /WEB-INF/spring/facetConfigurations.xml
         </param-value>
     </context-param>
-    -->
+
+    <!-- root key -->
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>resrev.rootkey</param-value>
+    </context-param>
+
+    <!-- log4j configuration file -->
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j.properties</param-value>
+    </context-param>
+
+
+    <!-- ========== LISTENERS ========== -->
+
+    <!-- Spring context listener -->
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- log4j listener -->
+
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+
+
+    <!-- ========== SERVLETS ========== -->
+
+    <!-- Spring dispatcher servlet -->
 
     <servlet>
         <servlet-name>resrev</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>namespace</param-name>
+            <param-value>spring/resrev-servlet</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
+
+    <!-- ========== SERVLET MAPPINGS ========== -->
+
+    <!-- Mapping for the Spring MVC controller -->
 
     <servlet-mapping>
         <servlet-name>resrev</servlet-name>
         <url-pattern>/resrev/*</url-pattern>
     </servlet-mapping>
-
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
 
 </web-app>

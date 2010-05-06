@@ -2,6 +2,7 @@ package org.ilrt.wf.facets.web.spring.controller;
 
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetViewService;
+import org.ilrt.wf.facets.FacetViewServiceException;
 import org.ilrt.wf.facets.impl.FacetViewImpl;
 import org.ilrt.wf.facets.web.spring.controllers.ResRevController;
 import org.jmock.Expectations;
@@ -31,7 +32,7 @@ public class ResRevControllerTest {
 
 
     @Test
-    public void test() throws FacetException {
+    public void test() throws FacetViewServiceException {
 
         final MockHttpServletRequest request = new MockHttpServletRequest();
         request.setContextPath(contextPath);

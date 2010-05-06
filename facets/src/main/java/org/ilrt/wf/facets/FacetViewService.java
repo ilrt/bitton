@@ -9,6 +9,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface FacetViewService {
 
-    FacetView generate(HttpServletRequest request) throws FacetException;
+    FacetView generate(HttpServletRequest request) throws FacetViewServiceException;
 
 }

@@ -38,6 +38,8 @@ public class FacetFactoryImpl implements FacetFactory {
     @Override
     public Facet create(FacetEnvironment environment) throws FacetException {
 
+        System.out.println("CALLED!");
+
         String facetType = environment.getConfig().get(Facet.FACET_TYPE);
 
         if (facetType.equals(Facet.ALPHA_NUMERIC_FACET_TYPE)) {

@@ -5,9 +5,6 @@ package org.ilrt.wf.facets;
  */
 public class FacetException extends Exception {
 
-    public FacetException() {
-    }
-
     public FacetException(String message) {
         super(message);
     }
