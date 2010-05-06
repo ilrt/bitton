@@ -34,6 +34,7 @@ import com.hp.hpl.jena.sparql.expr.E_LessThan;
 import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
 import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
 import com.hp.hpl.jena.sparql.expr.E_Regex;
+import com.hp.hpl.jena.sparql.expr.E_Str;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import java.util.AbstractList;
@@ -288,7 +289,7 @@ public class SPARQLQueryService implements FacetQueryService {
             Var val = genVar(); // TODO generate
             return OpFilter.filter(
                     new E_Regex(
-                      new ExprVar(val),
+                      new E_Str(new ExprVar(val)),
                       rc.getRegexp(),
                       "i"
                       ),
