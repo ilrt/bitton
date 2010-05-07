@@ -114,7 +114,7 @@ public class SPARQLQueryServiceTest {
                 instance.constraintToOp(constraint));
 
         constraint = new RegexpConstraint(prop, "^a");
-        assertEquals(Algebra.parse("(filter (regex ?v2 \"^a\" \"i\") (bgp (triple ?s <http://example.com/ns#prop> ?v2)))"),
+        assertEquals(Algebra.parse("(filter (regex (str ?v2) \"^a\" \"i\") (bgp (triple ?s <http://example.com/ns#prop> ?v2)))"),
                 instance.constraintToOp(constraint));
     }
 
