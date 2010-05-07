@@ -7,6 +7,8 @@ package org.ilrt.wf.facets.sparql;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.query.DataSource;
+import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -45,7 +47,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import org.ilrt.wf.facets.FacetQueryService;
@@ -188,8 +189,6 @@ public class SPARQLQueryService implements FacetQueryService {
         // Remember this query. We'll use it later.
         Op opBasic = constraintsToOp(statesToConstraints(currentFacetStates));
         Op op = opBasic;
-        // Over named graphs, just get subject
-        op = new OpGraph(Var.alloc("g"), op);
         op = new OpProject(op, Collections.singletonList(SUBJECT));
         // Apply limit and offset
         op = new OpSlice(op, offset, number);
@@ -207,12 +206,19 @@ public class SPARQLQueryService implements FacetQueryService {
         q = OpAsQuery.asQuery(opBasic);
         q.addResultVar(SUBJECT);
         q.setQuerySelectType();
-        qe = QueryExecutionFactory.create(q, m);
+        DataSource ds = DatasetFactory.create();
+        ds.addNamedModel("urn:x-ilrt:graph", m);
+        qe = QueryExecutionFactory.create(q, ds);
         ResultSet res = qe.execSelect();
 
         List<Resource> results = new LinkedList<Resource>();
         while (res.hasNext()) {
-            results.add(res.next().getResource(SUBJECT.getVarName()));
+            Resource result = res.next().getResource(SUBJECT.getVarName());
+            // We need to reattach to original model. Nasty.
+            result = result.isAnon() ?
+                m.createResource(result.getId()) :
+                m.getResource(result.getURI()) ;
+            results.add(result);
         }
 
         return results;
@@ -235,8 +241,7 @@ public class SPARQLQueryService implements FacetQueryService {
     protected int getCount(Collection<Constraint> constraints) {
         Op op = constraintsToOp(constraints);
 
-        // Over named graphs, just get subject
-        op = new OpGraph(Var.alloc("g"), op);
+        // just get subject
         op = new OpProject(op, Collections.singletonList(SUBJECT));
 
         Query q = OpAsQuery.asQuery(op);
@@ -253,9 +258,13 @@ public class SPARQLQueryService implements FacetQueryService {
         for (Constraint con: cons) {
             Op newOp = constraintToOp(con);
             if (newOp instanceof OpNull) continue;
-            else if (op == null) op = newOp;
-            else op = OpJoin.create(op, newOp);
+            // We wrap each constraint in a new graph
+            // TODO prettify queries. this messes up previous work
+            else if (op == null) op = new OpGraph(genVar(), newOp);
+            else op = OpJoin.create(op, new OpGraph(genVar(), newOp));
+
         }
+
         // Completelty unconstrained is not permitted
         if (op == null) throw new RuntimeException("Operation is completely unconstrained");
         op = Transformer.transform(new QueryCleaner(), op);
