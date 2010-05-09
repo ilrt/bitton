@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
 public class FacetViewServiceImpl implements FacetViewService {
@@ -84,6 +85,7 @@ public class FacetViewServiceImpl implements FacetViewService {
 
         return facetView;
     }
+
 
     /**
      * Query Service wants the current facet states from all of the facets - we decompose the

@@ -22,10 +22,8 @@
     <util:map id="institutionName" map-class="java.util.HashMap">
         <entry key="facetType" value="AlphaNumeric"/>
         <entry key="facetTitle" value="Institution Names"/>
-        <entry key="linkProperty" value="http://xmlns.com/foaf/0.1/family_name"/>
-        <entry key="constraintType" value="http://xmlns.com/foaf/0.1/Person"/>
         <entry key="linkProperty" value="http://xmlns.com/foaf/0.1/name"/>
-        <entry key="constraintType" value="http://vocab.org/aiiso/schema#Institution"/>
+        <entry key="constraintType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
         <entry key="paramName" value="institutionName"/>
     </util:map>
 

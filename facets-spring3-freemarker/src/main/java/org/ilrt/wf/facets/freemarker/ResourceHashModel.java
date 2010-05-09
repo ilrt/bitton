@@ -117,16 +117,8 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
 
             if (value instanceof String) {
                 return new SimpleScalar((String) value);
-            } else if (value instanceof Integer) {
-                return new SimpleNumber((Integer) value);
-            } else if (value instanceof Float) {
-                return new SimpleNumber((Float) value);
-            } else if (value instanceof Short) {
-                return new SimpleNumber((Short) value);
-            } else if (value instanceof Long) {
-                return new SimpleNumber((Long) value);
-            } else if (value instanceof Double) {
-                return new SimpleNumber((Double) value);
+            } else if (value instanceof Number) {
+                return new SimpleNumber((Number) value);
             } else if (value instanceof Date) {
                 return new SimpleDate((Date) value, TemplateDateModel.UNKNOWN);
             } else if (value instanceof Calendar) {
@@ -155,11 +147,17 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
 
     // ---------- TemplateScalarModel interface methods
 
+
     @Override
     public String getAsString() throws TemplateModelException {
-        return resource.getURI();
+        if (resource.getURI() == null) {
+            return INVALID_URL;          // b-nodes return null and their ids are useless
+        } else {
+            return resource.getURI();
+        }
     }
 
     private Resource resource;
     private PrefixMapping prefixMapping;
+    private final String INVALID_URL = "http://invalid.org";
 }
