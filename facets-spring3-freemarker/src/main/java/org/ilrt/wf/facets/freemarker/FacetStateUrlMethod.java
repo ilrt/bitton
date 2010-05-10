@@ -72,7 +72,13 @@ public class FacetStateUrlMethod implements TemplateMethodModelEx {
             if (value == null || key == null || key.equals("")) {
                 params.remove(key);
             } else {
-                params.put(key, new String[]{value});  // replace the value
+
+                String[] vals = (String[]) params.get(key);
+                if (value.equals(vals[0])) {
+                    params.remove(key);
+                } else {
+                    params.put(key, new String[]{value});  // replace the value
+                }
             }
         }
 

@@ -109,6 +109,10 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
 
         Statement stmt = resource.getProperty(property);
 
+        if (stmt == null) {
+            return null; // bail
+        }
+
         RDFNode node = stmt.getObject();
 
         if (node.isLiteral()) {

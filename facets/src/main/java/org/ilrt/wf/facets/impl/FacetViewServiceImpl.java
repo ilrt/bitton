@@ -66,7 +66,7 @@ public class FacetViewServiceImpl implements FacetViewService {
 
         // get the counts
 
-        //facetFactory.calculateCount(states);
+        facetFactory.calculateCount(states);
 
         // add the facets to the view
         facetView.setFacets(facets);
@@ -74,7 +74,6 @@ public class FacetViewServiceImpl implements FacetViewService {
         // ---------- results list
 
         // TODO handle index and off set from parameter values
-        log.debug("Results...");
         List<Resource> results = facetFactory.results(states, 0, 10);
         facetView.setResults(results);
 
