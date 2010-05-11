@@ -6,6 +6,8 @@ import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,7 +41,9 @@ public class FacetStateUrlMethod implements TemplateMethodModelEx {
         // get the new parameter we want to add
         if (args.size() == 3) {
             key = ((SimpleScalar) args.get(1)).getAsString();
-            value = ((SimpleScalar) args.get(2)).getAsString();
+            if (args.get(2) != null) {
+                value = ((SimpleScalar) args.get(2)).getAsString();
+            }
         }
 
         // get the base URI for future requests
@@ -72,13 +76,7 @@ public class FacetStateUrlMethod implements TemplateMethodModelEx {
             if (value == null || key == null || key.equals("")) {
                 params.remove(key);
             } else {
-
-                String[] vals = (String[]) params.get(key);
-                if (value.equals(vals[0])) {
-                    params.remove(key);
-                } else {
-                    params.put(key, new String[]{value});  // replace the value
-                }
+                params.put(key, new String[]{value});  // replace the value
             }
         }
 
@@ -103,9 +101,9 @@ public class FacetStateUrlMethod implements TemplateMethodModelEx {
 
         if (args.size() == 3) {
             if (!((args.get(0) instanceof HttpRequestHashModel) && (args.get(1) instanceof SimpleScalar)
-                    && (args.get(2) instanceof SimpleScalar))) {
+                    && (args.get(2) instanceof SimpleScalar || args.get(2) == null))) {
                 throw new TemplateModelException("Unexpected argument type, expected a " +
-                        "HttpRequestHashModel, SimpleScalar and SimpleScalar; received "
+                        "HttpRequestHashModel, SimpleScalar and SimpleScalar or null; received "
                         + args.get(0)
                         + ", " + args.get(1)
                         + ", " + args.get(2));
@@ -135,7 +133,7 @@ public class FacetStateUrlMethod implements TemplateMethodModelEx {
                 if (i > 0) {
                     builder.append("&amp;");
                 }
-                builder.append(key).append("=").append(values[i]);
+                builder.append(key).append("=").append(encodeValue(values[i]));
             }
 
             if (iter.hasNext()) {
@@ -143,6 +141,16 @@ public class FacetStateUrlMethod implements TemplateMethodModelEx {
             }
         }
 
+
         return builder.toString();
+    }
+
+    private String encodeValue(String value) {
+        try {
+            return URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return value;
+        }
     }
 }
