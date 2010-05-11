@@ -1,7 +1,6 @@
 package org.ilrt.wf.facets.impl;
 
 import com.hp.hpl.jena.rdf.model.Resource;
-import org.apache.log4j.Logger;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
 public class FacetViewServiceImpl implements FacetViewService {
@@ -61,7 +59,7 @@ public class FacetViewServiceImpl implements FacetViewService {
         }
 
         // get all of the current states
-        
+
         List<FacetState> states = currentStates(facets);
 
         // get the counts
@@ -114,5 +112,5 @@ public class FacetViewServiceImpl implements FacetViewService {
     final List<Map<String, String>> configurationList;
     final Map<String, String> prefixes;
 
-    final private Logger log = Logger.getLogger(FacetViewServiceImpl.class);
+    //final private Logger log = Logger.getLogger(FacetViewServiceImpl.class);
 }
