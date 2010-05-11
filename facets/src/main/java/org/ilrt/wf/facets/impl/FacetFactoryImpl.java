@@ -160,8 +160,8 @@ public class FacetFactoryImpl implements FacetFactory {
     // ---------- methods relating to hierarchical facets
 
     protected FacetStateImpl currentHierarchicalState(List<? extends Constraint> constraints,
-                                                  Resource resource, Property property,
-                                                  boolean isBroader) {
+                                                      Resource resource, Property property,
+                                                      boolean isBroader) {
 
         FacetStateImpl currentFacetState = new FacetStateImpl();
         currentFacetState.setParamValue(qNameUtility.getQName(resource.getURI()));
@@ -185,11 +185,7 @@ public class FacetFactoryImpl implements FacetFactory {
         for (Resource resource : resources) {
 
             String uri = resource.getURI();
-            String label = null;
-
-            if (resource.hasProperty(RDFS.label)) {
-                label = resource.getProperty(RDFS.label).getLiteral().getLexicalForm();
-            }
+            String label = getLabel(resource);
 
             refinementList.add(new FacetStateImpl(label, parentState,
                     qNameUtility.getQName(uri), constraints));
@@ -216,11 +212,7 @@ public class FacetFactoryImpl implements FacetFactory {
 
             // get the URIs and label
             String uri = resource.getURI();
-            String label = null;
-
-            if (resource.hasProperty(RDFS.label)) {
-                label = resource.getProperty(RDFS.label).getLiteral().getLexicalForm();
-            }
+            String label = getLabel(resource);
 
             // end of the line - so is actually the current state
             if (!iter.hasNext()) {
@@ -340,7 +332,6 @@ public class FacetFactoryImpl implements FacetFactory {
 //    protected char[] alphaNumericArray() {
 //        return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 //    }
-
     protected char[] alphaNumericArray() {
         return "ABCDEFG".toCharArray();
     }
@@ -394,6 +385,19 @@ public class FacetFactoryImpl implements FacetFactory {
         }
 
         return refinementsList;
+    }
+
+    protected String getLabel(Resource resource) {
+
+        if (resource.hasProperty(RDFS.label)) {
+            return resource.getProperty(RDFS.label).getLiteral().getLexicalForm();
+        }
+
+        if (resource.getURI() != null) {
+            return resource.getURI();
+        }
+
+        return resource.toString();
     }
 
 
