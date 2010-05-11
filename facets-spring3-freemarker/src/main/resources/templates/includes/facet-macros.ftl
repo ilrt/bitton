@@ -22,14 +22,13 @@
                 </#if>
                 <#-- Display the current facet -->
                 <ul class="facet-list">
-                    <@listItem/>${facet.state.name} [<a href="${facetStateUrl(Request, facet.param, facet.state.paramValue)}">x</a>]
+                    <@listItem/>${facet.state.name} [<a href="${facetStateUrl(Request, facet.param, facet.state.parent.paramValue)}">x</a>]
                     <#if facet.state.refinements?size &gt; 0>
                         <@refinementList refinements=facet.state.refinements paramKey=facet.param />
                     </#if>
                     <#list parents as parent>
                         </li></ul>
                     </#list>
-
             </#if>
         </div>
     </#if>
