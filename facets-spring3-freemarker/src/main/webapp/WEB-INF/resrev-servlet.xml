@@ -60,8 +60,8 @@
 
 
     <util:list id="facetList" list-class="java.util.ArrayList">
-<!--        <ref bean="grantName"/> -->
-        <ref bean="deptNames"/>
+        <ref bean="grantName"/>
+<!--        <ref bean="deptNames"/> -->
     </util:list>
 
 

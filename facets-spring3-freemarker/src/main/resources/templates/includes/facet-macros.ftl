@@ -2,7 +2,7 @@
 <#macro diplayFacet facet>
     <#if facet?? && facet.state??>
         <div class="facet">
-            <h3 class="facet-title">${facet.name}</h3>
+            <h4 class="facet-title">${facet.name}</h4>
             <#if facet.state.root>
                 <@refinementList refinements=facet.state.refinements paramKey=facet.param/>
             <#else>
