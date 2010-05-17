@@ -1,0 +1,6 @@
+<#include "includes/macro.ftl"/>
+<#include "includes/header.ftl"/>
+<#include "includes/header-title.ftl"/>
+<#include "includes/header-navigation.ftl"/>
+<#include "includes/grantView-content.ftl"/>
+<#include "includes/footer.ftl"/>

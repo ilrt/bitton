@@ -227,3 +227,32 @@ body {
     margin: 0px;
     font-size: 10px;
 }
+
+#content {
+    padding: 10px;
+}
+
+#content strong {
+    font-weight: bold;
+}
+
+#content em {
+    font-style: italic;
+}
+
+.more-results {
+    color: #000000;
+    text-decoration: none;
+    display: inline;
+    background: #d9d9d9;
+    border: solid 1px #e4bb13;
+    padding: 4px 10px 4px 10px;
+    font-size: 14px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.more-results > a, .more-results > a:hover, .more-results > a:visited {
+    color: #000000;
+    text-decoration: none;
+}

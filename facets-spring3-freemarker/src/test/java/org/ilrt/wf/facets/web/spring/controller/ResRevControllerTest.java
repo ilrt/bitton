@@ -1,6 +1,5 @@
 package org.ilrt.wf.facets.web.spring.controller;
 
-import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetViewService;
 import org.ilrt.wf.facets.FacetViewServiceException;
 import org.ilrt.wf.facets.impl.FacetViewImpl;
@@ -44,7 +43,7 @@ public class ResRevControllerTest {
 
         ModelAndView mav = controller.mainView(request);
 
-        assertEquals("Unexpected view name", ResRevController.VIEW_NAME, mav.getViewName());
+        assertEquals("Unexpected view name", ResRevController.MAIN_VIEW_NAME, mav.getViewName());
         assertEquals("Unexpected context path", contextPath,
                 mav.getModel().get(ResRevController.CONTEXT_PATH_KEY));
 

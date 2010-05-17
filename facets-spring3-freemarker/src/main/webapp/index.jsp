@@ -1,1 +1,1 @@
-<jsp:forward page="/resrev/" /> 
+<%response.sendRedirect(request.getContextPath() + "/resrev/");%>

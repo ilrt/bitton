@@ -35,6 +35,11 @@ public class FacetViewServiceImpl implements FacetViewService {
             throw new FacetViewServiceException("There is no registered configuration");
         }
 
+        // calculate the offset and number needed in returning results
+        int offset = calculateIntegerFromParam(request.getParameter(OFFSET_PARAM), DEFAULT_OFFSET);
+        int number = calculateIntegerFromParam(request.getParameter(NUMBER_PARAM), DEFAULT_NUMBER);
+
+
         // the view that will be returned
         FacetViewImpl facetView = new FacetViewImpl();
 
@@ -72,7 +77,7 @@ public class FacetViewServiceImpl implements FacetViewService {
         // ---------- results list
 
         // TODO handle index and off set from parameter values
-        List<Resource> results = facetFactory.results(states, 0, 10);
+        List<Resource> results = facetFactory.results(states, offset, number);
         facetView.setResults(results);
 
         // ---------- add the total count
@@ -108,9 +113,39 @@ public class FacetViewServiceImpl implements FacetViewService {
         return new FacetEnvironmentImpl(configuration, request.getParameterMap(), prefixes);
     }
 
+
+    /**
+     * @param value        string value received from http request
+     * @param defaultValue default value to return if the string doesn't parse
+     * @return an integer representation of the string
+     */
+    int calculateIntegerFromParam(String value, int defaultValue) {
+
+        if (value == null) {
+            return defaultValue;
+        }
+
+        try {
+
+            int intValue = Integer.parseInt(value);
+            return intValue <= 0 ? defaultValue : intValue;
+
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+            return defaultValue;
+        }
+    }
+
+
     final FacetFactory facetFactory;
     final List<Map<String, String>> configurationList;
     final Map<String, String> prefixes;
+
+    final int DEFAULT_OFFSET = 0;
+    final int DEFAULT_NUMBER = 10;
+
+    final String NUMBER_PARAM = "number";
+    final String OFFSET_PARAM = "offset";
 
     //final private Logger log = Logger.getLogger(FacetViewServiceImpl.class);
 }

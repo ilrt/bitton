@@ -8,3 +8,5 @@
         Untitled resource
     </#if>
 </#macro>
+
+<#macro moreResults>${contextPath}${servletPath}/?<#if RequestParameters.number?exists>number=${RequestParameters.number?number + 10}<#else>number=20</#if><#list RequestParameters?keys as key><#if key != 'number'>&amp;${key}=${RequestParameters[key]}</#if></#list></#macro>
