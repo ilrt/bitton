@@ -26,41 +26,46 @@ public class ResRevController extends AbstractController {
         this.facetViewService = facetViewService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = DEFAULT_PATH, method = RequestMethod.GET)
     public ModelAndView mainView(HttpServletRequest request) throws FacetViewServiceException {
 
         HttpSession session = request.getSession(true);
 
-        if (request.getParameter("drill") != null) {
+        if (request.getParameter(DRILL_PARAMETER) != null) {
 
-            FacetView view = (FacetView) session.getAttribute("facetView");
+            FacetView view = (FacetView) session.getAttribute(FACETVIEW_SESSION);
 
             if (view != null) {
-                int drill = Integer.parseInt(request.getParameter("drill"));
-                Resource resource = view.getResults().get(drill);
 
-                ModelAndView mav =  createModelAndView(GRANT_VIEW_NAME, request);
-                mav.addObject("resource", new ResourceHashModel(resource));
-                return mav;
+                int drill = Integer.parseInt(request.getParameter(DRILL_PARAMETER));
+
+                if (drill < view.getResults().size()) {
+
+                    Resource resource = view.getResults().get(drill);
+
+                    ModelAndView mav = createModelAndView(GRANT_VIEW_NAME, request);
+                    mav.addObject("resource", new ResourceHashModel(resource));
+                    return mav;
+                }
             }
 
         }
 
         ModelAndView mav = createModelAndView(MAIN_VIEW_NAME, request);
         FacetView facetView = facetViewService.generate(request);
-        session.setAttribute("facetView", facetView);
+        session.setAttribute(FACETVIEW_SESSION, facetView);
         mav.addObject(FACET_VIEW_KEY,
                 new FacetViewFreeMarkerWrapper(facetViewService.generate(request)));
         return mav;
     }
 
-    @RequestMapping(value = "/about/", method = RequestMethod.GET)
+    @RequestMapping(value = ABOUT_PATH, method = RequestMethod.GET)
     public ModelAndView aboutView(HttpServletRequest request) throws FacetViewServiceException {
 
         return createModelAndView(ABOUT_VIEW_NAME, request);
     }
 
-    @RequestMapping(value = "/contact/", method = RequestMethod.GET)
+    @RequestMapping(value = CONTACT_PATH, method = RequestMethod.GET)
     public ModelAndView contactView(HttpServletRequest request) throws FacetViewServiceException {
 
         return createModelAndView(CONTACT_VIEW_NAME, request);
@@ -72,4 +77,11 @@ public class ResRevController extends AbstractController {
     public static String ABOUT_VIEW_NAME = "aboutView";
     public static String CONTACT_VIEW_NAME = "contactView";
     public static String GRANT_VIEW_NAME = "grantView";
+
+    private final String FACETVIEW_SESSION = "facetView";
+    private final String DRILL_PARAMETER = "drill";
+
+    private final String DEFAULT_PATH = "/";
+    private final String ABOUT_PATH = "/about/";
+    private final String CONTACT_PATH = "/contact/";
 }
