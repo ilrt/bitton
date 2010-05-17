@@ -1,6 +1,7 @@
 package org.ilrt.wf.facets.web.spring.controllers;
 
 import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.log4j.Logger;
 import org.ilrt.wf.facets.FacetView;
 import org.ilrt.wf.facets.FacetViewService;
 import org.ilrt.wf.facets.FacetViewServiceException;
@@ -43,6 +44,8 @@ public class ResRevController extends AbstractController {
 
                     Resource resource = view.getResults().get(drill);
 
+                    log.debug("Request to view " + resource.getURI());
+
                     ModelAndView mav = createModelAndView(GRANT_VIEW_NAME, request);
                     mav.addObject("resource", new ResourceHashModel(resource));
                     return mav;
@@ -84,4 +87,6 @@ public class ResRevController extends AbstractController {
     private final String DEFAULT_PATH = "/";
     private final String ABOUT_PATH = "/about/";
     private final String CONTACT_PATH = "/contact/";
+
+    private Logger log = Logger.getLogger(ResRevController.class);
 }

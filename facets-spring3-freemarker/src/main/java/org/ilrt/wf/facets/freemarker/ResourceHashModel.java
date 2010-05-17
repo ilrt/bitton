@@ -1,5 +1,6 @@
 package org.ilrt.wf.facets.freemarker;
 
+import com.hp.hpl.jena.datatypes.DatatypeFormatException;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -117,22 +118,28 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
 
         if (node.isLiteral()) {
 
-            Object value = ((Literal) node).getValue();
+            try {
 
-            if (value instanceof String) {
-                return new SimpleScalar((String) value);
-            } else if (value instanceof Number) {
-                return new SimpleNumber((Number) value);
-            } else if (value instanceof Date) {
-                return new SimpleDate((Date) value, TemplateDateModel.UNKNOWN);
-            } else if (value instanceof Calendar) {
-                return new SimpleDate(((Calendar) value).getTime(), TemplateDateModel.UNKNOWN);
-            } else if (value instanceof XSDDateTime) {
-                return new SimpleDate(((XSDDateTime) value).asCalendar().getTime(),
-                        TemplateDateModel.DATETIME);
+                Object value = ((Literal) node).getValue();
+
+                if (value instanceof String) {
+                    return new SimpleScalar((String) value);
+                } else if (value instanceof Number) {
+                    return new SimpleNumber((Number) value);
+                } else if (value instanceof Date) {
+                    return new SimpleDate((Date) value, TemplateDateModel.UNKNOWN);
+                } else if (value instanceof Calendar) {
+                    return new SimpleDate(((Calendar) value).getTime(), TemplateDateModel.UNKNOWN);
+                } else if (value instanceof XSDDateTime) {
+                    return new SimpleDate(((XSDDateTime) value).asCalendar().getTime(),
+                            TemplateDateModel.DATETIME);
+                }
+
+                return new SimpleScalar(((Literal) node).getLexicalForm());
+
+            } catch (DatatypeFormatException ex) {
+                return new SimpleScalar(((Literal) node).getLexicalForm());
             }
-
-            return new SimpleScalar(((Literal) node).getLexicalForm());
 
 
         } else if (node.isResource()) {
