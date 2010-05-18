@@ -1,11 +1,13 @@
+<#include "includes/macro.ftl"/>
+<#include "includes/header.ftl"/>
+<#include "includes/header-title.ftl"/>
+<#include "includes/header-navigation.ftl"/>
 <!-- main content -->
 <div id="main-content">
 
     <div id="content">
 
-        <h2>About Research Revealed</h2>
-
-        <h3>A Subtitle</h3>
+        <h2>Default View</h2>
 
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
             labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
@@ -16,6 +18,7 @@
      </div>
 
 
-<#include "address-footer.ftl"/>
+<#include "includes/address-footer.ftl"/>
 
 </div>
+<#include "includes/footer.ftl"/>

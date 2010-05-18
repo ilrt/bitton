@@ -3,7 +3,7 @@
     <h2>Results</h2>
 
     <#list facetView.results as result>
-        <p><a href="${contextPath}${servletPath}/?drill=${result_index}"><@label resource=result/></a></p>
+        <p><a href="<@drillForResult result=result/>"><@label resource=result/></a></p>
     </#list>
 
     <#if facetView.results?size < facetView.total>

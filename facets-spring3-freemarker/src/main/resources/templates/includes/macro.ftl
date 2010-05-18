@@ -9,4 +9,6 @@
     </#if>
 </#macro>
 
+<#macro drillForResult result>${contextPath}${servletPath}/?drill=${result?url('UTF-8')}<#list RequestParameters?keys as key>&amp;${key}=${RequestParameters[key]}</#list></#macro>
+
 <#macro moreResults>${contextPath}${servletPath}/?<#if RequestParameters.number?exists>number=${RequestParameters.number?number + 10}<#else>number=20</#if><#list RequestParameters?keys as key><#if key != 'number'>&amp;${key}=${RequestParameters[key]}</#if></#list></#macro>

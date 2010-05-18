@@ -9,6 +9,10 @@ import org.ilrt.wf.facets.FacetState;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Mike Jones (mike.a.jones@bristol.ac.uk)
+ */
 public class FacetParentListMethod implements TemplateMethodModelEx {
 
     @Override
