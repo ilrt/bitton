@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,9 +91,9 @@ public class FacetStateUrlMethodTest {
     }
 
     @Test
-    public void testNoFacetParameters() throws TemplateModelException {
+    public void testNoFacetParameters() throws TemplateModelException, UnsupportedEncodingException {
 
-        final String expectedUrl = baseUri + "?" + key + "=" + historyValue;
+        final String expectedUrl = baseUri + "?" + key + "=" + URLEncoder.encode(historyValue, "UTF-8");
 
         request.setRequestURI(baseUri);
 
@@ -105,10 +107,11 @@ public class FacetStateUrlMethodTest {
     }
 
     @Test
-    public void testNoFacetParametersWithFooParameter() throws TemplateModelException {
+    public void testNoFacetParametersWithFooParameter() throws TemplateModelException,
+            UnsupportedEncodingException {
 
         final String expectedUrl = baseUri + "?" + fooKey + "=" + barValue + "&amp;"
-                + key + "=" + historyValue;
+                + key + "=" + URLEncoder.encode(historyValue, "UTF-8");
 
         request.setRequestURI(baseUri);
         request.addParameter(fooKey, barValue);
@@ -123,11 +126,11 @@ public class FacetStateUrlMethodTest {
     }
 
     @Test
-    public void testReplacingExistingFacetParameter() throws TemplateModelException {
+    public void testReplacingExistingFacetParameter() throws TemplateModelException, UnsupportedEncodingException {
 
         final String replacementValue = "subjects:british_history";
 
-        final String expectedUrl = baseUri + "?" + key + "=" + replacementValue;
+        final String expectedUrl = baseUri + "?" + key + "=" + URLEncoder.encode(replacementValue, "UTF-8");
 
         // set the request with an initial replacementValue
         request.setRequestURI(baseUri);
@@ -145,12 +148,12 @@ public class FacetStateUrlMethodTest {
 
     @Test
     public void testReplacingExistingFacetParameterAlsoHasFooParameter()
-            throws TemplateModelException {
+            throws TemplateModelException, UnsupportedEncodingException {
 
         final String replacementValue = "subjects:british_history";
 
         final String expectedUrl = baseUri + "?" + fooKey + "=" + barValue + "&amp;"
-                + key + "=" + replacementValue;
+                + key + "=" + URLEncoder.encode(replacementValue, "UTF-8");
 
         // set the request with an initial replacementValue
         request.setRequestURI(baseUri);

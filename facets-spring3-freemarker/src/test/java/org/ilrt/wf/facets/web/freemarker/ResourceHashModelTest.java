@@ -4,7 +4,9 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import freemarker.template.SimpleCollection;
 import freemarker.template.SimpleScalar;
+import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -14,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -87,9 +90,13 @@ public class ResourceHashModelTest {
     @Test
     public void testGet() throws TemplateModelException {
 
-        // test a literal
-        assertEquals("Unexpected label", label, ((SimpleScalar) resourceHashModel
-                .get(RDFS.label.getURI())).getAsString());
+        SimpleSequence collection = (SimpleSequence) resourceHashModel.get(RDFS.label.getURI());
+
+        for (Object o : collection.toList()) {
+            String s = (String) o;
+            assertEquals("Unexpected label", label, s);
+        }
+
     }
 
     @Test

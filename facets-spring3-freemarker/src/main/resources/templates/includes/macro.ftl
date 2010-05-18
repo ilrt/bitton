@@ -1,9 +1,11 @@
 <#-- display a default label for a resource -->
 <#macro label resource>
-    <#if resource['http://xmlns.com/foaf/0.1/name']??>
-        ${resource['http://xmlns.com/foaf/0.1/name']}
+    <#if resource['http://www.w3.org/2000/01/rdf-schema#label']??>
+        ${resource['http://www.w3.org/2000/01/rdf-schema#label']?first}
+    <#elseif resource['http://xmlns.com/foaf/0.1/name']??>
+        ${resource['http://xmlns.com/foaf/0.1/name']?first}
     <#elseif resource['http://purl.org/dc/terms/title']??>
-        ${resource['http://purl.org/dc/terms/title']}
+        ${resource['http://purl.org/dc/terms/title']?first}
     <#else>
         Untitled resource
     </#if>

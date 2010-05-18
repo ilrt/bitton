@@ -78,6 +78,8 @@ public class ResourceHashModelInTemplateTest extends AbstractTemplateTest {
 
         writer.flush();
 
+        System.out.println(output);
+
         XPath engine = XPathFactory.newInstance().newXPath();
 
         // check we have the expected uri

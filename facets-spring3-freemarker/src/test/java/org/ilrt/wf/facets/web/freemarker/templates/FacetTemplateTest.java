@@ -151,7 +151,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
 
         writer.flush();
 
-        //System.out.println(output);
+        System.out.println(output);
 
         XPath engine = XPathFactory.newInstance().newXPath();
 
@@ -168,7 +168,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
                 new InputSource(new StringReader(output))));
 
         // check title of the first div - departments
-        assertEquals("Unexpected title", departments_title, engine.evaluate("/div/div[1]/h3/text()",
+        assertEquals("Unexpected title", departments_title, engine.evaluate("/div/div[1]/h4/text()",
                 new InputSource(new StringReader(output))));
 
         // check the number of refinements for departments
@@ -177,7 +177,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
                         new InputSource(new StringReader(output))));
 
         // check title of the second div - subjects
-        assertEquals("Unexpected title", subjects_title, engine.evaluate("/div/div[2]/h3/text()",
+        assertEquals("Unexpected title", subjects_title, engine.evaluate("/div/div[2]/h4/text()",
                 new InputSource(new StringReader(output))));
 
         // check the selected subject
@@ -190,7 +190,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
                         new InputSource(new StringReader(output))));
 
         // check title of the third div - staff
-        assertEquals("Unexpected title", staff_title, engine.evaluate("/div/div[3]/h3/text()",
+        assertEquals("Unexpected title", staff_title, engine.evaluate("/div/div[3]/h4/text()",
                 new InputSource(new StringReader(output))));
 
         // check the selected letter for staff
@@ -198,7 +198,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
                 new InputSource(new StringReader(output))).startsWith("Z*"));
 
         // check title of the fourth div - location
-        assertEquals("Unexpected title", location_title, engine.evaluate("/div/div[4]/h3/text()",
+        assertEquals("Unexpected title", location_title, engine.evaluate("/div/div[4]/h4/text()",
                 new InputSource(new StringReader(output))));
 
 

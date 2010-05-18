@@ -1,3 +1,4 @@
+<#include "macro.ftl">
 <div id="results">
 
     <h2>Results</h2>

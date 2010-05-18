@@ -10,6 +10,7 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.ilrt.wf.facets.freemarker.JenaObjectWrapper;
+import org.ilrt.wf.facets.impl.FacetViewImpl;
 import org.junit.Test;
 import org.springframework.web.servlet.ModelAndView;
 import org.xml.sax.InputSource;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -73,7 +75,12 @@ public class ResultsListTemplateTest extends AbstractTemplateTest {
         resourceFive.addLiteral(RDFS.label, labelFive);
         results.add(resourceFive);
 
-        mav.addObject("results", results);
+        FacetViewImpl facetView = new FacetViewImpl();
+        facetView.setResults(results);
+
+        mav.addObject("facetView", facetView);
+        mav.addObject("servletPath", "");
+        mav.addObject("RequestParameters", new HashMap());
 
         // ---------- run the template
 
@@ -82,6 +89,8 @@ public class ResultsListTemplateTest extends AbstractTemplateTest {
         template.process(mav.getModel(), writer);
 
         String output = writer.getBuffer().toString();
+
+        //System.out.println(output);
 
         writer.flush();
 
@@ -92,24 +101,24 @@ public class ResultsListTemplateTest extends AbstractTemplateTest {
         XPath engine = XPathFactory.newInstance().newXPath();
 
         // check we have the expected label
-        assertEquals("Unexpected label", labelOne, engine.evaluate("/div/p[1]/text()",
-                new InputSource(new StringReader(output))));
+        assertEquals("Unexpected label", labelOne, engine.evaluate("/div/p[1]/a/text()",
+                new InputSource(new StringReader(output))).trim());
 
         // check we have the expected label
-        assertEquals("Unexpected label", labelTwo, engine.evaluate("/div/p[2]/text()",
-                new InputSource(new StringReader(output))));
+        assertEquals("Unexpected label", labelTwo, engine.evaluate("/div/p[2]/a/text()",
+                new InputSource(new StringReader(output))).trim());
 
         // check we have the expected label
-        assertEquals("Unexpected label", labelThree, engine.evaluate("/div/p[3]/text()",
-                new InputSource(new StringReader(output))));
+        assertEquals("Unexpected label", labelThree, engine.evaluate("/div/p[3]/a/text()",
+                new InputSource(new StringReader(output))).trim());
 
         // check we have the expected label
-        assertEquals("Unexpected label", labelFour, engine.evaluate("/div/p[4]/text()",
-                new InputSource(new StringReader(output))));
+        assertEquals("Unexpected label", labelFour, engine.evaluate("/div/p[4]/a/text()",
+                new InputSource(new StringReader(output))).trim());
 
         // check we have the expected label
-        assertEquals("Unexpected label", labelFive, engine.evaluate("/div/p[5]/text()",
-                new InputSource(new StringReader(output))));
+        assertEquals("Unexpected label", labelFive, engine.evaluate("/div/p[5]/a/text()",
+                new InputSource(new StringReader(output))).trim());
     }
 
     private final String uriOne = "http://example/item/1/";

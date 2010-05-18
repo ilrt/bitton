@@ -14,6 +14,7 @@ import freemarker.template.SimpleCollection;
 import freemarker.template.SimpleDate;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
+import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateHashModelEx;
@@ -24,6 +25,7 @@ import freemarker.template.TemplateScalarModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Class to help display a Jena Resource in a freemarker template. For example, for the
@@ -108,13 +110,41 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
 
         Property property = ResourceFactory.createProperty(uri);
 
-        Statement stmt = resource.getProperty(property);
-
-        if (stmt == null) {
+        if (!resource.hasProperty(property)) {
             return null; // bail
         }
 
-        RDFNode node = stmt.getObject();
+        List<TemplateModel> list = new ArrayList<TemplateModel>();
+
+        StmtIterator iter = resource.listProperties(property);
+
+        while (iter.hasNext()) {
+            list.add(resolveModel(iter.next().getObject()));
+        }
+
+        return new SimpleSequence(list);
+    }
+
+    @Override
+    public boolean isEmpty() throws TemplateModelException {
+
+        StmtIterator iterator = resource.listProperties();
+        return iterator.toList().size() == 0;
+    }
+
+    // ---------- TemplateScalarModel interface methods
+
+
+    @Override
+    public String getAsString() throws TemplateModelException {
+        if (resource.getURI() == null) {
+            return INVALID_URL;          // b-nodes return null and their ids are useless
+        } else {
+            return resource.getURI();
+        }
+    }
+
+    private TemplateModel resolveModel(RDFNode node) {
 
         if (node.isLiteral()) {
 
@@ -147,25 +177,6 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
         }
 
         return null;
-    }
-
-    @Override
-    public boolean isEmpty() throws TemplateModelException {
-
-        StmtIterator iterator = resource.listProperties();
-        return iterator.toList().size() == 0;
-    }
-
-    // ---------- TemplateScalarModel interface methods
-
-
-    @Override
-    public String getAsString() throws TemplateModelException {
-        if (resource.getURI() == null) {
-            return INVALID_URL;          // b-nodes return null and their ids are useless
-        } else {
-            return resource.getURI();
-        }
     }
 
     private Resource resource;
