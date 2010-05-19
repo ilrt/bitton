@@ -333,7 +333,7 @@ public class FacetFactoryImpl implements FacetFactory {
 //        return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 //    }
     protected char[] alphaNumericArray() {
-        return "ABCDEFG".toCharArray();
+        return "ABCDEFGHIJK".toCharArray();
     }
 
     /**
