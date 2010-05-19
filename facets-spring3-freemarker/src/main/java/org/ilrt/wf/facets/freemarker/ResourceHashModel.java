@@ -54,7 +54,14 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
     public ResourceHashModel(Resource resource) {
         this.resource = resource;
         this.prefixMapping = PrefixMapping.Factory.create();
+
+        // hard coded - not ideal
         prefixMapping.setNsPrefixes(PrefixMapping.Standard);
+        prefixMapping.setNsPrefix("foaf", "http://xmlns.com/foaf/0.1/");
+        prefixMapping.setNsPrefix("aiiso", "http://purl.org/vocab/aiiso/schema#");
+        prefixMapping.setNsPrefix("proj", "http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#");
+        prefixMapping.setNsPrefix("dc", "http://vocab.ilrt.bris.ac.uk/rr/closed#");
+
     }
 
     // ---------- TemplateModel interface methods
@@ -106,7 +113,8 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
     @Override
     public TemplateModel get(String s) throws TemplateModelException {
 
-        String uri = prefixMapping.expandPrefix(s);
+
+        String uri = prefixMapping.expandPrefix(s);      
 
         Property property = ResourceFactory.createProperty(uri);
 

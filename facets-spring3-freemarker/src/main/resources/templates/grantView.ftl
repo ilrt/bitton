@@ -10,34 +10,47 @@
 
         <h2>${resource['http://purl.org/dc/terms/title']?first}</h2>
 
-        <p><strong>Grant Number:</strong> ${resource['http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#grantNumber']?first}</p>
+        <p><strong>Grant Number:</strong> ${resource['proj:grantNumber']?first}</p>
 
-        <p><strong>Start Date: </strong> ${resource['http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#startDate']?first}</p>
+        <p><strong>Start Date: </strong> ${resource['proj:startDate']?first}</p>
 
-        <p><strong>End Date: </strong> ${resource['http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#endDate']?first}</p>
+        <p><strong>End Date: </strong> ${resource['proj:endDate']?first}</p>
 
-        <p><strong>Value: </strong> ${resource['http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#value']?first}</p>
+        <p><strong>Value: </strong> ${resource['proj:value']?first}</p>
 
         <p><strong>Abstract:</strong></p>
 
         <p>${resource['http://purl.org/dc/terms/abstract']?first}</p>
 
-        <p><strong>Principal Investigators</strong></p>
+        <p><strong>Principal Investigators:</strong></p>
 
-        <#if resource['http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#hasPrincipalInvestigator']??>
+        <#if resource['proj:hasPrincipalInvestigator']??>
             <ul>
-                <#list resource['http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#hasPrincipalInvestigator'] as pi>
+                <#list resource['proj:hasPrincipalInvestigator'] as pi>
                     <li><a href="${pi}">${pi}</a></li>
                 </#list>
             </ul>
         </#if>
 
-        <p><strong>Co-Investigators</strong></p>
+        <p><strong>Co-Investigators:</strong></p>
 
-        <#if resource['http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#hasCoInvestigator']??>
+        <#if resource['proj:hasCoInvestigator']??>
             <ul>
-                <#list resource['http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#hasCoInvestigator'] as pi>
+                <#list resource['proj:hasCoInvestigator'] as pi>
                     <li><a href="${pi}">${pi}</a></li>
+                </#list>
+            </ul>
+        </#if>
+
+        <p><strong>Hosted by:</strong></p>
+
+        <#if resource['proj:hostedBy']??>
+            <ul>
+                <#list resource['proj:hostedBy'] as host>
+                    <@displayHost host=host/>
+                </#list>
+                <#list resource['proj:hostedBy'] as host>
+                    <@displayHost host=host/>
                 </#list>
             </ul>
         </#if>
