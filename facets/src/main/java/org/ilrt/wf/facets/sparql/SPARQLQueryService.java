@@ -124,6 +124,7 @@ public class SPARQLQueryService implements FacetQueryService {
         QueryExecution qe = qef.get( query );
 
         Model hierarchy = qe.execConstruct();
+        qe.close();
 
         // Make local base, so we don't have to pass model about
         Resource baseL = hierarchy.getResource(base.getURI());
@@ -198,6 +199,7 @@ public class SPARQLQueryService implements FacetQueryService {
 
         QueryExecution qe = qef.get(q);
         Model m = qe.execDescribe();
+        qe.close();
 
         // We now have a model containing the things we were interested in
         // plus a bunch of info about them. We want to return pointer to those
@@ -220,6 +222,8 @@ public class SPARQLQueryService implements FacetQueryService {
                 m.getResource(result.getURI()) ;
             results.add(result);
         }
+
+        qe.close();
 
         return results;
     }
@@ -250,6 +254,9 @@ public class SPARQLQueryService implements FacetQueryService {
         int count = 0;
         ResultSet r = qe.execSelect();
         while (r.hasNext()) { count++; r.next(); }
+
+        qe.close();
+        
         return count;
     }
 

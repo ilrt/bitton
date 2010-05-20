@@ -20,4 +20,7 @@ public abstract class AbstractConstraint implements Constraint {
 
     @Override
     public Property getProperty() { return property; }
+
+    @Override
+    public String toString() { return "[" + property + "]"; }
 }

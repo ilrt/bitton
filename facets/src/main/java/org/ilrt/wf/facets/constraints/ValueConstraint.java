@@ -26,4 +26,7 @@ public class ValueConstraint extends AbstractConstraint {
     public boolean matches(RDFNode node) {
         return value.equals(node);
     }
+
+    @Override
+    public String toString() { return super.toString() + " value: " + value; }
 }

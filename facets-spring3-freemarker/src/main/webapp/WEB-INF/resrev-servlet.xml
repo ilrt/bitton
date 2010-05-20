@@ -54,14 +54,14 @@
         <entry key="linkProperty" value="http://vocab.ilrt.bris.ac.uk/rr/closed#hostedBy"/>
         <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
         <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-merb/organisation_units/UNIV#org"/>
-        <entry key="constraintType" value="http://purl.org/vocab/aiiso/schema#Institutions"/>
+        <entry key="constraintType" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
         <entry key="paramName" value="dept"/>
     </util:map>
 
 
     <util:list id="facetList" list-class="java.util.ArrayList">
         <ref bean="grantName"/>
-<!--        <ref bean="deptNames"/> -->
+        <ref bean="deptNames"/>
     </util:list>
 
 

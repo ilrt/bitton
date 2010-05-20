@@ -26,4 +26,6 @@ public class UnConstraint implements Constraint {
         throw new UnsupportedOperationException("Don't bother");
     }
 
+    @Override
+    public String toString() { return "[ Unconstrained ]"; }
 }
