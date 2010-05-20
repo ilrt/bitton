@@ -182,7 +182,7 @@ public class HierarchicalFacetTest extends AbstractFacetTest {
 
         // call the internal "protected" method and test the results
         List<FacetState> refinements = facetFactory.hierarchicalRefinements(resources,
-                mockConstraints, mockParentState);
+                mockParentState, null, null);
 
         // test the list
         assertEquals("Unexpected number of refinements", 2, refinements.size());
