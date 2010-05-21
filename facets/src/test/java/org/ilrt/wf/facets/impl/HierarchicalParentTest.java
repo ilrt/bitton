@@ -4,6 +4,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetQueryService.Tree;
+import org.ilrt.wf.facets.QNameUtility;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
 import org.jmock.integration.junit4.JUnit4Mockery;
@@ -41,7 +42,8 @@ public class HierarchicalParentTest extends AbstractFacetTest {
     public void setUp() {
 
         FacetQueryService mockFacetQueryService = context.mock(FacetQueryService.class);
-        facetFactory = new FacetFactoryImpl(mockFacetQueryService, getPrefixMap());
+        hierarchicalFacetImpl = new HierarchicalFacetImpl(mockFacetQueryService,
+                new QNameUtility(getPrefixMap()));
 
         node_A = createTestTree();
 
@@ -175,7 +177,7 @@ public class HierarchicalParentTest extends AbstractFacetTest {
     @Test
     public void searchForNodeA() {
 
-        List<Resource> path = facetFactory.findChildren(node_A, URI_A);
+        List<Resource> path = hierarchicalFacetImpl.findChildren(node_A, URI_A);
 
         assertEquals("Incorrect path size", 1, path.size());
         assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
@@ -184,7 +186,7 @@ public class HierarchicalParentTest extends AbstractFacetTest {
     @Test
     public void searchForNodeB1() {
 
-        List<Resource> path = facetFactory.findChildren(node_A, URI_B1);
+        List<Resource> path = hierarchicalFacetImpl.findChildren(node_A, URI_B1);
 
         assertEquals("Incorrect path size", 2, path.size());
         assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
@@ -194,7 +196,7 @@ public class HierarchicalParentTest extends AbstractFacetTest {
     @Test
     public void searchForNodeC1() {
 
-        List<Resource> path = facetFactory.findChildren(node_A, URI_C1);
+        List<Resource> path = hierarchicalFacetImpl.findChildren(node_A, URI_C1);
 
         assertEquals("Incorrect path size", 3, path.size());
         assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
@@ -205,7 +207,7 @@ public class HierarchicalParentTest extends AbstractFacetTest {
     @Test
     public void searchForNodeD1() {
 
-        List<Resource> path = facetFactory.findChildren(node_A, URI_D1);
+        List<Resource> path = hierarchicalFacetImpl.findChildren(node_A, URI_D1);
 
         assertEquals("Incorrect path size", 4, path.size());
         assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
@@ -217,7 +219,7 @@ public class HierarchicalParentTest extends AbstractFacetTest {
     @Test
     public void searchForNodeC2() {
 
-        List<Resource> path = facetFactory.findChildren(node_A, URI_C2);
+        List<Resource> path = hierarchicalFacetImpl.findChildren(node_A, URI_C2);
 
         assertEquals("Incorrect path size", 3, path.size());
         assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
@@ -228,7 +230,7 @@ public class HierarchicalParentTest extends AbstractFacetTest {
     @Test
     public void searchForNodeB2() {
 
-        List<Resource> path = facetFactory.findChildren(node_A, URI_B2);
+        List<Resource> path = hierarchicalFacetImpl.findChildren(node_A, URI_B2);
 
         assertEquals("Incorrect path size", 2, path.size());
         assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
@@ -238,7 +240,7 @@ public class HierarchicalParentTest extends AbstractFacetTest {
     @Test
     public void searchForNodeC3() {
 
-        List<Resource> path = facetFactory.findChildren(node_A, URI_C3);
+        List<Resource> path = hierarchicalFacetImpl.findChildren(node_A, URI_C3);
 
         assertEquals("Incorrect path size", 3, path.size());
         assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
@@ -249,7 +251,7 @@ public class HierarchicalParentTest extends AbstractFacetTest {
     @Test
     public void searchForNodeC4() {
 
-        List<Resource> path = facetFactory.findChildren(node_A, URI_C4);
+        List<Resource> path = hierarchicalFacetImpl.findChildren(node_A, URI_C4);
 
         assertEquals("Incorrect path size", 3, path.size());
         assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
@@ -260,7 +262,7 @@ public class HierarchicalParentTest extends AbstractFacetTest {
     @Test
     public void searchForNodeD2() {
 
-        List<Resource> path = facetFactory.findChildren(node_A, URI_D2);
+        List<Resource> path = hierarchicalFacetImpl.findChildren(node_A, URI_D2);
 
         assertEquals("Incorrect path size", 4, path.size());
         assertEquals("Unexpected URI for element", URI_A, path.get(0).getURI());
@@ -271,6 +273,6 @@ public class HierarchicalParentTest extends AbstractFacetTest {
 
     private Tree<Resource> node_A;
 
-    private FacetFactoryImpl facetFactory;
     private final Mockery context = new JUnit4Mockery();
+    private HierarchicalFacetImpl hierarchicalFacetImpl;
 }

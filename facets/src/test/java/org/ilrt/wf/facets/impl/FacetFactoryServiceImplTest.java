@@ -18,12 +18,12 @@ import java.util.Map;
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
 @RunWith(JMock.class)
-public class FacetFactoryImplTest extends AbstractFacetTest {
+public class FacetFactoryServiceImplTest extends AbstractFacetTest {
 
     @Before
     public void setUp() {
         FacetQueryService mockQueryService = context.mock(FacetQueryService.class);
-        facetFactory = new FacetFactoryImpl(mockQueryService, getPrefixMap());
+        facetFactoryService = new FacetFactoryServiceImpl(mockQueryService, getPrefixMap());
     }
 
     /**
@@ -56,7 +56,7 @@ public class FacetFactoryImplTest extends AbstractFacetTest {
 
         // test the service
 
-        facetFactory.create(mockEnvironment);
+        facetFactoryService.create(mockEnvironment);
     }
 
 
@@ -65,5 +65,5 @@ public class FacetFactoryImplTest extends AbstractFacetTest {
     // mock context
     private final Mockery context = new JUnit4Mockery();
 
-    private FacetFactoryImpl facetFactory;
+    private FacetFactoryServiceImpl facetFactoryService;
 }

@@ -34,12 +34,13 @@ import static org.junit.Assert.fail;
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
 @RunWith(JMock.class)
-public class AlphaNumericFacetTest extends AbstractFacetTest {
+public class AlphaNumericFacetImplTest extends AbstractFacetTest {
 
     @Before
     public void setUp() {
         mockFacetQueryService = context.mock(FacetQueryService.class);
-        facetFactory = new FacetFactoryImpl(mockFacetQueryService, getPrefixMap());
+        alphaNumericFacetImpl = new AlphaNumericFacetImpl();
+        facetFactory = new FacetFactoryServiceImpl(mockFacetQueryService, getPrefixMap());
     }
 
     /**
@@ -48,7 +49,7 @@ public class AlphaNumericFacetTest extends AbstractFacetTest {
     @Test
     public void alphaNumericLabel() {
 
-        assertEquals("Unexpected label", label, facetFactory.alphaNumericLabel(c));
+        assertEquals("Unexpected label", label, alphaNumericFacetImpl.alphaNumericLabel(c));
     }
 
     /**
@@ -58,7 +59,7 @@ public class AlphaNumericFacetTest extends AbstractFacetTest {
     public void alphaNumericConstraint() {
 
         assertEquals("Unexpected constraint", constraint,
-                facetFactory.alphaNumericConstraint(ResourceFactory.
+                alphaNumericFacetImpl.alphaNumericConstraint(ResourceFactory.
                         createProperty(linkProperty), c).getRegexp());
     }
 
@@ -69,7 +70,7 @@ public class AlphaNumericFacetTest extends AbstractFacetTest {
     public void alphaNumericConstraintFromLabel() {
 
         assertEquals("Unexpected constraint", constraint,
-                facetFactory.alphaNumericConstraint(ResourceFactory.
+                alphaNumericFacetImpl.alphaNumericConstraint(ResourceFactory.
                         createProperty(linkProperty), label).getRegexp());
     }
 
@@ -80,7 +81,7 @@ public class AlphaNumericFacetTest extends AbstractFacetTest {
     public void expectedAlphaNumericArray() {
 
         assertEquals("Unexpected array size", MAX_ALPHANUMERIC_ITEMS,
-                facetFactory.alphaNumericArray().length);
+                alphaNumericFacetImpl.alphaNumericArray().length);
     }
 
     /**
@@ -98,7 +99,7 @@ public class AlphaNumericFacetTest extends AbstractFacetTest {
 
         // get the states
         List<FacetState> states =
-                facetFactory.alphaNumericRefinements(new ValueConstraint(RDF.type,
+                alphaNumericFacetImpl.alphaNumericRefinements(new ValueConstraint(RDF.type,
                         ResourceFactory.createProperty(typeProperty)), p, rootState);
 
         // check we have the expected number of elements
@@ -304,5 +305,6 @@ public class AlphaNumericFacetTest extends AbstractFacetTest {
     private final Mockery context = new JUnit4Mockery();
 
     private FacetQueryService mockFacetQueryService;
-    private FacetFactoryImpl facetFactory;
+    private FacetFactoryServiceImpl facetFactory;
+    private AlphaNumericFacetImpl alphaNumericFacetImpl;
 }

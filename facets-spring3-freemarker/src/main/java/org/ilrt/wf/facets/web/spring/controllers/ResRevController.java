@@ -107,7 +107,6 @@ public class ResRevController extends AbstractController {
 
             Resource resource = wrapper.get(uri);
 
-            
             if (resource != null) {
 
                 log.debug("Found resource");

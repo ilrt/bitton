@@ -39,13 +39,14 @@ import static org.junit.Assert.assertTrue;
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
 @RunWith(JMock.class)
-public class HierarchicalFacetTest extends AbstractFacetTest {
+public class HierarchicalFacetImplTest extends AbstractFacetTest {
 
     @Before
     public void setUp() {
         mockFacetQueryService = context.mock(FacetQueryService.class);
-        facetFactory = new FacetFactoryImpl(mockFacetQueryService, getPrefixMap());
+        facetFactoryService = new FacetFactoryServiceImpl(mockFacetQueryService, getPrefixMap());
         qNameUtility = new QNameUtility(getPrefixMap());
+        hierarchicalFacetImpl = new HierarchicalFacetImpl(mockFacetQueryService, qNameUtility);
     }
 
     @Test
@@ -75,7 +76,7 @@ public class HierarchicalFacetTest extends AbstractFacetTest {
                 new HashMap<String, String[]>(), new HashMap<String, String>());
 
         // create the facet
-        Facet facet = facetFactory.create(environment);
+        Facet facet = facetFactoryService.create(environment);
 
         // test the result
         assertNotNull("The facet should not be null", facet);
@@ -131,7 +132,7 @@ public class HierarchicalFacetTest extends AbstractFacetTest {
                 params, new HashMap<String, String>());
 
         // create the facet
-        Facet facet = facetFactory.create(environment);
+        Facet facet = facetFactoryService.create(environment);
 
         // test the result
         assertNotNull("The facet should not be null", facet);
@@ -181,7 +182,7 @@ public class HierarchicalFacetTest extends AbstractFacetTest {
         List<Resource> resources = createMockRefinementsResourceListFromNodeA();
 
         // call the internal "protected" method and test the results
-        List<FacetState> refinements = facetFactory.hierarchicalRefinements(resources,
+        List<FacetState> refinements = hierarchicalFacetImpl.hierarchicalRefinements(resources,
                 mockParentState, null, null);
 
         // test the list
@@ -260,6 +261,7 @@ public class HierarchicalFacetTest extends AbstractFacetTest {
     private final Mockery context = new JUnit4Mockery();
 
     private FacetQueryService mockFacetQueryService;
-    private FacetFactoryImpl facetFactory;
+    private FacetFactoryServiceImpl facetFactoryService;
     private QNameUtility qNameUtility;
+    private HierarchicalFacetImpl hierarchicalFacetImpl;
 }
