@@ -2,10 +2,12 @@ package org.ilrt.wf.facets.impl;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import java.util.Collection;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
@@ -195,6 +197,22 @@ public class HierarchicalFacetImplTest extends AbstractFacetTest {
         assertEquals("Unexpected parameter value", qNameUtility.getQName(URI_B1),
                 state.getParamValue());
         assertEquals("Unexpected parent", mockParentState, state.getParent());
+
+        // I better explain this
+        // For each refinement, one of the constraints must use the supplied
+        // refined values (resources).
+        List<RDFNode> touchedRes = new ArrayList<RDFNode>(resources);
+        for (FacetState refine: refinements) {
+            Collection<Constraint> constraints = refine.getConstraints();
+            boolean gotValue = false;
+            for (Constraint c: constraints) {
+                ValueConstraint vc = (ValueConstraint) c;
+                if (touchedRes.contains(vc.getValue())) gotValue = true;
+                touchedRes.remove(vc.getValue());
+            }
+            assertTrue("Refined resource appeared in refined constraints", gotValue);
+        }
+        assertTrue("All refinements found", touchedRes.isEmpty());
     }
 
 
