@@ -180,7 +180,7 @@ public class AlphaNumericFacetTest extends AbstractFacetTest {
         assertEquals("Unexpected number of refinements", MAX_ALPHANUMERIC_ITEMS,
                 facetState.getRefinements().size());
         assertEquals("Unexpected count value", 0, facetState.getCount());
-        assertEquals("There should be no constraints", 0, facetState.getConstraints().size());
+        assertEquals("There should be one constraint", 1, facetState.getConstraints().size());
 
 
         // testing the refinements of the state
