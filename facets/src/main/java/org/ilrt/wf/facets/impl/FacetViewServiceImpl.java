@@ -4,7 +4,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
-import org.ilrt.wf.facets.FacetFactory;
+import org.ilrt.wf.facets.FacetFactoryService;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.FacetView;
 import org.ilrt.wf.facets.FacetViewService;
@@ -20,10 +20,10 @@ import java.util.Map;
  */
 public class FacetViewServiceImpl implements FacetViewService {
 
-    public FacetViewServiceImpl(FacetFactory facetFactory,
+    public FacetViewServiceImpl(FacetFactoryService facetFactoryService,
                                 List<Map<String, String>> configurationList,
                                 Map<String, String> prefixes) {
-        this.facetFactory = facetFactory;
+        this.facetFactoryService = facetFactoryService;
         this.configurationList = configurationList;
         this.prefixes = prefixes;
     }
@@ -56,7 +56,7 @@ public class FacetViewServiceImpl implements FacetViewService {
 
             // get the facet via the factory and add to the list
             try {
-                Facet facet = facetFactory.create(environment);
+                Facet facet = facetFactoryService.create(environment);
                 facets.add(facet);
             } catch (FacetException ex) {
                 throw new FacetViewServiceException(ex);
@@ -69,7 +69,7 @@ public class FacetViewServiceImpl implements FacetViewService {
 
         // get the counts
 
-        facetFactory.calculateCount(states);
+        facetFactoryService.calculateCount(states);
 
         // add the facets to the view
         facetView.setFacets(facets);
@@ -77,12 +77,12 @@ public class FacetViewServiceImpl implements FacetViewService {
         // ---------- results list
 
         // TODO handle index and off set from parameter values
-        List<Resource> results = facetFactory.results(states, offset, number);
+        List<Resource> results = facetFactoryService.results(states, offset, number);
         facetView.setResults(results);
 
         // ---------- add the total count
 
-        int total = facetFactory.totalResults(states);
+        int total = facetFactoryService.totalResults(states);
         facetView.setTotal(total);
 
         return facetView;
@@ -137,7 +137,7 @@ public class FacetViewServiceImpl implements FacetViewService {
     }
 
 
-    final FacetFactory facetFactory;
+    final FacetFactoryService facetFactoryService;
     final List<Map<String, String>> configurationList;
     final Map<String, String> prefixes;
 

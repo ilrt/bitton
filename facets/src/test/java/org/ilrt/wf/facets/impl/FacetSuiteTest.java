@@ -5,10 +5,10 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        AlphaNumericFacetTest.class,
-        FacetFactoryImplTest.class,
+        AlphaNumericFacetImplTest.class,
+        FacetFactoryServiceImplTest.class,
         FacetServiceImplTest.class,
-        HierarchicalFacetTest.class,
+        HierarchicalFacetImplTest.class,
         HierarchicalParentTest.class
 })
 public class FacetSuiteTest {

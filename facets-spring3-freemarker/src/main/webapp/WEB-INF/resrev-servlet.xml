@@ -89,7 +89,7 @@
 
     <!-- Facet Service -->
 
-    <bean id="facetFactory" class="org.ilrt.wf.facets.impl.FacetFactoryImpl">
+    <bean id="facetFactoryService" class="org.ilrt.wf.facets.impl.FacetFactoryServiceImpl">
         <constructor-arg index="0" ref="sparqlQueryService"/>
         <constructor-arg index="1" ref="prefixes"/>
     </bean>
@@ -97,7 +97,7 @@
     <!-- Facet View Service -->
 
     <bean id="facetViewService" class="org.ilrt.wf.facets.impl.FacetViewServiceImpl">
-        <constructor-arg index="0" ref="facetFactory"/>
+        <constructor-arg index="0" ref="facetFactoryService"/>
         <constructor-arg index="1" ref="facetList"/>
         <constructor-arg index="2" ref="prefixes"/>
     </bean>

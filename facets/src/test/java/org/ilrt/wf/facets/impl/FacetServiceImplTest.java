@@ -48,13 +48,13 @@ public class FacetServiceImplTest {
         }});
 
 
-        // mock the FacetFactory.class
+        // mock the FacetFactoryService.class
 
-        final FacetFactory facetFactory = context.mock(FacetFactory.class);
+        final FacetFactoryService facetFactoryService = context.mock(FacetFactoryService.class);
 
         // test the service
 
-        FacetViewService facetViewService = new FacetViewServiceImpl(facetFactory, configuration);
+        FacetViewService facetViewService = new FacetViewServiceImpl(facetFactoryService, configuration);
 //        FacetView facetView = facetViewService.generate(request);
 
 
