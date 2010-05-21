@@ -358,12 +358,12 @@ public class FacetFactoryImpl implements FacetFactory {
     /**
      * @return an array of alpha-numeric characters.
      */
-//    protected char[] alphaNumericArray() {
-//        return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-//    }
     protected char[] alphaNumericArray() {
-        return "ABCDEFGHIJK".toCharArray();
+        return "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     }
+//    protected char[] alphaNumericArray() {
+//        return "ABCDEFGHIJK".toCharArray();
+//    }
 
     /**
      * @param c the character we want to represent in a label
