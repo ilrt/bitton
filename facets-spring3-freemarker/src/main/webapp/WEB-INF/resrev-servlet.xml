@@ -25,7 +25,7 @@
         <entry key="proj" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#"/>
 
         <!-- title, abstract, source (provenance) -->
-        <entry key="dc" value="http://purl.org/dc/terms" />
+        <entry key="dc" value="http://purl.org/dc/terms"/>
 
         <!--  label -->
         <entry key="rdfs" value="http://www.w3.org/2000/01/rdf-schema#"/>
@@ -44,7 +44,8 @@
         <entry key="facetType" value="AlphaNumeric"/>
         <entry key="facetTitle" value="Grant Titles"/>
         <entry key="linkProperty" value="http://purl.org/dc/terms/title"/>
-        <entry key="constraintType" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+        <entry key="constraintType"
+               value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
         <entry key="paramName" value="grant"/>
     </util:map>
 
@@ -53,15 +54,28 @@
         <entry key="facetTitle" value="Department Names"/>
         <entry key="linkProperty" value="http://vocab.ilrt.bris.ac.uk/rr/closed#hostedBy"/>
         <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
-        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-merb/organisation_units/UNIV#org"/>
-        <entry key="constraintType" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+        <entry key="facetBase"
+               value="http://resrev.ilrt.bris.ac.uk/research-revealed-merb/organisation_units/UNIV#org"/>
+        <entry key="constraintType"
+               value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
         <entry key="paramName" value="dept"/>
     </util:map>
 
 
+    <util:map id="grantValues" map-class="java.util.HashMap">
+        <entry key="facetType" value="SimpleNumberRange"/>
+        <entry key="facetTitle" value="Grant Values"/>
+        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#value"/>
+        <entry key="constraintType"
+               value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+        <entry key="numericRange" value="0:50000,50000:100000,100000:250000,250000:500000,500000:1000000,1000000:5000000"/>
+        <entry key="paramName" value="grantValues"/>
+    </util:map>
+
     <util:list id="facetList" list-class="java.util.ArrayList">
         <ref bean="grantName"/>
         <ref bean="deptNames"/>
+        <ref bean="grantValues"/>
     </util:list>
 
 

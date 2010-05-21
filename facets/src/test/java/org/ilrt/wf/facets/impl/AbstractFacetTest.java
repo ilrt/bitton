@@ -4,15 +4,45 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetQueryService.Tree;
+import org.ilrt.wf.facets.FacetState;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
 public abstract class AbstractFacetTest {
+
+    Map<FacetState, Integer> getCounts(List<? extends FacetState> states) {
+
+        Map<FacetState, Integer> results = new HashMap<FacetState, Integer>();
+
+        // go through root states to get refinements
+        for (FacetState facetState : states) {
+            for (FacetState refinementState : facetState.getRefinements()) {
+                // set everything with a count of 5
+                results.put(refinementState, 5);
+            }
+        }
+
+        return results;
+    }
+
+    List<FacetState> currentStates(List<Facet> facetList) {
+
+        List<FacetState> states = new ArrayList<FacetState>();
+
+        for (Facet facet : facetList) {
+            states.add(facet.getState());
+        }
+
+        return states;
+    }
 
     Map<String, String> getPrefixMap() {
 

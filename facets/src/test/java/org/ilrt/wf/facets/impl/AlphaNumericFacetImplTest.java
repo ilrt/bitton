@@ -262,31 +262,7 @@ public class AlphaNumericFacetImplTest extends AbstractFacetTest {
         return config;
     }
 
-    public Map<FacetState, Integer> getCounts(List<? extends FacetState> states) {
 
-        Map<FacetState, Integer> results = new HashMap<FacetState, Integer>();
-
-        // go through root states to get refinements
-        for (FacetState facetState : states) {
-            for (FacetState refinementState : facetState.getRefinements()) {
-                // set everything with a count of 5
-                results.put(refinementState, 5);
-            }
-        }
-
-        return results;
-    }
-
-    private List<FacetState> currentStates(List<Facet> facetList) {
-
-        List<FacetState> states = new ArrayList<FacetState>();
-
-        for (Facet facet : facetList) {
-            states.add(facet.getState());
-        }
-
-        return states;
-    }
 
     // ---------- private variables
 

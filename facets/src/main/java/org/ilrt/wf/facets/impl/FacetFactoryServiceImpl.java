@@ -28,6 +28,7 @@ public class FacetFactoryServiceImpl implements FacetFactoryService {
         QNameUtility qNameUtility = new QNameUtility(prefixMap);
         hierarchicalFacetImpl = new HierarchicalFacetImpl(facetQueryService, qNameUtility);
         alphaNumericFacetImpl = new AlphaNumericFacetImpl();
+        simpleNumericRangeFacetImpl = new SimpleNumericRangeFacetImpl();
     }
 
     // ---------- public methods implementing the interface
@@ -41,6 +42,8 @@ public class FacetFactoryServiceImpl implements FacetFactoryService {
             return alphaNumericFacetImpl.create(environment);
         } else if (facetType.equals(Facet.HIERARCHICAL_FACET_TYPE)) {
             return hierarchicalFacetImpl.create(environment);
+        } else if (facetType.equals(Facet.SIMPLE_NUMBER_RANGE_FACET_TYPE)) {
+            return simpleNumericRangeFacetImpl.create(environment);
         } else {
             throw new FacetException("Unrecognized facet type: " + facetType);
         }
@@ -75,4 +78,5 @@ public class FacetFactoryServiceImpl implements FacetFactoryService {
     private final FacetQueryService facetQueryService;
     private final FacetFactory hierarchicalFacetImpl;
     private final FacetFactory alphaNumericFacetImpl;
+    private final FacetFactory simpleNumericRangeFacetImpl;
 }

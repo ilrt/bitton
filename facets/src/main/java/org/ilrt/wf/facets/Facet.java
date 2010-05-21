@@ -23,10 +23,12 @@ public interface Facet {
     String PREFIX = "prefix";
     String START_YEAR = "startYear";
     String END_YEAR = "endYear";
+    String NUMERIC_RANGE = "numericRange";
 
     // facet types
     String ALPHA_NUMERIC_FACET_TYPE = "AlphaNumeric";
     String HIERARCHICAL_FACET_TYPE = "Hierarchical";
+    String SIMPLE_NUMBER_RANGE_FACET_TYPE = "SimpleNumberRange";
     String DATE_TIME_FACET_TYPE = "DateTime";
     String FLAT_FACET_TYPE = "Flat";
     String TEXT_SEARCH_FACET = "TextSearch";
