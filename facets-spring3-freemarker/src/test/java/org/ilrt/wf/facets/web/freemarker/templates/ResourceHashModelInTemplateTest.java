@@ -37,6 +37,7 @@ public class ResourceHashModelInTemplateTest extends AbstractTemplateTest {
 
         // configure to find test_templates
         Configuration configuration = createTestConfiguration(wrapper, TEMPLATES_PATH);
+        configuration.setLocale(Locale.US); // On Ubuntu we were getting "o'clock"
 
         // create a model and view
         ModelAndView mav = new ModelAndView();
