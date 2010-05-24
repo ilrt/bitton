@@ -55,21 +55,21 @@ public class SimpleNumberRangeFacetImplTest extends AbstractFacetTest {
 
         FacetState stateOne = states.get(0);
 
-        assertEquals("Unexpected name", "£0 - £50,000", stateOne.getName());
+        assertEquals("Unexpected name", "Â£0 - Â£50,000", stateOne.getName());
         assertEquals("Unexpected parameter value", "0:50000", stateOne.getParamValue());
         assertEquals("Unexpected parent", rootState, stateOne.getParent());
         assertEquals("There should be two constraints", 2, stateOne.getConstraints().size());
 
         FacetState stateFour = states.get(3);
 
-        assertEquals("Unexpected name", "£250,000 - £500,000", stateFour.getName());
+        assertEquals("Unexpected name", "Â£250,000 - Â£500,000", stateFour.getName());
         assertEquals("Unexpected parameter value", "250000:500000", stateFour.getParamValue());
         assertEquals("Unexpected parent", rootState, stateFour.getParent());
         assertEquals("There should be two constraints", 2, stateFour.getConstraints().size());
 
         FacetState stateSix = states.get(5);
 
-        assertEquals("Unexpected name", "£1,000,000 - £5,000,000", stateSix.getName());
+        assertEquals("Unexpected name", "Â£1,000,000 - Â£5,000,000", stateSix.getName());
         assertEquals("Unexpected parameter value", "1000000:5000000", stateSix.getParamValue());
         assertEquals("Unexpected parent", rootState, stateSix.getParent());
         assertEquals("There should be two constraints", 2, stateSix.getConstraints().size());
