@@ -95,5 +95,5 @@ public class SimpleNumericRangeFacetImpl extends AbstractFacetFactoryImpl implem
         return new RangeConstraint(property, lower, upper);
     }
 
-    DecimalFormat df = new DecimalFormat("£###,###");
+    DecimalFormat df = new DecimalFormat("Â£###,###");
 }
