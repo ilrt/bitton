@@ -16,7 +16,7 @@
     <name>Web Application Module</name>
     <url>http://maven.apache.org</url>
     <build>
-        <finalName>facets-spring3-freemarker</finalName>
+        <finalName>browser</finalName>
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
