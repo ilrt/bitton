@@ -73,6 +73,10 @@ public class SPARQLQueryService implements FacetQueryService {
 
     public SPARQLQueryService(QEFactory qef) {
         this.qef = qef;
+
+        // TODO: Work around. Remove this when ARQ is fixed
+
+        System.setProperty("http.keepAlive", "false");
     }
 
     @Override
