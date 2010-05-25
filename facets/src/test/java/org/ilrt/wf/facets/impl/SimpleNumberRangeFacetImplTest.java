@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,11 +46,10 @@ public class SimpleNumberRangeFacetImplTest extends AbstractFacetTest {
         // property used in each state
         Property p = ResourceFactory.createProperty(linkProperty);
 
-
         // get the states
         List<FacetState> states =
                 facet.refinements(testRanges, new ValueConstraint(RDF.type,
-                        ResourceFactory.createProperty(typeProperty)), p, rootState);
+                        ResourceFactory.createProperty(typeProperty)), p, rootState, typeUri, df);
 
         assertEquals("Unexpected label", 6, states.size());
 
@@ -152,4 +152,8 @@ public class SimpleNumberRangeFacetImplTest extends AbstractFacetTest {
     private FacetFactoryServiceImpl facetFactory;
 
     private final Mockery context = new JUnit4Mockery();
+
+    private final String typeUri = "http://www.w3.org/2001/XMLSchema#integer";
+
+    DecimalFormat df = new DecimalFormat("£###,###");
 }

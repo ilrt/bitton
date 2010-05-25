@@ -24,6 +24,8 @@ public interface Facet {
     String START_YEAR = "startYear";
     String END_YEAR = "endYear";
     String NUMERIC_RANGE = "numericRange";
+    String NUMERIC_RANGE_TYPE = "numericRangeType";
+    String NUMERIC_RANGE_FORMAT = "numericRangeFormat";
 
     // facet types
     String ALPHA_NUMERIC_FACET_TYPE = "AlphaNumeric";
