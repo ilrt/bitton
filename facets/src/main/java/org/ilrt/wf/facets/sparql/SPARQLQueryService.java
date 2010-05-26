@@ -14,6 +14,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
@@ -26,20 +27,26 @@ import com.hp.hpl.jena.sparql.algebra.Transformer;
 import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
+import com.hp.hpl.jena.sparql.algebra.op.OpGroupAgg;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.algebra.op.OpSlice;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.sparql.core.VarExprList;
+import com.hp.hpl.jena.sparql.expr.E_Aggregator;
 import com.hp.hpl.jena.sparql.expr.E_LessThan;
 import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
 import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
 import com.hp.hpl.jena.sparql.expr.E_Regex;
 import com.hp.hpl.jena.sparql.expr.E_Str;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
+import com.hp.hpl.jena.sparql.expr.aggregate.AggCount;
+import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVar;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import java.util.AbstractList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -248,9 +255,30 @@ public class SPARQLQueryService implements FacetQueryService {
 
     protected int getCount(Collection<Constraint> constraints) {
         Op op = constraintsToOp(constraints);
+        
+        // Using count(*)
+        E_Aggregator x = new E_Aggregator("name", AggCount.get().create());
+        Op op2 = new OpGroupAgg(op, new VarExprList(), Collections.singletonList(x));
+
+        log.info("Op is: " + op2);
+
+        Query q = OpAsQuery.asQuery(op);
+        q.setQuerySelectType();
+        q.setQueryResultStar(false);
+        E_Aggregator agg = q.allocAggregate(AggCount.get());
+        q.addResultVar("count", agg);
+        q.addProjectVars(Arrays.asList(Var.alloc("count")));
+        QueryExecution qe = qef.get(q);
+
+        ResultSet r = qe.execSelect();
+        int count = r.next().getLiteral("count").getInt();
+        qe.close();
 
         // just get subject
+        /*
         op = new OpProject(op, Collections.singletonList(SUBJECT));
+
+
 
         Query q = OpAsQuery.asQuery(op);
         QueryExecution qe = qef.get(q);
@@ -259,7 +287,7 @@ public class SPARQLQueryService implements FacetQueryService {
         ResultSet r = qe.execSelect();
         while (r.hasNext()) { count++; r.next(); }
 
-        qe.close();
+        qe.close();*/
         
         return count;
     }
