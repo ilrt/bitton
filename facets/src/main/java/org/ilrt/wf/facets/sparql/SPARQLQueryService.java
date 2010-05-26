@@ -74,7 +74,7 @@ public class SPARQLQueryService implements FacetQueryService {
 
     private final static Logger log = LoggerFactory.getLogger(SPARQLQueryService.class);
 
-    private final static Var SUBJECT = Var.alloc("s");
+    protected final static Var SUBJECT = Var.alloc("s");
 
     private final QEFactory qef;
 
@@ -257,11 +257,6 @@ public class SPARQLQueryService implements FacetQueryService {
         Op op = constraintsToOp(constraints);
         
         // Using count(*)
-        E_Aggregator x = new E_Aggregator("name", AggCount.get().create());
-        Op op2 = new OpGroupAgg(op, new VarExprList(), Collections.singletonList(x));
-
-        log.info("Op is: " + op2);
-
         Query q = OpAsQuery.asQuery(op);
         q.setQuerySelectType();
         q.setQueryResultStar(false);
@@ -346,13 +341,13 @@ public class SPARQLQueryService implements FacetQueryService {
         } else throw new RuntimeException("Unknown constraint type");
     }
 
-    private Op tripleToBGP(Node s, Node p, Node o) {
+    protected Op tripleToBGP(Node s, Node p, Node o) {
         BasicPattern bgp = new BasicPattern();
         bgp.add(Triple.create(s, p, o));
         return new OpBGP(bgp);
     }
 
-    private Collection<Constraint> statesToConstraints(Collection<? extends FacetState> states, FacetState... moreStates) {
+    protected Collection<Constraint> statesToConstraints(Collection<? extends FacetState> states, FacetState... moreStates) {
         Collection<Constraint> cs = new LinkedList<Constraint>();
         for (FacetState s: states) cs.addAll(s.getConstraints());
         for (FacetState s: moreStates) cs.addAll(s.getConstraints());
