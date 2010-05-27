@@ -14,7 +14,6 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
@@ -27,14 +26,12 @@ import com.hp.hpl.jena.sparql.algebra.Transformer;
 import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
-import com.hp.hpl.jena.sparql.algebra.op.OpGroupAgg;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.algebra.op.OpSlice;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.sparql.core.VarExprList;
 import com.hp.hpl.jena.sparql.expr.E_Aggregator;
 import com.hp.hpl.jena.sparql.expr.E_LessThan;
 import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
@@ -43,10 +40,8 @@ import com.hp.hpl.jena.sparql.expr.E_Regex;
 import com.hp.hpl.jena.sparql.expr.E_Str;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.aggregate.AggCount;
-import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVar;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import java.util.AbstractList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -88,15 +83,25 @@ public class SPARQLQueryService implements FacetQueryService {
 
     @Override
     public List<Resource> getRefinements(Resource base, Property prop, boolean isBroader) {
+        long startTime = 0;
+        if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
         Tree<Resource> refinements =
                 getHierarchy(base, prop, isBroader, true) ;
-        return new TreeChildrenList<Resource>(refinements);
+        TreeChildrenList<Resource> toReturn = new TreeChildrenList<Resource>(refinements);
+        if (log.isDebugEnabled()) log.debug("getRefinements took: {} ms",
+                System.currentTimeMillis() - startTime);
+        return toReturn;
     }
 
     @Override
     public Tree<Resource> getHierarchy(Resource base, Property prop,
             boolean isBroader) {
-        return getHierarchy(base, prop, isBroader, false);
+        long startTime = 0;
+        if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
+        Tree<Resource> toReturn = getHierarchy(base, prop, isBroader, false);
+        if (log.isDebugEnabled()) log.debug("getHierarchy took: {} ms",
+                System.currentTimeMillis() - startTime);
+        return toReturn;
     }
 
     /**
@@ -183,21 +188,32 @@ public class SPARQLQueryService implements FacetQueryService {
 
     @Override
     public Map<FacetState, Integer> getCounts(List<? extends FacetState> currentFacetStates) {
+        long startTime = 0;
+        if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
         // Inefficient first pass
         Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
         for (FacetState state: currentFacetStates) {
             getStateCounts(state, currentFacetStates, counts);
         }
+        if (log.isDebugEnabled()) log.debug("getCounts took: {} ms",
+                System.currentTimeMillis() - startTime);
         return counts;
     }
 
     @Override
     public int getCount(List<? extends FacetState> currentFacetStates) {
-        return getCount(statesToConstraints(currentFacetStates));
+        long startTime = 0;
+        if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
+        int toReturn = getCount(statesToConstraints(currentFacetStates));
+        if (log.isDebugEnabled()) log.debug("getCount took: {} ms",
+                System.currentTimeMillis() - startTime);
+        return toReturn;
     }
 
     @Override
     public List<Resource> getResults(List<? extends FacetState> currentFacetStates, int offset, int number) {
+        long startTime = 0;
+        if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
         // Remember this query. We'll use it later.
         Op opBasic = constraintsToOp(statesToConstraints(currentFacetStates));
         Op op = opBasic;
@@ -235,6 +251,9 @@ public class SPARQLQueryService implements FacetQueryService {
         }
 
         qe.close();
+
+        if (log.isDebugEnabled()) log.debug("getResults took: {} ms",
+                System.currentTimeMillis() - startTime);
 
         return results;
     }

@@ -33,12 +33,16 @@ import java.util.Map;
 import java.util.Set;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.constraints.Constraint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author pldms
  */
 public class SPARQLOneShotQueryService extends SPARQLQueryService {
+
+    private final static Logger log = LoggerFactory.getLogger(SPARQLOneShotQueryService.class);
 
     public SPARQLOneShotQueryService(QEFactory qef) {
         super(qef);
@@ -51,6 +55,8 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
      */
     @Override
     public Map<FacetState, Integer> getCounts(List<? extends FacetState> currentFacetStates) {
+        long startTime = 0;
+        if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
         Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
         Collection<Constraint> allConstraints = statesToConstraints(currentFacetStates);
 
@@ -94,6 +100,9 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
         countMatchingRefinements(counts, currentFacetStates, results, propToVar);
 
         qe.close();
+
+        if (log.isDebugEnabled()) log.debug("getCounts took: {} ms",
+                System.currentTimeMillis() - startTime);
 
         return counts;
     }
