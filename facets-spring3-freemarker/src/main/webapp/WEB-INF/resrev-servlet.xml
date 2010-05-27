@@ -125,7 +125,7 @@
         <constructor-arg value="${sparql.endpoint}"/>
     </bean>
 
-    <bean id="sparqlQueryService" class="org.ilrt.wf.facets.sparql.SPARQLQueryService">
+    <bean id="sparqlQueryService" class="org.ilrt.wf.facets.sparql.SPARQLOneShotQueryService">
         <constructor-arg ref="sparqlQEFactory"/>
     </bean>
 
