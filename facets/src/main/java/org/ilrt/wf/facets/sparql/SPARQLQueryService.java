@@ -76,7 +76,7 @@ public class SPARQLQueryService implements FacetQueryService {
 
     protected final static Var SUBJECT = Var.alloc("s");
 
-    private final QEFactory qef;
+    protected final QEFactory qef;
 
     public SPARQLQueryService(QEFactory qef) {
         this.qef = qef;

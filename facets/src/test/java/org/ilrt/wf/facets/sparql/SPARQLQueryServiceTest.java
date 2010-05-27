@@ -12,6 +12,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.sparql.algebra.Algebra;
 import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.vocabulary.RDF;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +41,7 @@ public class SPARQLQueryServiceTest {
     private final Property range = ResourceFactory.createProperty(NS, "range");
     private final Property label = ResourceFactory.createProperty(NS, "label");
     private final RDFNode val = ResourceFactory.createResource(NS + "value");
+    private final RDFNode TYPE = ResourceFactory.createResource(NS + "Thing");
     private final Property broader = ResourceFactory.createProperty(NS, "broader");
     private final Property narrower = ResourceFactory.createProperty(NS, "narrower");
 
@@ -150,9 +152,9 @@ public class SPARQLQueryServiceTest {
 
     @Test
     public void checkFullCounts() {
-        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+        SPARQLQueryService instance = new SPARQLOneShotQueryService(new ModelQEFactory(model));
 
-        MFacetState a = new MFacetState(new UnConstraint());
+        MFacetState a = new MFacetState(new ValueConstraint(RDF.type, TYPE));
         FacetState a1 =
                 a.addRefinement( new MFacetState(new RegexpConstraint(label, "^a")) );
         FacetState a2 =
