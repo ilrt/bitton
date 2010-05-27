@@ -21,7 +21,9 @@ import com.hp.hpl.jena.sparql.algebra.OpWalker;
 import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
+import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.core.Var;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,11 +78,16 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
             }
         }
 
+        List<Var> vars = new ArrayList<Var>();
+        vars.add(SUBJECT);
+        // Bah, I just can't win here.
+        for (String varName: propToVar.values()) vars.add(Var.alloc(varName));
+        op = new OpProject(op, vars);
+
         // Now get the results...
         Query q = OpAsQuery.asQuery(op);
         q.setQuerySelectType();
         q.setQueryResultStar(false);
-        q.addProjectVars(propToVar.values()); // select only the bits we want
 
         QueryExecution qe = qef.get(q);
         ResultSet results = qe.execSelect();

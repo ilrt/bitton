@@ -257,12 +257,12 @@ public class SPARQLQueryService implements FacetQueryService {
         Op op = constraintsToOp(constraints);
         
         // Using count(*)
+        op = new OpProject(op, Collections.singletonList(Var.alloc("count")));
         Query q = OpAsQuery.asQuery(op);
         q.setQuerySelectType();
         q.setQueryResultStar(false);
         E_Aggregator agg = q.allocAggregate(AggCount.get());
         q.addResultVar("count", agg);
-        q.addProjectVars(Arrays.asList(Var.alloc("count")));
         QueryExecution qe = qef.get(q);
 
         ResultSet r = qe.execSelect();
