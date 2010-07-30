@@ -25,6 +25,31 @@
         <param-value>classpath:log4j.properties</param-value>
     </context-param>
 
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/resrev-servlet.xml</param-value>
+        <param-value>/WEB-INF/resrev-security.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!-- ========== SECURITY FILTER ========== -->
+    <filter>
+           <filter-name>CAS Authentication Filter</filter-name>
+           <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+           <init-param>
+                   <param-name>targetBeanName</param-name>
+                   <param-value>casAuthenticationFilter</param-value>
+           </init-param>
+   </filter>
+
+
+   <filter-mapping>
+           <filter-name>CAS Authentication Filter</filter-name>
+           <url-pattern>/resrev/*</url-pattern>
+   </filter-mapping>
 
     <!-- ========== LISTENERS ========== -->
 
