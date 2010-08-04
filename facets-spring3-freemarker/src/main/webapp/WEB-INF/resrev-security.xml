@@ -20,7 +20,7 @@
                 p:service="http://localhost:8081/resrev/">
                 <property name="ticketValidator">
                         <bean class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator">
-                                <constructor-arg index="0" value="https://sso.bris.ac.uk/sso/proxyValidate" />
+                                <constructor-arg index="0" value="https://sso.bris.ac.uk/sso" />
                         </bean>
                 </property>
         </bean>
