@@ -148,10 +148,15 @@ public interface FacetQueryService {
 
         @Override
         public String toString() {
+            return toString(0);
+        }
+
+        public String toString(int indent) {
+            StringBuilder is = new StringBuilder(indent * 2);
+            for (int i = 0; i < indent; i++) is.append("  ");
             StringBuilder sb = new StringBuilder();
-            sb.append("(").append(node).append(" ");
-            for (Tree<T> x: children) sb.append(x);
-            sb.append(" )");
+            sb.append(is).append("|-").append(node).append("\n");
+            for (Tree<T> x: children) sb.append(x.toString(indent + 1));
             return sb.toString();
         }
     }
