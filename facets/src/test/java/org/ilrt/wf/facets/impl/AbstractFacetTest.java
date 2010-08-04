@@ -86,6 +86,12 @@ public abstract class AbstractFacetTest {
         Resource resource_D2 = model.createResource(URI_D2);
         resource_D2.addLiteral(RDFS.label, label_D2);
 
+        Resource resource_E1 = model.createResource(URI_E1);
+        resource_E1.addLiteral(RDFS.label, label_E1);
+
+        Resource resource_F1 = model.createResource(URI_F1);
+        resource_F1.addLiteral(RDFS.label, label_F1);
+
         Tree<Resource> tree_A = new Tree<Resource>(resource_A);
         Tree<Resource> tree_B1 = new Tree<Resource>(resource_B1);
         Tree<Resource> tree_B2 = new Tree<Resource>(resource_B2);
@@ -95,6 +101,8 @@ public abstract class AbstractFacetTest {
         Tree<Resource> tree_C4 = new Tree<Resource>(resource_C4);
         Tree<Resource> tree_D1 = new Tree<Resource>(resource_D1);
         Tree<Resource> tree_D2 = new Tree<Resource>(resource_D2);
+        Tree<Resource> tree_E1 = new Tree<Resource>(resource_E1);
+        Tree<Resource> tree_F1 = new Tree<Resource>(resource_F1);
 
         tree_A.addChild(tree_B1);
         tree_A.addChild(tree_B2);
@@ -109,6 +117,10 @@ public abstract class AbstractFacetTest {
 
         tree_C4.addChild(tree_D2);
 
+        tree_D1.addChild(tree_E1);
+
+        tree_E1.addChild(tree_F1);
+
         return tree_A;
     }
 
@@ -121,6 +133,8 @@ public abstract class AbstractFacetTest {
     final String URI_C4 = "http://example.org/C4";
     final String URI_D1 = "http://example.org/D1";
     final String URI_D2 = "http://example.org/D2";
+    final String URI_E1 = "http://example.org/E1";
+    final String URI_F1 = "http://example.org/F1";
 
     final String label_A = "Node A";
     final String label_B1 = "Node B1";
@@ -131,6 +145,8 @@ public abstract class AbstractFacetTest {
     final String label_C4 = "Node C4";
     final String label_D1 = "Node D1";
     final String label_D2 = "Node D2";
+    final String label_E1 = "Node E1";
+    final String label_F1 = "Node F1";
 
     private final String foafPrefix = "foaf";
     private final String foafUri = "http://xmlns.com/foaf/0.1/Person";

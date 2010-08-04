@@ -30,6 +30,10 @@ import static org.junit.Assert.assertTrue;
  *                      C1   C2 C3   C4
  *                     /              \
  *                    D1              D2
+ *                    /
+ *                   E1
+ *                   /
+ *                  F1
  * </pre>
  *
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
@@ -148,14 +152,14 @@ public class HierarchicalParentTest extends AbstractFacetTest {
 
         Tree<Resource> node_D1 = node_C1_children.get(0);
 
-        assertTrue("Node D1 is a leaf", node_D1.isLeaf());
+        //assertTrue("Node D1 is a leaf", node_D1.isLeaf());
         assertEquals("Unexpected URI for Node D1", URI_D1, node_D1.getValue().getURI());
         assertEquals("Unexpected label for Node D1", label_D1, node_D1.getValue()
                 .getProperty(RDFS.label).getLiteral().getLexicalForm());
 
         List<Tree<Resource>> node_D1_children = node_D1.getChildren();
 
-        assertEquals("There should be no children", 0, node_D1_children.size());
+        //assertEquals("There should be no children", 0, node_D1_children.size());
 
 
         // ---------- check node D2
