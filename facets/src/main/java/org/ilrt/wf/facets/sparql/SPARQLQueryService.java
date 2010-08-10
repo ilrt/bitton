@@ -16,6 +16,7 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
@@ -375,6 +376,21 @@ public class SPARQLQueryService implements FacetQueryService {
 
     private int varCount = 0;
     private Var genVar() { varCount++; return Var.alloc("v" + varCount); }
+
+    @Override
+    public String getLabelFor(Resource thing) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Resource getInformationAbout(Resource thing) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Resource getInformationAboutIndirect(Property property, RDFNode value) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     /**
      * This is for cleaning up the query having created it
