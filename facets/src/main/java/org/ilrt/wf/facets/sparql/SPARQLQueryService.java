@@ -14,6 +14,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -42,7 +43,9 @@ import com.hp.hpl.jena.sparql.expr.E_Str;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.aggregate.AggCount;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
+import com.hp.hpl.jena.vocabulary.RDFS;
 import java.util.AbstractList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -377,19 +380,67 @@ public class SPARQLQueryService implements FacetQueryService {
     private int varCount = 0;
     private Var genVar() { varCount++; return Var.alloc("v" + varCount); }
 
+    // TODO Need to think about making this smarter
+    // How to choose from multiple results, for example
     @Override
     public String getLabelFor(Resource thing) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Var label = Var.alloc("label");
+        Op op = tripleToBGP(thing.asNode(), RDFS.label.asNode(), label);
+        op = new OpGraph(Var.alloc("g"), op);
+        op = new OpProject(op, Arrays.asList(label));
+        Query q = OpAsQuery.asQuery(op);
+        QueryExecution qe = qef.get(q);
+        ResultSet results = qe.execSelect();
+        String lab;
+        if (results.hasNext()) {
+            RDFNode val = results.next().get("label");
+            if (val.isLiteral()) lab = val.as(Literal.class).getLexicalForm();
+            else lab = null;
+        } else {
+            lab = null;
+        }
+        qe.close();
+        return lab;
     }
 
     @Override
     public Resource getInformationAbout(Resource thing) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (thing.isAnon()) throw new IllegalArgumentException("Described nodes must be ground");
+        Query q = QueryFactory.create(String.format("DESCRIBE <%s>", thing.getURI()));
+        QueryExecution qe = qef.get(q);
+        Model m = qe.execDescribe();
+        qe.close();
+        return m.createResource(thing.getURI());
     }
 
     @Override
     public Resource getInformationAboutIndirect(Property property, RDFNode value) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Var thing = Var.alloc("thing");
+        Op op = tripleToBGP(thing, property.asNode(), value.asNode());
+        op = new OpGraph(Var.alloc("g"), op);
+        op = new OpProject(op, Arrays.asList(thing));
+        Query q = OpAsQuery.asQuery(op);
+        q.setQueryDescribeType();
+        QueryExecution qe = qef.get(q);
+        Model m = qe.execDescribe();
+        qe.close();
+
+        // Ok, now the same thing locally to find out what we described
+
+        q.setQuerySelectType(); // select this time
+        DataSource ds = DatasetFactory.create();
+        ds.addNamedModel("http://example.com", m);
+        qe = QueryExecutionFactory.create(q, ds);
+        ResultSet results = qe.execSelect();
+        Resource t;
+        if (results.hasNext()) {
+            t = results.next().getResource("thing");
+            t = m.createResource(t.getURI()); // ensure t is associated with model
+        } else {
+            t = null;
+        }
+        qe.close();
+        return t;
     }
 
     /**

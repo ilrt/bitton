@@ -5,6 +5,7 @@
 
 package org.ilrt.wf.facets.sparql;
 
+import com.hp.hpl.jena.vocabulary.RDFS;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -223,6 +224,45 @@ public class SPARQLQueryServiceTest {
         assertTrue(res.hasProperty(prop, val));
         assertTrue(res.hasProperty(range));
         assertTrue(res.hasProperty(label));
+    }
+
+    private final Resource desc = ResourceFactory.createResource(NS + "desc");
+    private final Property ifp = ResourceFactory.createProperty(NS + "ifp");
+    private final Property prop2 = ResourceFactory.createProperty(NS + "prop2");
+    private final Resource val2 = ResourceFactory.createResource(NS + "val2");
+
+    @Test
+    public void checkGetLabel() {
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+
+        String lab = instance.getLabelFor(desc);
+
+        assertEquals("Damian", lab);
+    }
+
+    @Test
+    public void checkGetDescription() {
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+
+        Resource described = instance.getInformationAbout(desc);
+
+        assertEquals(desc.getURI(), described.getURI());
+        assertTrue(described.hasProperty(ifp, "pldms"));
+        assertTrue(described.hasProperty(prop2, val2));
+        assertTrue(described.hasProperty(RDFS.label, "Damian"));
+    }
+
+    @Test
+    public void checkGetDescriptionIndirect() {
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+
+        Resource described = instance.getInformationAboutIndirect(ifp,
+                ResourceFactory.createPlainLiteral("pldms"));
+
+        assertEquals(desc.getURI(), described.getURI());
+        assertTrue(described.hasProperty(ifp, "pldms"));
+        assertTrue(described.hasProperty(prop2, val2));
+        assertTrue(described.hasProperty(RDFS.label, "Damian"));
     }
 
     @Test
