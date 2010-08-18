@@ -27,8 +27,8 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/resrev-servlet.xml</param-value>
-        <param-value>/WEB-INF/resrev-security.xml</param-value>
+        <param-value>/WEB-INF/resrev-servlet.xml
+            /WEB-INF/resrev-security.xml</param-value>
     </context-param>
 
     <listener>
