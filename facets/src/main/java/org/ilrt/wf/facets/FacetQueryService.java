@@ -1,6 +1,7 @@
 package org.ilrt.wf.facets;
 
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -68,7 +69,30 @@ public interface FacetQueryService {
      * @return
      */
     List<Resource> getResults(List<? extends FacetState> currentFacetStates, int offset, int number);
-
+    
+    /**
+     * Get a display label for an item
+     * @param thing Thing to get a label for
+     * @return A label for the thing
+     */
+    String getLabelFor(Resource thing);
+    
+    /**
+     * Get information about this thing from the store
+     * @param thing Thing to get information about
+     * @return Thing with details
+     */
+    Resource getInformationAbout(Resource thing);
+    
+    /**
+     * Get information about the thing identified by (property, value)
+     * Use with non-identifying details is undefined
+     * @param property The property
+     * @param value The value of the property
+     * @return Details about the thing identified by the property value
+     */
+    Resource getInformationAboutIndirect(Property property, RDFNode value);
+    
     /**
      * A simple tree implemenation for returning the hierarchy.
      * @param <T>
@@ -148,10 +172,15 @@ public interface FacetQueryService {
 
         @Override
         public String toString() {
+            return toString(0);
+        }
+
+        public String toString(int indent) {
+            StringBuilder is = new StringBuilder(indent * 2);
+            for (int i = 0; i < indent; i++) is.append("  ");
             StringBuilder sb = new StringBuilder();
-            sb.append("(").append(node).append(" ");
-            for (Tree<T> x: children) sb.append(x);
-            sb.append(" )");
+            sb.append(is).append("|-").append(node).append("\n");
+            for (Tree<T> x: children) sb.append(x.toString(indent + 1));
             return sb.toString();
         }
     }

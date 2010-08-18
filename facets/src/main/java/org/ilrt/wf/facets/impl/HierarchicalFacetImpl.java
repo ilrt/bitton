@@ -180,6 +180,9 @@ public class HierarchicalFacetImpl extends AbstractFacetFactoryImpl implements F
 
             // have we reached our goal?
             if (hierarchy.getValue().getURI().equals(currentUri)) {
+                // TODO not sure this is correct at all
+                // See resrev bug #56
+                if (path.size() > level + 1) path.remove(level + 1);
                 return false;
             }
 
