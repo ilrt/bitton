@@ -1,5 +1,6 @@
 package org.ilrt.wf.facets.web.spring.controller;
 
+import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetViewService;
 import org.ilrt.wf.facets.FacetViewServiceException;
 import org.ilrt.wf.facets.impl.FacetViewImpl;
@@ -26,7 +27,7 @@ public class ResRevControllerTest {
     @Before
     public void setUp() {
 
-        controller = new ResRevController(facetViewService);
+        controller = new ResRevController(facetViewService, facetQueryService);
     }
 
 
@@ -58,4 +59,5 @@ public class ResRevControllerTest {
 
     private final Mockery context = new JUnit4Mockery();
     private final FacetViewService facetViewService = context.mock(FacetViewService.class);
+    private final FacetQueryService facetQueryService = context.mock(FacetQueryService.class);
 }

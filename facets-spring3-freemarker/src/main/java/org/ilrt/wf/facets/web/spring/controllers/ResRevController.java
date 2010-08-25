@@ -1,6 +1,9 @@
 package org.ilrt.wf.facets.web.spring.controllers;
 
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.apache.log4j.Logger;
 import org.ilrt.wf.facets.FacetView;
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.ilrt.wf.facets.FacetQueryService;
 
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
@@ -25,8 +29,9 @@ import javax.servlet.http.HttpSession;
 public class ResRevController extends AbstractController {
 
     @Autowired
-    public ResRevController(final FacetViewService facetViewService) {
+    public ResRevController(final FacetViewService facetViewService, final FacetQueryService facetQueryService) {
         this.facetViewService = facetViewService;
+        this.facetQueryService = facetQueryService;
     }
 
     // ---------- public methods that are mapped to URLs
@@ -40,8 +45,6 @@ public class ResRevController extends AbstractController {
         if (request.getParameter(DRILL_PARAMETER) != null) {
             return displayResource(session, request);
         }
-
-        log.debug("Displaying results");
 
         // do a fresh query the service
         ModelAndView mav = createModelAndView(MAIN_VIEW_NAME, request);
@@ -64,6 +67,22 @@ public class ResRevController extends AbstractController {
         return createModelAndView(CONTACT_VIEW_NAME, request);
     }
 
+    @RequestMapping(value = PROFILE_PATH, method = RequestMethod.GET)
+    public ModelAndView profileView(HttpServletRequest request) throws FacetViewServiceException {
+        String username = request.getRemoteUser();
+        log.debug("Displaying results for " + request.getRemoteUser());
+
+        // get the session object
+        HttpSession session = request.getSession(true);
+
+        // do a fresh query the service
+        ModelAndView mav = createModelAndView(PROFILE_VIEW_NAME, request);
+
+        Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
+
+        mav.addObject("resource",  new ResourceHashModel(resource));
+        return mav;
+    }
 
     // ---------- private methods
 
@@ -147,10 +166,15 @@ public class ResRevController extends AbstractController {
     }
 
     private FacetViewService facetViewService;
+    private FacetQueryService facetQueryService;
+
+    private final String FOAF = "http://xmlns.com/foaf/0.1/";
+    private final Property userNameProp = ResourceFactory.createProperty(FOAF, "nick");
 
     public static String MAIN_VIEW_NAME = "mainView";
     public static String ABOUT_VIEW_NAME = "aboutView";
     public static String CONTACT_VIEW_NAME = "contactView";
+    public static String PROFILE_VIEW_NAME = "profileView";
     public static String GRANT_VIEW_NAME = "grantView";
     public static String DEFAULT_VIEW = "defaultView";
 
@@ -160,6 +184,7 @@ public class ResRevController extends AbstractController {
     private final String DEFAULT_PATH = "/";
     private final String ABOUT_PATH = "/about/";
     private final String CONTACT_PATH = "/contact/";
+    private final String PROFILE_PATH = "/profile";
 
     private Logger log = Logger.getLogger(ResRevController.class);
 }
