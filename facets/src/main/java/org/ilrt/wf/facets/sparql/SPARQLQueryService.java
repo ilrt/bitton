@@ -43,6 +43,8 @@ import com.hp.hpl.jena.sparql.expr.E_Str;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.aggregate.AggCount;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
+import com.hp.hpl.jena.sparql.syntax.Template;
+import com.hp.hpl.jena.sparql.syntax.TemplateGroup;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import java.util.AbstractList;
 import java.util.Arrays;
@@ -212,6 +214,72 @@ public class SPARQLQueryService implements FacetQueryService {
         if (log.isDebugEnabled()) log.debug("getCount took: {} ms",
                 System.currentTimeMillis() - startTime);
         return toReturn;
+    }
+
+    /**
+     *
+     * @param constraints
+     * @return
+     */
+    private List<Resource> describeSubjects(Op constraints, int offset, int number) {
+        long startTime = 0;
+        if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
+        
+        // We did use DESCRIBE, but this had scalability issues and didn't go backwards
+        // Hence shifted to CONSTRUCT
+
+        Triple forward = Triple.create(SUBJECT, genVar(), genVar());
+
+        TemplateGroup template = new TemplateGroup();
+        template.addTriple(forward);
+
+        BasicPattern bgpF = new BasicPattern();
+        bgpF.add(forward);
+
+        // Join the subject restriction to the info gatherer
+        Op op = OpJoin.create(constraints, new OpGraph(genVar(), new OpBGP(bgpF)));
+
+        op = new OpSlice(op, offset, number);
+
+        Query q = OpAsQuery.asQuery(op);
+        
+        q.setQueryConstructType();
+        q.setConstructTemplate(template);
+
+        QueryExecution qe = qef.get(q);
+        Model m = qe.execConstruct();
+        qe.close();
+
+        // We have our results! Now we work out what matched the constraint...
+
+        // Just subject, please...
+        op = new OpProject(constraints, Collections.singletonList(SUBJECT));
+        q = OpAsQuery.asQuery(op);
+        q.setQuerySelectType();
+
+        log.info("Local seleect:\n{}", q);
+
+        DataSource ds = DatasetFactory.create();
+        ds.addNamedModel("urn:x-ilrt:graph", m);
+        qe = QueryExecutionFactory.create(q, ds);
+        ResultSet res = qe.execSelect();
+
+        List<Resource> results = new LinkedList<Resource>();
+        while (res.hasNext()) {
+            Resource result = res.next().getResource(SUBJECT.getVarName());
+            // We need to reattach to original model. Nasty.
+            result = result.isAnon() ?
+                m.createResource(result.getId()) :
+                m.getResource(result.getURI()) ;
+            results.add(result);
+        }
+
+        qe.close();
+
+        if (log.isDebugEnabled()) log.debug("getResults took: {} ms",
+                System.currentTimeMillis() - startTime);
+
+        return results;
     }
 
     @Override
