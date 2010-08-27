@@ -49,6 +49,7 @@
     <filter-mapping>
        <filter-name>CAS Single Sign Out Filter</filter-name>
        <url-pattern>/resrev/*</url-pattern>
+       <url-pattern>/j_spring_cas_security_check</url-pattern>
     </filter-mapping>
 
     <filter-mapping>
