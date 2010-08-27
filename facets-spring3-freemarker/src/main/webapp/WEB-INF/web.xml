@@ -55,6 +55,7 @@
     <filter-mapping>
       <filter-name>springSecurityFilterChain</filter-name>
       <url-pattern>/resrev/*</url-pattern>
+      <url-pattern>/j_spring_cas_security_check</url-pattern>
     </filter-mapping>
 
     <!-- ========== LISTENERS ========== -->
