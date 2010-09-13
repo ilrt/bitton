@@ -11,17 +11,23 @@
         <h2>${resource['http://purl.org/dc/terms/title']?first}</h2>
 
         <p><strong>Grant Number:</strong> ${resource['proj:grantNumber']?first}</p>
-
-        <p><strong>Start Date: </strong> ${resource['proj:startDate']?first}</p>
-
-        <p><strong>End Date: </strong> ${resource['proj:endDate']?first}</p>
-
+        
+        <#if resource['proj:startDate']??>
+          <p><strong>Start Date: </strong> ${resource['proj:startDate']?first}</p>
+        </#if>
+        
+        <#if resource['proj:endDate']??>
+          <p><strong>End Date: </strong> ${resource['proj:endDate']?first}</p>
+        </#if>
+        
         <p><strong>Value: </strong> ${resource['proj:value']?first}</p>
 
         <p><strong>Abstract:</strong></p>
-
-        <p>${resource['http://purl.org/dc/terms/abstract']?first}</p>
-
+        
+        <#if resource['http://purl.org/dc/terms/abstract']??>
+          <p>${resource['http://purl.org/dc/terms/abstract']?first}</p>
+        </#if>
+        
         <p><strong>Principal Investigators:</strong></p>
 
         <#if resource['proj:hasPrincipalInvestigator']??>
