@@ -59,9 +59,10 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
         if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
         Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
         Collection<Constraint> allConstraints = statesToConstraints(currentFacetStates);
-
+        VarGen vgen = new VarGen();
+        
         // This limits SUBJECT to those things matching current state
-        Op op = constraintsToOp(allConstraints);
+        Op op = constraintsToOp(allConstraints, vgen);
 
         // Now we want to grab the values to count for refinements
         Map<Property, String> propToVar = new HashMap<Property, String>();

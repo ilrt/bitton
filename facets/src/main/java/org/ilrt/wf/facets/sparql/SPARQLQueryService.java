@@ -198,8 +198,9 @@ public class SPARQLQueryService implements FacetQueryService {
         if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
         // Inefficient first pass
         Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
+        VarGen vgen = new VarGen();
         for (FacetState state: currentFacetStates) {
-            getStateCounts(state, currentFacetStates, counts);
+            getStateCounts(state, currentFacetStates, counts, vgen);
         }
         if (log.isDebugEnabled()) log.debug("getCounts took: {} ms",
                 System.currentTimeMillis() - startTime);
@@ -210,17 +211,13 @@ public class SPARQLQueryService implements FacetQueryService {
     public int getCount(List<? extends FacetState> currentFacetStates) {
         long startTime = 0;
         if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
-        int toReturn = getCount(statesToConstraints(currentFacetStates));
+        int toReturn = getCount(statesToConstraints(currentFacetStates), new VarGen());
         if (log.isDebugEnabled()) log.debug("getCount took: {} ms",
                 System.currentTimeMillis() - startTime);
         return toReturn;
     }
 
-    /**
-     *
-     * @param constraints
-     * @return
-     */
+    /*
     private List<Resource> describeSubjects(Op constraints, int offset, int number) {
         long startTime = 0;
         if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
@@ -280,14 +277,14 @@ public class SPARQLQueryService implements FacetQueryService {
                 System.currentTimeMillis() - startTime);
 
         return results;
-    }
+    }*/
 
     @Override
     public List<Resource> getResults(List<? extends FacetState> currentFacetStates, int offset, int number) {
         long startTime = 0;
         if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
         // Remember this query. We'll use it later.
-        Op opBasic = constraintsToOp(statesToConstraints(currentFacetStates));
+        Op opBasic = constraintsToOp(statesToConstraints(currentFacetStates), new VarGen());
         Op op = opBasic;
         op = new OpProject(op, Collections.singletonList(SUBJECT));
         // Apply limit and offset
@@ -331,21 +328,22 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     protected void getStateCounts(FacetState state,
-            List<? extends FacetState> currentFacetStates, Map<FacetState, Integer> counts) {
+            List<? extends FacetState> currentFacetStates, 
+            Map<FacetState, Integer> counts, VarGen vgen) {
         // Get contrast state
         List<FacetState> otherStates = new LinkedList<FacetState>(currentFacetStates);
         otherStates.remove(state);
         for (FacetState futureState: state.getRefinements()) {
-            counts.put(futureState, getCount(futureState, otherStates));
+            counts.put(futureState, getCount(futureState, otherStates, vgen));
         }
     }
 
-    protected int getCount(FacetState ffs, List<FacetState> otherStates) {
-        return getCount(statesToConstraints(otherStates, ffs));
+    protected int getCount(FacetState ffs, List<FacetState> otherStates, VarGen vgen) {
+        return getCount(statesToConstraints(otherStates, ffs), vgen);
     }
 
-    protected int getCount(Collection<Constraint> constraints) {
-        Op op = constraintsToOp(constraints);
+    protected int getCount(Collection<Constraint> constraints, VarGen vgen) {
+        Op op = constraintsToOp(constraints, vgen);
         
         // Using count(*)
         op = new OpProject(op, Collections.singletonList(Var.alloc("count")));
@@ -378,15 +376,15 @@ public class SPARQLQueryService implements FacetQueryService {
         return count;
     }
 
-    protected Op constraintsToOp(Collection<Constraint> cons) {
+    protected Op constraintsToOp(Collection<Constraint> cons, VarGen vgen) {
         Op op = null;
         for (Constraint con: cons) {
-            Op newOp = constraintToOp(con);
+            Op newOp = constraintToOp(con, vgen);
             if (newOp instanceof OpNull) continue;
             // We wrap each constraint in a new graph
             // TODO prettify queries. this messes up previous work
-            else if (op == null) op = new OpGraph(genVar(), newOp);
-            else op = OpJoin.create(op, new OpGraph(genVar(), newOp));
+            else if (op == null) op = new OpGraph(vgen.genVar(), newOp);
+            else op = OpJoin.create(op, new OpGraph(vgen.genVar(), newOp));
 
         }
 
@@ -396,7 +394,7 @@ public class SPARQLQueryService implements FacetQueryService {
         return op;
     }
 
-    protected Op constraintToOp(Constraint constraint) {
+    protected Op constraintToOp(Constraint constraint, VarGen vgen) {
         if (constraint instanceof UnConstraint) return OpNull.create();
         else if (constraint instanceof ValueConstraint) {
             return tripleToBGP(SUBJECT,
@@ -405,7 +403,7 @@ public class SPARQLQueryService implements FacetQueryService {
                     );
         } else if (constraint instanceof RangeConstraint) {
             RangeConstraint rc = (RangeConstraint) constraint;
-            Var val = genVar(); // TODO generate
+            Var val = vgen.genVar();
             // create filters
             return OpFilter.filter(
                     new E_LogicalAnd(
@@ -420,7 +418,7 @@ public class SPARQLQueryService implements FacetQueryService {
                     );
         } else if (constraint instanceof RegexpConstraint) {
             RegexpConstraint rc = (RegexpConstraint) constraint;
-            Var val = genVar(); // TODO generate
+            Var val = vgen.genVar();
             return OpFilter.filter(
                     new E_Regex(
                       new E_Str(new ExprVar(val)),
@@ -445,8 +443,8 @@ public class SPARQLQueryService implements FacetQueryService {
         return cs;
     }
 
-    private int varCount = 0;
-    private Var genVar() { varCount++; return Var.alloc("v" + varCount); }
+    //private int varCount = 0;
+    //private Var genVar() { varCount++; return Var.alloc("v" + varCount); }
 
     // TODO Need to think about making this smarter
     // How to choose from multiple results, for example
@@ -581,5 +579,17 @@ public class SPARQLQueryService implements FacetQueryService {
 
         @Override
         public void remove() { throw new UnsupportedOperationException("Not supported"); }
+    }
+    
+    /**
+     * Simple class to generate variables when needed
+     */
+    protected static class VarGen {
+        private int num = 0;
+        
+        public Var genVar() {
+            num++;
+            return Var.alloc("v" + num);
+        }
     }
 }

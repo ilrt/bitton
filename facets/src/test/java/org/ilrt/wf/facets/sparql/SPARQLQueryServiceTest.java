@@ -5,6 +5,7 @@
 
 package org.ilrt.wf.facets.sparql;
 
+import org.ilrt.wf.facets.sparql.SPARQLQueryService.VarGen;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -45,7 +46,7 @@ public class SPARQLQueryServiceTest {
     private final RDFNode TYPE = ResourceFactory.createResource(NS + "Thing");
     private final Property broader = ResourceFactory.createProperty(NS, "broader");
     private final Property narrower = ResourceFactory.createProperty(NS, "narrower");
-
+    private final VarGen vgen;
 
     private Resource make(String n) {
         return ResourceFactory.createResource(NS + n);
@@ -54,6 +55,7 @@ public class SPARQLQueryServiceTest {
     public SPARQLQueryServiceTest() {
         URL data = this.getClass().getResource("/sparql/testdata.ttl");
         this.model = FileManager.get().loadModel(data.toExternalForm());
+        this.vgen = new VarGen();
     }
 
     /**
@@ -106,19 +108,19 @@ public class SPARQLQueryServiceTest {
 
         Constraint constraint = new UnConstraint();
         assertEquals(Algebra.parse("(null)"),
-                instance.constraintToOp(constraint));
+                instance.constraintToOp(constraint, vgen));
 
         constraint = new ValueConstraint(prop, val);
         assertEquals(Algebra.parse("(bgp (triple ?s <http://example.com/ns#prop> <http://example.com/ns#value>))"),
-                instance.constraintToOp(constraint));
+                instance.constraintToOp(constraint, vgen));
 
         constraint = new RangeConstraint(prop, ResourceFactory.createPlainLiteral("a"), ResourceFactory.createPlainLiteral("z"));
         assertEquals(Algebra.parse("(filter (&& (<= \"a\" ?v1) (< ?v1 \"z\") ) (bgp (triple ?s <http://example.com/ns#prop> ?v1)))"),
-                instance.constraintToOp(constraint));
+                instance.constraintToOp(constraint, vgen));
 
         constraint = new RegexpConstraint(prop, "^a");
         assertEquals(Algebra.parse("(filter (regex (str ?v2) \"^a\" \"i\") (bgp (triple ?s <http://example.com/ns#prop> ?v2)))"),
-                instance.constraintToOp(constraint));
+                instance.constraintToOp(constraint, vgen));
     }
 
     @Test
@@ -131,7 +133,7 @@ public class SPARQLQueryServiceTest {
                 makeRangeCon(0, 5)
                 );
 
-        assertEquals(3, instance.getCount(cos));
+        assertEquals(3, instance.getCount(cos, vgen));
 
         cos = new LinkedList<Constraint>();
         Collections.addAll(cos,
@@ -139,7 +141,7 @@ public class SPARQLQueryServiceTest {
                 new RegexpConstraint(label, "^A")
                 );
 
-        assertEquals(4, instance.getCount(cos));
+        assertEquals(4, instance.getCount(cos, vgen));
 
         cos = new LinkedList<Constraint>();
         Collections.addAll(cos,
@@ -148,7 +150,7 @@ public class SPARQLQueryServiceTest {
                 new RegexpConstraint(label, "^g")
                 );
 
-        assertEquals(1, instance.getCount(cos));
+        assertEquals(1, instance.getCount(cos, vgen));
     }
 
     @Test
@@ -285,7 +287,7 @@ public class SPARQLQueryServiceTest {
             instance.constraintsToOp(Arrays.<Constraint>asList(
                 new UnConstraint(),
                 new UnConstraint()
-                ));
+                ), vgen);
         } catch (RuntimeException e) {
             return;
         }
