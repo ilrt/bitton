@@ -21,17 +21,19 @@ import java.util.Map;
 public class FacetViewServiceImpl implements FacetViewService {
 
     public FacetViewServiceImpl(FacetFactoryService facetFactoryService,
-                                List<Map<String, String>> configurationList,
+                                Map<String, Map<String, Object>> configuration,
                                 Map<String, String> prefixes) {
         this.facetFactoryService = facetFactoryService;
-        this.configurationList = configurationList;
+        this.configurationList = configuration;
         this.prefixes = prefixes;
     }
 
     @Override
     public FacetView generate(HttpServletRequest request) throws FacetViewServiceException {
 
-        if (configurationList.size() == 0) {
+        String facetType = getFacetType(request);
+
+        if (!configurationList.containsKey(facetType) || configurationList.get(facetType).size() == 0) {
             throw new FacetViewServiceException("There is no registered configuration");
         }
 
@@ -49,9 +51,12 @@ public class FacetViewServiceImpl implements FacetViewService {
         List<Facet> facets = new ArrayList<Facet>();
 
         // iterate through facet configurations
-        for (Map<String, String> configuration : configurationList) {
+
+        List<Map<String, String>> configurations = (List<Map<String, String>>)configurationList.get(facetType).get("facetList");
+        for (Map<String, String> configuration : configurations) {
 
             // the facet is affected by its configuration and possibly request parameters
+
             FacetEnvironment environment = environment(configuration, request);
 
             // get the facet via the factory and add to the list
@@ -136,9 +141,16 @@ public class FacetViewServiceImpl implements FacetViewService {
         }
     }
 
+    public String getFacetType(HttpServletRequest request)
+    {
+        String facetType = request.getQueryString();
+        System.out.println("facetType:"+request.getContextPath());
+        System.out.println("facetType:"+facetType);
+        return "grant";
+    }
 
     final FacetFactoryService facetFactoryService;
-    final List<Map<String, String>> configurationList;
+    final Map<String,Map<String, Object>> configurationList;
     final Map<String, String> prefixes;
 
     final int DEFAULT_OFFSET = 0;
