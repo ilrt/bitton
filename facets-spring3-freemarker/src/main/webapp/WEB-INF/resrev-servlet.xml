@@ -97,8 +97,7 @@
         <entry key="paramName" value="grantEndYear"/>
     </util:map>
 
-
-    <util:list id="facetList" list-class="java.util.ArrayList">
+    <util:list id="grantFacets" list-class="java.util.ArrayList">
         <ref bean="grantName"/>
         <ref bean="deptNames"/>
         <ref bean="grantValues"/>
@@ -106,6 +105,44 @@
         <ref bean="grantEndYear"/>
     </util:list>
 
+    <util:map id="grantProps" map-class="java.util.HashMap">
+        <entry key="facetList" value-ref="grantFacets"/>
+        <entry key="facetId" value="grants"/>
+        <entry key="facetType" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+    </util:map>
+
+    <!-- Organisation facets -->
+    <util:map id="orgName" map-class="java.util.HashMap">
+        <entry key="facetType" value="AlphaNumeric"/>
+        <entry key="facetTitle" value="Organisation Names"/>
+        <entry key="linkProperty" value="http://www.w3.org/2000/01/rdf-schema#label"/>
+        <entry key="constraintType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
+        <entry key="paramName" value="orgName"/>
+    </util:map>
+    <util:map id="orgDeptNames" map-class="java.util.HashMap">
+        <entry key="facetType" value="Hierarchical"/>
+        <entry key="facetTitle" value="Department Names"/>
+        <entry key="linkProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
+        <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
+        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-merb/organisation_units/UNIV#org"/>
+        <entry key="constraintType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
+        <entry key="paramName" value="orgDept"/>
+    </util:map>
+    <util:list id="orgFacets" list-class="java.util.ArrayList">
+        <ref bean="orgName"/>
+<!--        <ref bean="orgDeptNames"/>-->
+    </util:list>
+
+    <util:map id="orgProps" map-class="java.util.HashMap">
+        <entry key="facetList" value-ref="orgFacets"/>
+        <entry key="facetId" value="organisations"/>
+        <entry key="facetType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
+    </util:map>
+
+    <util:map id="facetList" map-class="java.util.HashMap">
+        <entry key="grant" value-ref="grantProps"/>
+        <entry key="org" value-ref="orgProps"/>
+    </util:map>
 
     <!-- scan for controllers -->
 

@@ -1,7 +1,6 @@
 package org.ilrt.wf.facets.web.spring.controllers;
 
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -159,6 +158,9 @@ public class ResRevController extends AbstractController {
             if (type.equals("http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant")) {
                 return GRANT_VIEW_NAME;
             }
+            if (type.equals("http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant")) {
+                return ORGANISATION_VIEW_NAME;
+            }
 
         }
 
@@ -176,6 +178,7 @@ public class ResRevController extends AbstractController {
     public static String CONTACT_VIEW_NAME = "contactView";
     public static String PROFILE_VIEW_NAME = "profileView";
     public static String GRANT_VIEW_NAME = "grantView";
+    public static String ORGANISATION_VIEW_NAME = "orgView";
     public static String DEFAULT_VIEW = "defaultView";
 
     private final String FACETVIEW_SESSION = "facetView";
