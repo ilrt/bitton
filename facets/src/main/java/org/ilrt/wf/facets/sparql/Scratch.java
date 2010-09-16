@@ -16,6 +16,7 @@ import java.util.Collections;
 import org.ilrt.wf.facets.FacetQueryService.Tree;
 import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
+import org.ilrt.wf.facets.sparql.SPARQLQueryService.VarGen;
 
 /**
  *
@@ -36,13 +37,13 @@ public class Scratch {
         Tree<Resource> h = service.getHierarchy(univ, broader, true);
         System.err.println(h);
         h.getValue().getModel().write(System.err, "TTL");
-
+        VarGen vgen = new VarGen();
         Constraint type = new ValueConstraint(RDF.type, grant);
-        System.err.println("Number of grants: " + service.getCount(Collections.singleton(type)));
+        System.err.println("Number of grants: " + service.getCount(Collections.singleton(type), vgen));
         Constraint inMech = new ValueConstraint(hosted, mech);
-        System.err.println("Number of things hostedBy Mech: " + service.getCount(Collections.singleton(inMech)));
+        System.err.println("Number of things hostedBy Mech: " + service.getCount(Collections.singleton(inMech), vgen));
         System.err.println("Number of Grants hostedBy Mech: " +
-                service.getCount(Arrays.asList(inMech, type)));
+                service.getCount(Arrays.asList(inMech, type), vgen));
     }
 
 }
