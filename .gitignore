@@ -16,3 +16,4 @@ build.xml
 catalog.xml
 .idea
 out
+/facets-spring3-freemarker/profiles.xml
