@@ -184,7 +184,7 @@ public class ResRevController extends AbstractController {
     private final String FACETVIEW_SESSION = "facetView";
     private final String DRILL_PARAMETER = "drill";
 
-    private final String DEFAULT_PATH = "/";
+    private final String DEFAULT_PATH = "/*";
     private final String ABOUT_PATH = "/about/";
     private final String CONTACT_PATH = "/contact/";
     private final String PROFILE_PATH = "/profile";
