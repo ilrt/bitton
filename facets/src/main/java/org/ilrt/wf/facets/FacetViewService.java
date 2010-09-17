@@ -11,5 +11,5 @@ public interface FacetViewService {
 
     FacetView generate(HttpServletRequest request) throws FacetViewServiceException;
     
-    String getFacetType(HttpServletRequest request);
+    String getViewType(HttpServletRequest request);
 }

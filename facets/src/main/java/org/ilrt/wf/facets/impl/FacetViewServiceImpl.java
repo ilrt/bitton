@@ -31,7 +31,7 @@ public class FacetViewServiceImpl implements FacetViewService {
     @Override
     public FacetView generate(HttpServletRequest request) throws FacetViewServiceException {
 
-        String facetType = getFacetType(request);
+        String facetType = getViewType(request);
 
         if (!configurationList.containsKey(facetType) || configurationList.get(facetType).size() == 0) {
             throw new FacetViewServiceException("There is no registered configuration");
@@ -141,12 +141,16 @@ public class FacetViewServiceImpl implements FacetViewService {
         }
     }
 
-    public String getFacetType(HttpServletRequest request)
+    @Override
+    public String getViewType(HttpServletRequest request)
     {
-        String facetType = request.getQueryString();
-        System.out.println("facetType:"+request.getContextPath());
-        System.out.println("facetType:"+facetType);
-        return "grant";
+        String facetType = request.getPathInfo();
+        if (facetType == null) facetType = "";
+
+        // remove slashes (should only be a single starting forward slash)
+        facetType = facetType.replace("/", "");
+
+        return facetType;
     }
 
     final FacetFactoryService facetFactoryService;
