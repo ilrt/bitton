@@ -1,5 +1,6 @@
 package org.ilrt.wf.facets;
 
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -12,4 +13,6 @@ public interface FacetViewService {
     FacetView generate(HttpServletRequest request) throws FacetViewServiceException;
     
     String getViewType(HttpServletRequest request);
+
+    Map<String,String> listViews();
 }

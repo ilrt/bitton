@@ -12,6 +12,7 @@ import org.ilrt.wf.facets.FacetViewServiceException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,12 +29,32 @@ public class FacetViewServiceImpl implements FacetViewService {
         this.prefixes = prefixes;
     }
 
+    public Map<String,String> listViews()
+    {
+        HashMap<String,String> views = new HashMap<String,String>();
+        for (Map<String, Object> view : configurationList.values())
+        {
+            views.put(view.get("viewId").toString(), view.get("viewName").toString());
+        }
+
+        return views;
+    }
+
     @Override
     public FacetView generate(HttpServletRequest request) throws FacetViewServiceException {
 
-        String facetType = getViewType(request);
+        String viewType = getViewType(request);
 
-        if (!configurationList.containsKey(facetType) || configurationList.get(facetType).size() == 0) {
+        Map<String, Object> view = null;
+        for (Map<String, Object> v : configurationList.values())
+        {
+            if (v.containsKey("viewId") && v.get("viewId").toString().equals(viewType))
+            {
+                view = v;
+            }
+        }
+        
+        if (view == null) {
             throw new FacetViewServiceException("There is no registered configuration");
         }
 
@@ -52,7 +73,7 @@ public class FacetViewServiceImpl implements FacetViewService {
 
         // iterate through facet configurations
 
-        List<Map<String, String>> configurations = (List<Map<String, String>>)configurationList.get(facetType).get("facetList");
+        List<Map<String, String>> configurations = (List<Map<String, String>>)view.get("facetList");
         for (Map<String, String> configuration : configurations) {
 
             // the facet is affected by its configuration and possibly request parameters
