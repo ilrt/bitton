@@ -18,3 +18,4 @@ catalog.xml
 out
 /facets-spring3-freemarker/profiles.xml
 /facets-spring3-freemarker/nb-configuration.xml
+/facets-spring3-freemarker/src/main/webapp/META-INF/context.xml
