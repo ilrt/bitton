@@ -35,7 +35,7 @@ public class ResRevController extends AbstractController {
 
     // ---------- public methods that are mapped to URLs
 
-    @RequestMapping(value = DEFAULT_PATH, method = RequestMethod.GET)
+    @RequestMapping(value = VIEW_PATH, method = RequestMethod.GET)
     public ModelAndView mainView(HttpServletRequest request) throws FacetViewServiceException {
 
         // get the session object
@@ -51,6 +51,14 @@ public class ResRevController extends AbstractController {
         session.setAttribute(FACETVIEW_SESSION, new FacetViewSessionWrapper(facetView));
         mav.addObject(FACET_VIEW_KEY, new FacetViewFreeMarkerWrapper(facetView));
 
+        return mav;
+    }
+
+    @RequestMapping(value = HOME_PATH, method = RequestMethod.GET)
+    public ModelAndView homeView(HttpServletRequest request) throws FacetViewServiceException {
+
+        ModelAndView mav = createModelAndView(HOME_VIEW_NAME, request);
+        mav.addObject(FACET_VIEW_KEY,this.facetViewService.listViews());
         return mav;
     }
 
@@ -173,6 +181,7 @@ public class ResRevController extends AbstractController {
     private final String FOAF = "http://xmlns.com/foaf/0.1/";
     private final Property userNameProp = ResourceFactory.createProperty(FOAF, "nick");
 
+    public static String HOME_VIEW_NAME = "homeView";
     public static String MAIN_VIEW_NAME = "mainView";
     public static String ABOUT_VIEW_NAME = "aboutView";
     public static String CONTACT_VIEW_NAME = "contactView";
@@ -184,7 +193,8 @@ public class ResRevController extends AbstractController {
     private final String FACETVIEW_SESSION = "facetView";
     private final String DRILL_PARAMETER = "drill";
 
-    private final String DEFAULT_PATH = "/*";
+    private final String HOME_PATH = "/";
+    private final String VIEW_PATH = "/*";
     private final String ABOUT_PATH = "/about/";
     private final String CONTACT_PATH = "/contact/";
     private final String PROFILE_PATH = "/profile";

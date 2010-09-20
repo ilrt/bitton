@@ -106,9 +106,10 @@
     </util:list>
 
     <util:map id="grantProps" map-class="java.util.HashMap">
+        <entry key="viewName" value="Grants"/>
         <entry key="facetList" value-ref="grantFacets"/>
-        <entry key="facetId" value="grants"/>
-        <entry key="facetType" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+        <entry key="viewId" value="grants"/>
+        <entry key="viewType" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
     </util:map>
 
     <!-- Organisation facets -->
@@ -134,12 +135,13 @@
     </util:list>
 
     <util:map id="orgProps" map-class="java.util.HashMap">
+        <entry key="viewName" value="Organisations"/>
         <entry key="facetList" value-ref="orgFacets"/>
-        <entry key="facetId" value="organisations"/>
-        <entry key="facetType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
+        <entry key="viewId" value="organisations"/>
+        <entry key="viewType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
     </util:map>
 
-    <util:map id="facetList" map-class="java.util.HashMap">
+    <util:map id="viewList" map-class="java.util.HashMap">
         <entry key="grant" value-ref="grantProps"/>
         <entry key="org" value-ref="orgProps"/>
     </util:map>
@@ -177,7 +179,7 @@
 
     <bean id="facetViewService" class="org.ilrt.wf.facets.impl.FacetViewServiceImpl">
         <constructor-arg index="0" ref="facetFactoryService"/>
-        <constructor-arg index="1" ref="facetList"/>
+        <constructor-arg index="1" ref="viewList"/>
         <constructor-arg index="2" ref="prefixes"/>
     </bean>
 
