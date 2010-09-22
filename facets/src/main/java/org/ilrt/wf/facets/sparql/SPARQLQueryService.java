@@ -26,6 +26,7 @@ import com.hp.hpl.jena.sparql.algebra.OpAsQuery;
 import com.hp.hpl.jena.sparql.algebra.TransformBase;
 import com.hp.hpl.jena.sparql.algebra.Transformer;
 import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
+import com.hp.hpl.jena.sparql.algebra.op.OpDistinct;
 import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
@@ -43,8 +44,10 @@ import com.hp.hpl.jena.sparql.expr.E_Str;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.aggregate.AggCount;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
+import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -505,6 +508,33 @@ public class SPARQLQueryService implements FacetQueryService {
         }
         qe.close();
         return t;
+    }
+
+    @Override
+    public Collection<RDFNode> getValuesOfPropertyForType(Resource type, Property property, boolean getObject) {
+        Var thing = Var.alloc("thing");
+        Var val = Var.alloc("val");
+
+        BasicPattern bgp = new BasicPattern();
+        bgp.add(Triple.create(thing, RDF.type.asNode(), type.asNode()));
+        if (getObject)
+            bgp.add(Triple.create(thing, property.asNode(), val));
+        else // reverse
+            bgp.add(Triple.create(val, property.asNode(), thing));
+
+        Op op = new OpBGP(bgp);
+        op = new OpGraph(Var.alloc("g"), op);
+        op = new OpProject(op, Collections.singletonList(val)); // select ?v
+        op = new OpDistinct(op);
+
+        Query q = OpAsQuery.asQuery(op);
+        QueryExecution qe = qef.get(q);
+        ResultSet results = qe.execSelect();
+        Collection<RDFNode> vals = new ArrayList<RDFNode>();
+
+        while (results.hasNext()) vals.add(results.next().get("val"));
+
+        return vals;
     }
 
     /**

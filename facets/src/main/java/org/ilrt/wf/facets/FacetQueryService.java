@@ -3,6 +3,7 @@ package org.ilrt.wf.facets;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -18,6 +19,14 @@ import java.util.Map;
  */
 public interface FacetQueryService {
 
+    /**
+     * Find the possible values of a property.
+     * @param type The type to limit our search to
+     * @param property The property we want the value of
+     * @param getObject If true, get the object of the property. false will typically be used for inverse properties
+     * @return A collection of possible values.
+     */
+    Collection<RDFNode> getValuesOfPropertyForType(Resource type, Property property, boolean getObject);
 
     /**
      * Extract a full tree hierarchy. The result may include labels on the resources.
