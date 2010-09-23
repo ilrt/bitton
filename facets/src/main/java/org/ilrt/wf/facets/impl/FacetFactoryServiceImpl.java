@@ -27,6 +27,7 @@ public class FacetFactoryServiceImpl implements FacetFactoryService {
 
         QNameUtility qNameUtility = new QNameUtility(prefixMap);
         hierarchicalFacetImpl = new HierarchicalFacetImpl(facetQueryService, qNameUtility);
+        flatFacetImpl = new FlatFacetImpl(facetQueryService, qNameUtility);
         alphaNumericFacetImpl = new AlphaNumericFacetImpl();
         simpleNumericRangeFacetImpl = new SimpleNumericRangeFacetImpl();
     }
@@ -38,7 +39,9 @@ public class FacetFactoryServiceImpl implements FacetFactoryService {
 
         String facetType = environment.getConfig().get(Facet.FACET_TYPE);
 
-        if (facetType.equals(Facet.ALPHA_NUMERIC_FACET_TYPE)) {
+        if (facetType.equals(Facet.FLAT_FACET_TYPE)) {
+            return flatFacetImpl.create(environment);
+        } else if (facetType.equals(Facet.ALPHA_NUMERIC_FACET_TYPE)) {
             return alphaNumericFacetImpl.create(environment);
         } else if (facetType.equals(Facet.HIERARCHICAL_FACET_TYPE)) {
             return hierarchicalFacetImpl.create(environment);
@@ -79,4 +82,5 @@ public class FacetFactoryServiceImpl implements FacetFactoryService {
     private final FacetFactory hierarchicalFacetImpl;
     private final FacetFactory alphaNumericFacetImpl;
     private final FacetFactory simpleNumericRangeFacetImpl;
+    private final FlatFacetImpl flatFacetImpl;
 }
