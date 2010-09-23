@@ -5,6 +5,7 @@
 
 package org.ilrt.wf.facets.impl;
 
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -63,19 +64,21 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
                 FacetState refine = new FacetStateImpl(
                         val.toString(),
                         state,
-                        param,
+                        toParamVal(val),
                         Arrays.asList(typeConstraint, valConstraint));
                 refinements.add(refine);
             }
             state.setRefinements(refinements);
 
         } else {
-            RDFNode val = ResourceFactory.createResource(currentVals[0]);
+            FacetStateImpl bState = new FacetStateImpl("Base", null, null, Collections.singletonList(typeConstraint));
+            bState.setRoot(true);
+            RDFNode val = fromParamVal(currentVals[0]);
             ValueConstraint valConstraint = new ValueConstraint(prop, val);
             state = new FacetStateImpl(
                     val.toString(),
-                    null,
-                    param,
+                    bState,
+                    toParamVal(val),
                     Arrays.asList(typeConstraint, valConstraint)
                     );
         }
@@ -83,6 +86,17 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
         return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment));
     }
 
-    
+    private String toParamVal(RDFNode node) {
+        if (node.isLiteral()) return "L" + ((Literal) node).getLexicalForm();
+        else if (node.isURIResource())
+            return "U" + qNameUtility.getQName(((Resource) node).getURI());
+        else return "B" + ((Resource) node).getId().getLabelString();
+    }
 
+    private RDFNode fromParamVal(String val) {
+        if (val.startsWith("U")) return ResourceFactory.createResource(qNameUtility.expandQName(val.substring(1)));
+        // Erm, what should we do here? Fail?
+        else if (val.startsWith("B")) return ResourceFactory.createResource();
+        else return ResourceFactory.createPlainLiteral(val.substring(1));
+    }
 }
