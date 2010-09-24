@@ -23,10 +23,10 @@ public interface FacetQueryService {
      * Find the possible values of a property.
      * @param type The type to limit our search to
      * @param property The property we want the value of
-     * @param getObject If true, get the object of the property. false will typically be used for inverse properties
+     * @param invert If false, get the object of the property. true will typically be used for inverse properties
      * @return A collection of possible values.
      */
-    Collection<RDFNode> getValuesOfPropertyForType(Resource type, Property property, boolean getObject);
+    Collection<RDFNode> getValuesOfPropertyForType(Resource type, Property property, boolean invert);
 
     /**
      * Extract a full tree hierarchy. The result may include labels on the resources.

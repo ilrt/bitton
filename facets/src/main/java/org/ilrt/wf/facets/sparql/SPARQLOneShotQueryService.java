@@ -79,7 +79,7 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
                     val = vf.make();
                     op = OpJoin.create(op,
                         new OpGraph( vf.make() ,
-                        tripleToBGP(SUBJECT, c.getProperty().asNode(), val)));
+                        tripleToBGP(SUBJECT, c.getProperty().asNode(), val, c.isPropertyInverted())));
                 }
                 propToVar.put(c.getProperty(), val.getVarName());
             }

@@ -13,13 +13,22 @@ import com.hp.hpl.jena.rdf.model.Property;
  */
 public abstract class AbstractConstraint implements Constraint {
     private final Property property;
+    private final boolean inverted;
 
     public AbstractConstraint(Property property) {
+        this(property, false);
+    }
+
+    public AbstractConstraint(Property property, boolean inverted) {
         this.property = property;
+        this.inverted = inverted;
     }
 
     @Override
     public Property getProperty() { return property; }
+
+    @Override
+    public boolean isPropertyInverted() { return inverted; }
 
     @Override
     public String toString() { return "[" + property + "]"; }

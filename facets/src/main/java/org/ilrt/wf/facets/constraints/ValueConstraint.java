@@ -16,7 +16,11 @@ public class ValueConstraint extends AbstractConstraint {
     private final RDFNode value;
 
     public ValueConstraint(Property property, RDFNode value) {
-        super(property);
+        this(property, value, false);
+    }
+
+    public ValueConstraint(Property property, RDFNode value, boolean inverted) {
+        super(property, inverted);
         this.value = value;
     }
 

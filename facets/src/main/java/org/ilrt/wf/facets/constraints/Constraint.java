@@ -14,5 +14,6 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
  */
 public interface Constraint {
     public Property getProperty();
+    public boolean isPropertyInverted();
     public boolean matches(RDFNode node);
 }

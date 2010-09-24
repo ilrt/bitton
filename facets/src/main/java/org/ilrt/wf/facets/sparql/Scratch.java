@@ -36,9 +36,9 @@ public class Scratch {
         System.err.println(h);
         h.getValue().getModel().write(System.err, "TTL");
         VarGen vgen = new VarGen();
-        Constraint type = new ValueConstraint(RDF.type, grant);
+        Constraint type = new ValueConstraint(RDF.type, grant, true);
         System.err.println("Number of grants: " + service.getCount(Collections.singleton(type), vgen));
-        Constraint inMech = new ValueConstraint(hosted, mech);
+        Constraint inMech = new ValueConstraint(hosted, mech, true);
         System.err.println("Number of things hostedBy Mech: " + service.getCount(Collections.singleton(inMech), vgen));
         System.err.println("Number of Grants hostedBy Mech: " +
                 service.getCount(Arrays.asList(inMech, type), vgen));

@@ -28,4 +28,9 @@ public class UnConstraint implements Constraint {
 
     @Override
     public String toString() { return "[ Unconstrained ]"; }
+
+    @Override
+    public boolean isPropertyInverted() {
+        throw new UnsupportedOperationException("Irrelevant");
+    }
 }

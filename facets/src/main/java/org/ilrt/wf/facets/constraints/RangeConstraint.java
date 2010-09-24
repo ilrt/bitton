@@ -5,11 +5,8 @@
 
 package org.ilrt.wf.facets.constraints;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.expr.ExprNotComparableException;
 import com.hp.hpl.jena.sparql.expr.NodeValue;
 

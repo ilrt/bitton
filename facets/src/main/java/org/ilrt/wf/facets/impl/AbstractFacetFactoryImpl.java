@@ -40,7 +40,7 @@ public abstract class AbstractFacetFactoryImpl implements FacetFactory {
     }
 
     protected ValueConstraint createTypeConstraint(String type) {
-        return new ValueConstraint(RDF.type, ResourceFactory.createProperty(type));
+        return new ValueConstraint(RDF.type, ResourceFactory.createProperty(type), false);
     }
 
 

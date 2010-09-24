@@ -43,24 +43,25 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
         FacetStateImpl state;
         String type = environment.getConfig().get(Facet.CONSTRAINT_TYPE);
         String property = environment.getConfig().get(Facet.LINK_PROPERTY);
+        String invertVal = environment.getConfig().get(Facet.LINK_INVERT);
+        boolean invert = (invertVal != null && invertVal.equalsIgnoreCase("true"));
         Property prop = ResourceFactory.createProperty(property);
         String param = environment.getConfig().get(Facet.PARAM_NAME);
         ValueConstraint typeConstraint = createTypeConstraint(type);
 
         String[] currentVals = environment.getParameters().get(environment.getConfig().get(Facet.PARAM_NAME));
 
-        // TODO -- GET THIS RIGHT
-        if (currentVals == null) { // The root state
+        if ( currentVals == null || currentVals.length == 0 ) { // The root state
             Collection<RDFNode> vals = facetQueryService.getValuesOfPropertyForType(
                     ResourceFactory.createResource(type),
                     prop,
-                    true);
+                    invert);
 
             state = new FacetStateImpl("Base", null, null, Collections.singletonList(typeConstraint));
             state.setRoot(true);
             List<FacetState> refinements = new ArrayList(vals.size());
             for (RDFNode val: vals) {
-                ValueConstraint valConstraint = new ValueConstraint(prop, val);
+                ValueConstraint valConstraint = new ValueConstraint(prop, val, invert);
                 FacetState refine = new FacetStateImpl(
                         val.toString(),
                         state,
@@ -74,7 +75,7 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
             FacetStateImpl bState = new FacetStateImpl("Base", null, null, Collections.singletonList(typeConstraint));
             bState.setRoot(true);
             RDFNode val = fromParamVal(currentVals[0]);
-            ValueConstraint valConstraint = new ValueConstraint(prop, val);
+            ValueConstraint valConstraint = new ValueConstraint(prop, val,invert);
             state = new FacetStateImpl(
                     val.toString(),
                     bState,

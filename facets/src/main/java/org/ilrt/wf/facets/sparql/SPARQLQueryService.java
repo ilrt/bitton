@@ -400,7 +400,8 @@ public class SPARQLQueryService implements FacetQueryService {
         else if (constraint instanceof ValueConstraint) {
             return tripleToBGP(SUBJECT,
                     constraint.getProperty().asNode(),
-                    ((ValueConstraint) constraint).getValue().asNode()
+                    ((ValueConstraint) constraint).getValue().asNode(),
+                    constraint.isPropertyInverted()
                     );
         } else if (constraint instanceof RangeConstraint) {
             RangeConstraint rc = (RangeConstraint) constraint;
@@ -415,7 +416,7 @@ public class SPARQLQueryService implements FacetQueryService {
                             new ExprVar(val),
                             NodeValueNode.makeNode(rc.getTo().asNode()) )
                             ),
-                    tripleToBGP(SUBJECT, constraint.getProperty().asNode(), val)
+                    tripleToBGP(SUBJECT, constraint.getProperty().asNode(), val, constraint.isPropertyInverted())
                     );
         } else if (constraint instanceof RegexpConstraint) {
             RegexpConstraint rc = (RegexpConstraint) constraint;
@@ -426,14 +427,15 @@ public class SPARQLQueryService implements FacetQueryService {
                       rc.getRegexp(),
                       "i"
                       ),
-                    tripleToBGP(SUBJECT, constraint.getProperty().asNode(), val)
+                    tripleToBGP(SUBJECT, constraint.getProperty().asNode(), val, constraint.isPropertyInverted())
                     );
         } else throw new RuntimeException("Unknown constraint type");
     }
 
-    protected Op tripleToBGP(Node s, Node p, Node o) {
+    protected Op tripleToBGP(Node s, Node p, Node o, boolean invert) {
         BasicPattern bgp = new BasicPattern();
-        bgp.add(Triple.create(s, p, o));
+        if (invert) bgp.add(Triple.create(o, p, s));
+        else bgp.add(Triple.create(s, p, o));
         return new OpBGP(bgp);
     }
 
@@ -452,7 +454,7 @@ public class SPARQLQueryService implements FacetQueryService {
     @Override
     public String getLabelFor(Resource thing) {
         Var label = Var.alloc("label");
-        Op op = tripleToBGP(thing.asNode(), RDFS.label.asNode(), label);
+        Op op = tripleToBGP(thing.asNode(), RDFS.label.asNode(), label, false);
         op = new OpGraph(Var.alloc("g"), op);
         op = new OpProject(op, Arrays.asList(label));
         Query q = OpAsQuery.asQuery(op);
@@ -483,7 +485,7 @@ public class SPARQLQueryService implements FacetQueryService {
     @Override
     public Resource getInformationAboutIndirect(Property property, RDFNode value) {
         Var thing = Var.alloc("thing");
-        Op op = tripleToBGP(thing, property.asNode(), value.asNode());
+        Op op = tripleToBGP(thing, property.asNode(), value.asNode(), false);
         op = new OpGraph(Var.alloc("g"), op);
         op = new OpProject(op, Arrays.asList(thing));
         Query q = OpAsQuery.asQuery(op);
@@ -511,16 +513,16 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     @Override
-    public Collection<RDFNode> getValuesOfPropertyForType(Resource type, Property property, boolean getObject) {
+    public Collection<RDFNode> getValuesOfPropertyForType(Resource type, Property property, boolean invert) {
         Var thing = Var.alloc("thing");
         Var val = Var.alloc("val");
 
         BasicPattern bgp = new BasicPattern();
         bgp.add(Triple.create(thing, RDF.type.asNode(), type.asNode()));
-        if (getObject)
-            bgp.add(Triple.create(thing, property.asNode(), val));
-        else // reverse
+        if (invert) // reverse
             bgp.add(Triple.create(val, property.asNode(), thing));
+        else
+            bgp.add(Triple.create(thing, property.asNode(), val));
 
         Op op = new OpBGP(bgp);
         op = new OpGraph(Var.alloc("g"), op);
