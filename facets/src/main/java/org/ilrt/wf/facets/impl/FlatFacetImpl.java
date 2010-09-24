@@ -63,7 +63,7 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
             for (RDFNode val: vals) {
                 ValueConstraint valConstraint = new ValueConstraint(prop, val, invert);
                 FacetState refine = new FacetStateImpl(
-                        val.toString(),
+                        getLabel(val),
                         state,
                         toParamVal(val),
                         Arrays.asList(typeConstraint, valConstraint));
@@ -77,7 +77,7 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
             RDFNode val = fromParamVal(currentVals[0]);
             ValueConstraint valConstraint = new ValueConstraint(prop, val,invert);
             state = new FacetStateImpl(
-                    val.toString(),
+                    getLabel(val),
                     bState,
                     toParamVal(val),
                     Arrays.asList(typeConstraint, valConstraint)
@@ -99,5 +99,16 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
         // Erm, what should we do here? Fail?
         else if (val.startsWith("B")) return ResourceFactory.createResource();
         else return ResourceFactory.createPlainLiteral(val.substring(1));
+    }
+
+    private String getLabel(RDFNode node) {
+        if (node.isLiteral()) return ((Literal) node).getLexicalForm();
+        else if (node.isAnon()) return ((Resource) node).getId().getLabelString();
+        else {
+            Resource r = (Resource) node;
+            String label = facetQueryService.getLabelFor(r);
+            if (label == null) return qNameUtility.getQName(r.getURI());
+            else return label;
+        }
     }
 }
