@@ -43,7 +43,7 @@ public class SPARQLQueryServiceTest {
     private final Property range = ResourceFactory.createProperty(NS, "range");
     private final Property label = ResourceFactory.createProperty(NS, "label");
     private final RDFNode val = ResourceFactory.createResource(NS + "value");
-    private final RDFNode TYPE = ResourceFactory.createResource(NS + "Thing");
+    private final Resource TYPE = ResourceFactory.createResource(NS + "Thing");
     private final Property broader = ResourceFactory.createProperty(NS, "broader");
     private final Property narrower = ResourceFactory.createProperty(NS, "narrower");
     private final VarGen vgen;
@@ -75,6 +75,13 @@ public class SPARQLQueryServiceTest {
         List<Resource> a = instance.getRefinements(make("a"), narrower, false);
 
         assertEquals("Got correct narrower refinements", 4, a.size());
+    }
+
+    public void testGetValues() {
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+        Collection<RDFNode> a = instance.getValuesOfPropertyForType(TYPE, prop, true);
+
+        assertEquals("Got right number of values", 2, a.size());
     }
 
     @Test

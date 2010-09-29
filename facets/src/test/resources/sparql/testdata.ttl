@@ -36,3 +36,4 @@ ns:y1 ns:narrower ns:z3 .
 ns:desc ns:ifp "pldms" ;
     rdfs:label "Damian" ;
     ns:prop2 ns:val2 .
+
