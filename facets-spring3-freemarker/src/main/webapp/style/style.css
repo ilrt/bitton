@@ -256,3 +256,14 @@ body {
     color: #000000;
     text-decoration: none;
 }
+
+.collapsible .collapsed
+{
+    display:none;
+}
+
+.collapsible .heading
+{
+    text-decoration: underline;
+}
+
