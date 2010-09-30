@@ -31,6 +31,17 @@ public class FacetViewSessionWrapper {
         }
     }
 
+    public void setView(String s)
+    {
+        viewName = s;
+    }
+    
+    public String getView()
+    {
+        return viewName;
+    }
+
+    private String viewName = "";
     private FacetView facetView;
     private Map<String, Resource> lookUp = new HashMap<String, Resource>();
 }
