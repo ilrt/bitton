@@ -61,7 +61,7 @@
             </ul>
         </#if>
 
-        <p><em><a href="javascript:history.go(-1)">Return to results</a></em></p>
+        <#if view??><p><em><a href="javascript:history.go(-1)">Return to results</a></em></p></#if>
 
 
      </div>
