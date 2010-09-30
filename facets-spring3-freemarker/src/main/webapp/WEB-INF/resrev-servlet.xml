@@ -40,6 +40,7 @@
 
     <!-- Facet configurations -->
 
+    <!--
     <util:map id="grantName" map-class="java.util.HashMap">
         <entry key="facetType" value="AlphaNumeric"/>
         <entry key="facetTitle" value="Grant Titles"/>
@@ -47,6 +48,16 @@
         <entry key="constraintType"
                value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
         <entry key="paramName" value="grant"/>
+    </util:map>-->
+
+    <util:map id="grantFunder" map-class="java.util.HashMap">
+        <entry key="facetType" value="Flat"/>
+        <entry key="facetTitle" value="Funder"/>
+        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#funds"/>
+        <entry key="constraintType"
+               value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+        <entry key="linkInvert" value="true"/>
+        <entry key="paramName" value="funder"/>
     </util:map>
 
     <util:map id="deptNames" map-class="java.util.HashMap">
@@ -98,7 +109,8 @@
     </util:map>
 
     <util:list id="grantFacets" list-class="java.util.ArrayList">
-        <ref bean="grantName"/>
+        <!--<ref bean="grantName"/>-->
+        <ref bean="grantFunder"/>
         <ref bean="deptNames"/>
         <ref bean="grantValues"/>
         <ref bean="grantStartYear"/>
@@ -131,7 +143,7 @@
     </util:map>
     <util:list id="orgFacets" list-class="java.util.ArrayList">
         <ref bean="orgName"/>
-<!--        <ref bean="orgDeptNames"/>-->
+        <!--<ref bean="orgDeptNames"/>-->
     </util:list>
 
     <util:map id="orgProps" map-class="java.util.HashMap">
@@ -141,9 +153,39 @@
         <entry key="viewType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
     </util:map>
 
+    <!-- People facets -->
+    <util:map id="peopleName" map-class="java.util.HashMap">
+        <entry key="facetType" value="AlphaNumeric"/>
+        <entry key="facetTitle" value="Name"/>
+        <entry key="linkProperty" value="http://www.w3.org/2000/01/rdf-schema#label"/>
+        <entry key="constraintType" value="http://xmlns.com/foaf/0.1/Person"/>
+        <entry key="paramName" value="pname"/>
+    </util:map>
+    <util:map id="peopleDeptNames" map-class="java.util.HashMap">
+        <entry key="facetType" value="Hierarchical"/>
+        <entry key="facetTitle" value="Department"/>
+        <entry key="linkProperty" value="http://vocab.ilrt.bris.ac.uk/rr/closed#member"/>
+        <entry key="linkInvert" value="true"/>
+        <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
+        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-merb/organisation_units/UNIV#org"/>
+        <entry key="constraintType" value="http://xmlns.com/foaf/0.1/Person"/>
+        <entry key="paramName" value="pdept"/>
+    </util:map>
+    <util:list id="pFacets" list-class="java.util.ArrayList">
+        <ref bean="peopleName"/>
+        <ref bean="peopleDeptNames"/>
+    </util:list>
+    <util:map id="personProps" map-class="java.util.HashMap">
+        <entry key="viewName" value="People"/>
+        <entry key="facetList" value-ref="pFacets"/>
+        <entry key="viewId" value="people"/>
+        <entry key="viewType" value="http://xmlns.com/foaf/0.1/Person"/>
+    </util:map>
+
     <util:map id="viewList" map-class="java.util.HashMap">
         <entry key="grant" value-ref="grantProps"/>
         <entry key="org" value-ref="orgProps"/>
+        <entry key="people" value-ref="personProps"/>
     </util:map>
 
     <!-- scan for controllers -->
