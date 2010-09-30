@@ -40,6 +40,8 @@ public class ResRevControllerTest {
         context.checking(new Expectations() {{
             oneOf(facetViewService).generate(request);
             will(returnValue(new FacetViewImpl()));
+            oneOf(facetViewService).getViewType(request);
+            will(returnValue(new String()));
         }});
 
         ModelAndView mav = controller.mainView(request);

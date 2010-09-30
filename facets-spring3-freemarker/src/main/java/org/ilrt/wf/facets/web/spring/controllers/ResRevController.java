@@ -3,6 +3,7 @@ package org.ilrt.wf.facets.web.spring.controllers;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.apache.log4j.Logger;
 import org.ilrt.wf.facets.FacetView;
@@ -34,6 +35,17 @@ public class ResRevController extends AbstractController {
     }
 
     // ---------- public methods that are mapped to URLs
+    
+    @RequestMapping(value = ITEM_PATH, method = RequestMethod.GET)
+    public ModelAndView resourceView(HttpServletRequest request) throws FacetViewServiceException {
+
+        // get the session object
+        HttpSession session = request.getSession(true);
+
+        String resource = request.getParameter(RESOURCE_PARAMETER);
+
+        return displayResource(session, request, resource);
+    }
 
     @RequestMapping(value = VIEW_PATH, method = RequestMethod.GET)
     public ModelAndView mainView(HttpServletRequest request) throws FacetViewServiceException {
@@ -41,14 +53,15 @@ public class ResRevController extends AbstractController {
         // get the session object
         HttpSession session = request.getSession(true);
 
-        if (request.getParameter(DRILL_PARAMETER) != null) {
-            return displayResource(session, request);
-        }
-
         // do a fresh query the service
         ModelAndView mav = createModelAndView(MAIN_VIEW_NAME, request);
         FacetView facetView = facetViewService.generate(request);
-        session.setAttribute(FACETVIEW_SESSION, new FacetViewSessionWrapper(facetView));
+        FacetViewSessionWrapper wrapper = new FacetViewSessionWrapper(facetView);
+        wrapper.setView(facetViewService.getViewType(request));
+        session.setAttribute(FACETVIEW_SESSION, wrapper);
+
+        // provide view context so that we can determine if resource is being viewed within a view
+        mav.addObject(VIEW_KEY, wrapper.getView());
         mav.addObject(FACET_VIEW_KEY, new FacetViewFreeMarkerWrapper(facetView));
 
         return mav;
@@ -92,16 +105,6 @@ public class ResRevController extends AbstractController {
     }
 
     // ---------- private methods
-
-    private FacetViewSessionWrapper createWrapper(HttpSession session, HttpServletRequest request)
-            throws FacetViewServiceException {
-
-        FacetView facetView = facetViewService.generate(request);
-        FacetViewSessionWrapper wrapper = new FacetViewSessionWrapper(facetView);
-        session.setAttribute(FACETVIEW_SESSION, wrapper);
-        return new FacetViewSessionWrapper(facetView);
-    }
-
     private ModelAndView displayResourceOrFail(FacetViewSessionWrapper wrapper, String uri,
                                                HttpServletRequest request) {
 
@@ -116,11 +119,23 @@ public class ResRevController extends AbstractController {
         }
     }
 
+    private ModelAndView displayResourceOrFail(String uri, HttpServletRequest request) {
 
-    private ModelAndView displayResource(HttpSession session, HttpServletRequest request)
+        Resource r = new ResourceImpl(uri);
+        Resource resource = facetQueryService.getInformationAbout(r);
+        if (resource == null) {
+            throw new NotFoundException("Unable to find the requested resource");
+        } else {
+            ModelAndView mav = createModelAndView(resolveViewForResource(resource), request);
+            mav.addObject("resource", new ResourceHashModel(resource));
+            return mav;
+        }
+    }
+
+
+
+    private ModelAndView displayResource(HttpSession session, HttpServletRequest request, String uri)
             throws FacetViewServiceException {
-
-        String uri = request.getParameter(DRILL_PARAMETER);
 
         log.debug("Requesting to view resource: " + uri);
 
@@ -139,21 +154,18 @@ public class ResRevController extends AbstractController {
 
                 ModelAndView mav = createModelAndView(resolveViewForResource(resource), request);
                 mav.addObject("resource", new ResourceHashModel(resource));
+                mav.addObject(VIEW_KEY, wrapper.getView());
                 return mav;
             } else {
 
                 log.debug("Cannot find the resource on the current session. Refreshing");
-
-                FacetViewSessionWrapper freshWrapper = createWrapper(session, request);
-                return displayResourceOrFail(freshWrapper, uri, request);
+                return displayResourceOrFail(uri, request);
             }
 
         } else {
 
             log.debug("We do not have a FacetViewSessionWrapper instance on the session. Refreshing");
-
-            FacetViewSessionWrapper freshWrapper = createWrapper(session, request);
-            return displayResourceOrFail(freshWrapper, uri, request);
+            return displayResourceOrFail(uri, request);
         }
     }
 
@@ -191,10 +203,12 @@ public class ResRevController extends AbstractController {
     public static String DEFAULT_VIEW = "defaultView";
 
     private final String FACETVIEW_SESSION = "facetView";
-    private final String DRILL_PARAMETER = "drill";
+    private final String VIEW_KEY = "view";
+    private final String RESOURCE_PARAMETER = "res";
 
     private final String HOME_PATH = "/";
     private final String VIEW_PATH = "/*";
+    private final String ITEM_PATH = "/item";
     private final String ABOUT_PATH = "/about/";
     private final String CONTACT_PATH = "/contact/";
     private final String PROFILE_PATH = "/profile";
