@@ -66,7 +66,6 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
 
         // Now we want to grab the values to count for refinements
         Map<Property, String> propToVar = new HashMap<Property, String>();
-        VarMaker vf = new VarMaker();
         Collection<Constraint> refinedConstraints = new LinkedList<Constraint>();
         for (FacetState parent: currentFacetStates) {
             for (FacetState child: parent.getRefinements())
@@ -76,9 +75,9 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
             if (!propToVar.containsKey(c.getProperty())) {
                 Var val = findVariable(c.getProperty(), op);
                 if (val == null) {
-                    val = vf.make();
+                    val = vgen.genVar();
                     op = OpJoin.create(op,
-                        new OpGraph( vf.make() ,
+                        new OpGraph( vgen.genVar() ,
                         tripleToBGP(SUBJECT, c.getProperty().asNode(), val, c.isPropertyInverted())));
                 }
                 propToVar.put(c.getProperty(), val.getVarName());
@@ -193,12 +192,5 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
         public int getCount() { return count; }
 
         public FacetState getState() { return state; }
-    }
-
-    public static class VarMaker {
-        private int num = 0;
-
-        public Var make() { num++; return Var.alloc("vm" + num); }
-        
     }
 }
