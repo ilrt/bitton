@@ -46,6 +46,7 @@ public class SPARQLQueryServiceTest {
     private final Resource TYPE = ResourceFactory.createResource(NS + "Thing");
     private final Property broader = ResourceFactory.createProperty(NS, "broader");
     private final Property narrower = ResourceFactory.createProperty(NS, "narrower");
+    private final Property opt = ResourceFactory.createProperty(NS, "opt");
     private final VarGen vgen;
 
     private Resource make(String n) {
@@ -162,6 +163,55 @@ public class SPARQLQueryServiceTest {
 
     @Test
     public void checkFullCounts() {
+        SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
+
+        MFacetState a = new MFacetState(new ValueConstraint(RDF.type, TYPE));
+        FacetState a1 =
+                a.addRefinement( new MFacetState(new RegexpConstraint(label, "^a")) );
+        FacetState a2 =
+                a.addRefinement( new MFacetState(new RegexpConstraint(label, "^b")) );
+        FacetState a3 =
+                a.addRefinement( new MFacetState(new RegexpConstraint(label, "^g")) );
+        FacetState a4 =
+                a.addRefinement( new MFacetState(new RegexpConstraint(label, "^x")) );
+        // Special bit: only on item has this property, check resrev #63 fixed
+        FacetState optional =
+                a.addRefinement( new MFacetState(new ValueConstraint(opt, ResourceFactory.createPlainLiteral("rare"))) );
+
+        Map<FacetState, Integer> counts = instance.getCounts(Collections.singletonList(a));
+
+        assertEquals(8, (int) counts.get(a1));
+        assertEquals(4, (int) counts.get(a2));
+        assertEquals(2, (int) counts.get(a3));
+        assertEquals(0, (int) counts.get(a4));
+
+        MFacetState b = new MFacetState(new ValueConstraint(prop, val));
+
+        counts = instance.getCounts(Arrays.asList(a, b));
+
+        assertEquals(4, (int) counts.get(a1));
+        assertEquals(2, (int) counts.get(a2));
+        assertEquals(1, (int) counts.get(a3));
+        assertEquals(0, (int) counts.get(a4));
+
+        MFacetState c = new MFacetState(makeRangeCon(5, 9));
+        FacetState c1 =
+                c.addRefinement( new MFacetState(makeRangeCon(5,7)) );
+        FacetState c2 =
+                c.addRefinement( new MFacetState(makeRangeCon(7,9)) );
+
+        counts = instance.getCounts(Arrays.asList(a, c));
+
+        assertEquals(2, (int) counts.get(a1));
+        assertEquals(4, (int) counts.get(a2));
+        assertEquals(2, (int) counts.get(a3));
+
+        assertEquals(4, (int) counts.get(c1));
+        assertEquals(4, (int) counts.get(c2));
+    }
+
+    @Test
+    public void checkFullCountsOneShot() {
         SPARQLQueryService instance = new SPARQLOneShotQueryService(new ModelQEFactory(model));
 
         MFacetState a = new MFacetState(new ValueConstraint(RDF.type, TYPE));
@@ -173,6 +223,9 @@ public class SPARQLQueryServiceTest {
                 a.addRefinement( new MFacetState(new RegexpConstraint(label, "^g")) );
         FacetState a4 =
                 a.addRefinement( new MFacetState(new RegexpConstraint(label, "^x")) );
+        // Special bit: only on item has this property, check resrev #63 fixed
+        FacetState optional =
+                a.addRefinement( new MFacetState(new ValueConstraint(opt, ResourceFactory.createPlainLiteral("rare"))) );
 
         Map<FacetState, Integer> counts = instance.getCounts(Collections.singletonList(a));
 

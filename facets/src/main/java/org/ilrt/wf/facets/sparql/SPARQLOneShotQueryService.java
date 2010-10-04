@@ -20,9 +20,10 @@ import com.hp.hpl.jena.sparql.algebra.OpVisitorBase;
 import com.hp.hpl.jena.sparql.algebra.OpWalker;
 import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
-import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
+import com.hp.hpl.jena.sparql.algebra.op.OpLeftJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.sparql.expr.ExprList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -76,9 +77,11 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
                 Var val = findVariable(c.getProperty(), op);
                 if (val == null) {
                     val = vgen.genVar();
-                    op = OpJoin.create(op,
+
+                    // Left join: property may be missing
+                    op = OpLeftJoin.create(op,
                         new OpGraph( vgen.genVar() ,
-                        tripleToBGP(SUBJECT, c.getProperty().asNode(), val, c.isPropertyInverted())));
+                        tripleToBGP(SUBJECT, c.getProperty().asNode(), val, c.isPropertyInverted())), (ExprList) null);
                 }
                 propToVar.put(c.getProperty(), val.getVarName());
             }
