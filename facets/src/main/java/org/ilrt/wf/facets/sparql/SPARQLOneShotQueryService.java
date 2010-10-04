@@ -181,10 +181,9 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
             for (Constraint constraint: state.getConstraints()) {
                 // Phew!
                 // check that constraint matches the value bound to the requisite
-                // property
-                if (!constraint.matches(
-                        soln.get(
-                        propToVar.get(constraint.getProperty())))) matches = false;
+                // property. Guard against nulls (properties may be optional)
+                RDFNode value = soln.get(propToVar.get(constraint.getProperty()));
+                if (value == null || !constraint.matches(value)) matches = false;
             }
             if (matches) {
                 counted.add(subject);
