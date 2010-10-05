@@ -143,7 +143,7 @@
     </util:map>
     <util:list id="orgFacets" list-class="java.util.ArrayList">
         <ref bean="orgName"/>
-        <!--<ref bean="orgDeptNames"/>-->
+        <ref bean="orgDeptNames"/>
     </util:list>
 
     <util:map id="orgProps" map-class="java.util.HashMap">
@@ -206,7 +206,7 @@
         <constructor-arg value="${sparql.endpoint}"/>
     </bean>
 
-    <bean id="sparqlQueryService" class="org.ilrt.wf.facets.sparql.SPARQLOneShotQueryService">
+    <bean id="sparqlQueryService" class="org.ilrt.wf.facets.sparql.SPARQLQueryService">
         <constructor-arg ref="sparqlQEFactory"/>
     </bean>
 
