@@ -1,5 +1,5 @@
 <#-- display a facet -->
-<#macro diplayFacet facet>
+<#macro displayFacet facet>
     <#if facet?? && facet.state??>
         <div class="facet">
             <h4 class="facet-title">${facet.name}</h4>
