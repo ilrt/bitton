@@ -22,6 +22,7 @@ import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
 import com.hp.hpl.jena.sparql.algebra.op.OpLeftJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
+import com.hp.hpl.jena.sparql.algebra.op.OpSlice;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.expr.ExprList;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
         }
         for (Constraint c: refinedConstraints) {
             if (!propToVar.containsKey(c.getProperty())) {
-                Var val = findVariable(c.getProperty(), op);
+                Var val = findVariable(c.getProperty(), op, c.isPropertyInverted());
                 if (val == null) {
                     val = vgen.genVar();
 
@@ -92,6 +93,7 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
         // Bah, I just can't win here.
         for (String varName: propToVar.values()) vars.add(Var.alloc(varName));
         op = new OpProject(op, vars);
+        //op = new OpSlice(op,0,10000); // Safety limit.
 
         // Now get the results...
         Query q = OpAsQuery.asQuery(op);
@@ -139,8 +141,8 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
         }
     }
 
-    // Find a variable which is the object of property, if any
-    private Var findVariable(Property property, Op op) {
+    // Find a variable which is the object (or subject, if inverted) of property, if any
+    private Var findVariable(Property property, Op op, final boolean isInverted) {
         final Node p = property.asNode();
         final Var[] foundVar = new Var[1];
         OpVisitor finder = new OpVisitorBase() {
@@ -148,9 +150,13 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
             @Override public void visit(OpBGP op) {
                 if (found) return;
                 for (Triple triple: op.getPattern()) {
-                    if (triple.getPredicate().equals(p) &&
+                    if (!isInverted && triple.getPredicate().equals(p) &&
                             triple.getObject() instanceof Var) {
                         foundVar[0] = (Var) triple.getObject();
+                        found = true;
+                    } else if (isInverted && triple.getPredicate().equals(p) &&
+                            triple.getSubject() instanceof Var) {
+                        foundVar[0] = (Var) triple.getSubject();
                         found = true;
                     }
                 }
