@@ -7,7 +7,7 @@ ns:b3 ns:broader ns:a .
 
 ns:a ns:narrower ns:n1, ns:n2, ns:n3, ns:n4 .
 
-[] a ns:Thing ; ns:prop ns:value ; ns:range 2 ; ns:label "alpha" .
+[] a ns:Thing ; ns:prop ns:value ; ns:range 2 ; ns:label "alpha" ; ns:opt "rare" .
 [] a ns:Thing ; ns:prop ns:novalue ; ns:range 2 ; ns:label "alpha" .
 [] a ns:Thing ; ns:prop ns:value ; ns:range 3 ; ns:label "alpha" .
 [] a ns:Thing ; ns:prop ns:novalue ; ns:range 3 ; ns:label "alpha" .

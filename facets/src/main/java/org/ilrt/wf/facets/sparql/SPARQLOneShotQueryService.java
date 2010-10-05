@@ -20,9 +20,10 @@ import com.hp.hpl.jena.sparql.algebra.OpVisitorBase;
 import com.hp.hpl.jena.sparql.algebra.OpWalker;
 import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
-import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
+import com.hp.hpl.jena.sparql.algebra.op.OpLeftJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.sparql.expr.ExprList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -66,7 +67,6 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
 
         // Now we want to grab the values to count for refinements
         Map<Property, String> propToVar = new HashMap<Property, String>();
-        VarMaker vf = new VarMaker();
         Collection<Constraint> refinedConstraints = new LinkedList<Constraint>();
         for (FacetState parent: currentFacetStates) {
             for (FacetState child: parent.getRefinements())
@@ -76,10 +76,12 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
             if (!propToVar.containsKey(c.getProperty())) {
                 Var val = findVariable(c.getProperty(), op);
                 if (val == null) {
-                    val = vf.make();
-                    op = OpJoin.create(op,
-                        new OpGraph( vf.make() ,
-                        tripleToBGP(SUBJECT, c.getProperty().asNode(), val, c.isPropertyInverted())));
+                    val = vgen.genVar();
+
+                    // Left join: property may be missing
+                    op = OpLeftJoin.create(op,
+                        new OpGraph( vgen.genVar() ,
+                        tripleToBGP(SUBJECT, c.getProperty().asNode(), val, c.isPropertyInverted())), (ExprList) null);
                 }
                 propToVar.put(c.getProperty(), val.getVarName());
             }
@@ -179,10 +181,9 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
             for (Constraint constraint: state.getConstraints()) {
                 // Phew!
                 // check that constraint matches the value bound to the requisite
-                // property
-                if (!constraint.matches(
-                        soln.get(
-                        propToVar.get(constraint.getProperty())))) matches = false;
+                // property. Guard against nulls (properties may be optional)
+                RDFNode value = soln.get(propToVar.get(constraint.getProperty()));
+                if (value == null || !constraint.matches(value)) matches = false;
             }
             if (matches) {
                 counted.add(subject);
@@ -193,12 +194,5 @@ public class SPARQLOneShotQueryService extends SPARQLQueryService {
         public int getCount() { return count; }
 
         public FacetState getState() { return state; }
-    }
-
-    public static class VarMaker {
-        private int num = 0;
-
-        public Var make() { num++; return Var.alloc("vm" + num); }
-        
     }
 }
