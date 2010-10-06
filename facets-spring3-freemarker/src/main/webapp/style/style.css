@@ -24,7 +24,6 @@ body {
     position: absolute;
     right: 0;
     margin-top: 10px;
-    font-size: 14px;
 }
 
 #nav-links ul {
@@ -87,7 +86,6 @@ body {
     border: 1px solid #b3b3b3;
     display: inline;
     list-style-type: none;
-    font-size: 14px;
     font-weight: 500;
     padding: 5px 20px 5px 20px;
     margin-left: 3px;
@@ -116,7 +114,6 @@ body {
     border: 1px solid #b3b3b3;
     display: inline;
     list-style-type: none;
-    font-size: 14px;
     font-weight: 500;
     padding: 5px 10px 5px 10px;
     margin-right: 3px;
@@ -137,15 +134,13 @@ body {
 }
 
 #search-text {
-    font-size: 14px;
     padding: 3px;
 }
 
-#search-button {
+.search-button {
     background: #f9e6a2;
     border: solid 1px #e4bb13;
     padding: 4px 10px 4px 10px;
-    font-size: 14px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
 }
@@ -201,7 +196,7 @@ body {
     padding-bottom: 20px;
 }
 
-#results p {
+#nav, #results p {
     font-size: 14px;
 }
 
@@ -247,7 +242,6 @@ body {
     background: #d9d9d9;
     border: solid 1px #808080;
     padding: 4px 10px 4px 10px;
-    font-size: 14px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
 }
