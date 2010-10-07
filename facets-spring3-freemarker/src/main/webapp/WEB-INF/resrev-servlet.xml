@@ -192,13 +192,24 @@
 
     <context:component-scan base-package="org.ilrt.wf.facets.web.spring.controllers"/>
 
-    <!-- Properties files -->
+    <!-- Properties -->
+
+    <!-- creates a java.util.Properties instance with values loaded from the supplied location -->
+    <util:properties id="appProperties" location="classpath:resrev.properties"/>
 
     <bean id="propertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:resrev.properties"/>
+        <property name="properties" ref="appProperties" />
     </bean>
 
+    <!-- Interceptors -->
+    <bean id="propertyInterceptor" class="org.ilrt.wf.facets.interceptor.PropertyInterceptor">
+        <property name="properties" ref="appProperties"/>
+    </bean>
+
+    <!-- need the DefaultAnnotationHandlerMapping bean for the property interceptor to be used correctly -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"
+        p:interceptors-ref="propertyInterceptor" />
 
     <!-- SPARQL Endpoint Service -->
 

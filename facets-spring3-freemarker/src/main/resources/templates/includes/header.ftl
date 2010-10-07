@@ -6,6 +6,9 @@
     <title>Research Revealed</title>
     <link rel="stylesheet" type="text/css" href="${contextPath}/style/reset.css"/>
     <link rel="stylesheet" type="text/css" href="${contextPath}/style/style.css"/>
+    <script type="text/javascript">
+        var COMPLETOR_URL = "${completorurl}";
+    </script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="${contextPath}/scripts/script.js"></script>
 </head>
