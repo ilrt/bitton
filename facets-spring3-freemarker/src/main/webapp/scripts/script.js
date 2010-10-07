@@ -24,5 +24,15 @@ $(document).ready(function(){
 
     });
 
+    $(".autoselect").each(function(){
+        var title = $(this).attr("title");
+        var submit = $(this).attr("submit");
+        var resource = $(this).attr("resource");
+        var url = COMPLETOR_URL + '?title='+title + '&submit=' + submit + '&resource=' + resource;
+        $(this).load(encodeURI(url), function() {
+            // call any initalisation functions
+            init();
+        });
+    });
 
 });
