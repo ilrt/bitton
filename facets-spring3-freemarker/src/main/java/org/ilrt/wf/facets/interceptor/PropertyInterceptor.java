@@ -51,8 +51,6 @@ public class PropertyInterceptor extends HandlerInterceptorAdapter implements In
             logger.debug("Request is " + request.getRequestURI());
         }
 
-        logger.debug(properties.size());
-
         Enumeration elements = properties.keys();
 
         while (elements.hasMoreElements()) {
