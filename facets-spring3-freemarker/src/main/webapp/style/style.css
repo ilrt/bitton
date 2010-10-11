@@ -196,7 +196,7 @@ body {
     padding-bottom: 20px;
 }
 
-#nav, #results p {
+#results p {
     font-size: 14px;
 }
 
@@ -261,12 +261,16 @@ body {
     text-decoration: underline;
 }
 
-.autoselectform
+.autoselect
 {
-    display:inline;
     float:left;
-    margin-left: 25px;
-    padding-top: 5px;
+    margin-left: 0.5em;
+    padding:7px;
 }
 
-.autoselectform .search-button { width: 5em; }
+.autoselectform .search-button { width:5em; }
+
+.loadError {
+    border:1px solid #c92f2f;
+    background-color:#efcbcb;
+}

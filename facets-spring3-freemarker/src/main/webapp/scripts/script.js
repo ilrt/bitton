@@ -4,7 +4,7 @@
  */
 
 $(document).ready(function(){
-
+    
     var link = "[<span>+</span>]&nbsp;";
     if ($(".collapsible .content:hidden").length > 0)
     {
@@ -29,10 +29,29 @@ $(document).ready(function(){
         var submit = $(this).attr("submit");
         var resource = $(this).attr("resource");
         var url = COMPLETOR_URL + '?title='+title + '&submit=' + submit + '&resource=' + resource;
-        $(this).load(encodeURI(url), function() {
-            // call any initalisation functions
-            init();
+        $(this).load(encodeURI(url), function(response, status, xhr) {
+            if (status != 'success' || xhr.status == '404')
+            {
+                handleLoadError(this);
+            }
+            else
+            {
+                try
+                {
+                    // call any initalisation functions
+                    init();
+                }
+                catch (err)
+                {
+                    handleLoadError(this);
+                }
+            }
         });
     });
 
 });
+
+function handleLoadError(obj)
+{
+    $(obj).addClass("loadError").html("Error");//.delay("slow").fadeOut("slow");
+}
