@@ -39,3 +39,10 @@
         <#if !person[rdfs + 'label']??>${person}</#if>
     </a>
 </#macro>
+
+<#macro displayOrg org>
+    <a href="${org}">
+        <#if org[rdfs + 'label']??>${org[rdfs + 'label']?first}</#if>
+        <#if !org[rdfs + 'label']??>${org}</#if>
+    </a>
+</#macro>

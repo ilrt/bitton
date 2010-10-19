@@ -15,7 +15,7 @@
         </#if>
 
         <#if resource[aiiso + 'part_of']??>
-          <p><strong>Part of: </strong><a href="${resource[aiiso + 'part_of']?first}">${resource[aiiso + 'part_of']?first}</a></p>
+          <p><strong>Part of: </strong><@displayOrg org=resource[aiiso + 'part_of']?first/></p>
         </#if>
 
         <#if resource[closed + 'member']?? && resource[foaf + 'member']??>
