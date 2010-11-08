@@ -8,7 +8,7 @@
 
     <div id="content">
 
-        <h2>${resource['http://purl.org/dc/terms/title']?first}</h2>
+        <h2>${resource[dc + 'title']?first}</h2>
 
         <p><strong>Grant Number:</strong> ${resource['proj:grantNumber']?first}</p>
         
@@ -24,8 +24,8 @@
 
         <p><strong>Abstract:</strong></p>
         
-        <#if resource['http://purl.org/dc/terms/abstract']??>
-          <p>${resource['http://purl.org/dc/terms/abstract']?first}</p>
+        <#if resource[dc + 'abstract']??>
+          <p>${resource[dc + 'abstract']?first}</p>
         </#if>
         
         <p><strong>Principal Investigators:</strong></p>
@@ -33,7 +33,9 @@
         <#if resource['proj:hasPrincipalInvestigator']??>
             <ul>
                 <#list resource['proj:hasPrincipalInvestigator'] as pi>
-                    <li><a href="${pi}">${pi}</a></li>
+                    <li>
+                        <@displayPerson person=pi/>
+                    </li>
                 </#list>
             </ul>
         </#if>
@@ -43,7 +45,9 @@
         <#if resource['proj:hasCoInvestigator']??>
             <ul>
                 <#list resource['proj:hasCoInvestigator'] as pi>
-                    <li><a href="${pi}">${pi}</a></li>
+                    <li>
+                        <@displayPerson person=pi/>
+                    </li>
                 </#list>
             </ul>
         </#if>

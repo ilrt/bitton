@@ -1,11 +1,17 @@
+<#assign foaf = "http://xmlns.com/foaf/0.1/">
+<#assign rdfs = "http://www.w3.org/2000/01/rdf-schema#">
+<#assign dc = "http://purl.org/dc/terms/">
+<#assign closed = "http://vocab.ilrt.bris.ac.uk/rr/closed#">
+<#assign aiiso = "http://purl.org/vocab/aiiso/schema#">
+
 <#-- display a default label for a resource -->
 <#macro label resource>
-    <#if resource['http://www.w3.org/2000/01/rdf-schema#label']??>
-        ${resource['http://www.w3.org/2000/01/rdf-schema#label']?first}
-    <#elseif resource['http://xmlns.com/foaf/0.1/name']??>
-        ${resource['http://xmlns.com/foaf/0.1/name']?first}
-    <#elseif resource['http://purl.org/dc/terms/title']??>
-        ${resource['http://purl.org/dc/terms/title']?first}
+    <#if resource[rdfs + 'label']??>
+        ${resource[rdfs + 'label']?first}
+    <#elseif resource[foaf + 'name']??>
+        ${resource[foaf + 'name']?first}
+    <#elseif resource[dc + 'title']??>
+        ${resource[dc + 'title']?first}
     <#else>
         Untitled resource
     </#if>
@@ -17,5 +23,26 @@
 
 <#-- check that we are not dealing with a bnode -> http://invalid.org -->
 <#macro displayHost host>
-    <#if host != 'http://invalid.org'><li><a href="${host}">${host}</a></li></#if>
+    <#if host != 'http://invalid.org'>
+        <li>
+            <a href="${host}">
+                <#if host[rdfs + 'label']??>${host[rdfs + 'label']?first}</#if>
+                <#if !host[rdfs + 'label']??>${host}</#if>
+            </a>
+        </li>
+    </#if>
+</#macro>
+
+<#macro displayPerson person>
+    <a href="${person}">
+        <#if person[rdfs + 'label']??>${person[rdfs + 'label']?first}</#if>
+        <#if !person[rdfs + 'label']??>${person}</#if>
+    </a>
+</#macro>
+
+<#macro displayOrg org>
+    <a href="${org}">
+        <#if org[rdfs + 'label']??>${org[rdfs + 'label']?first}</#if>
+        <#if !org[rdfs + 'label']??>${org}</#if>
+    </a>
 </#macro>
