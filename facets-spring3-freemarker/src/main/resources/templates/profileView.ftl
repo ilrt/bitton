@@ -35,6 +35,13 @@
 -->
      </div>
 
+     <div id="collaborators">
+       <h2>Collaborators</h2>
+       <#list resource['http://purl.org/vocab/relationship/collaboratesWith'] as collaborator>
+         <p><a href="${collaborator}">${collaborator[rdfs+'label']?first}</a></p>
+       </#list>
+     <div>
+
 <#include "includes/address-footer.ftl"/>
 
 </div>
