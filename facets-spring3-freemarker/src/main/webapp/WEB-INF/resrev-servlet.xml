@@ -201,9 +201,18 @@
         <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
         <entry key="paramName" value="pubdept"/>
     </util:map>
+    <util:map id="pubYear" map-class="java.util.HashMap">
+        <entry key="facetType" value="Flat"/>
+        <entry key="facetTitle" value="Year"/>
+        <entry key="linkProperty" value="http://purl.org/dc/terms/date"/>
+        <entry key="constraintType"
+               value="http://purl.org/dc/terms/Publication"/>
+        <entry key="paramName" value="pubtype"/>
+    </util:map>
     <util:list id="pubFacets" list-class="java.util.ArrayList">
         <ref bean="pubType"/>
         <ref bean="pubDept"/>
+        <ref bean="pubYear"/>
     </util:list>
     <util:map id="pubProps" map-class="java.util.HashMap">
         <entry key="viewName" value="Publications"/>
