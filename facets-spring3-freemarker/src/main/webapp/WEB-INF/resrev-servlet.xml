@@ -22,7 +22,7 @@
         <entry key="aiiso" value="http://purl.org/vocab/aiiso/schema#"/>
 
         <!-- Grants -->
-        <entry key="proj" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#"/>
+        <entry key="proj" value="http://vocab.ouls.ox.ac.uk/projectfunding#"/>
 
         <!-- title, abstract, source (provenance) -->
         <entry key="dc" value="http://purl.org/dc/terms"/>
@@ -34,7 +34,7 @@
         <entry key="owl" value="http://www.w3.org/2002/07/owl#"/>
 
         <!-- Inferred hierarchical info -->
-        <entry key="closed" value="http://vocab.ilrt.bris.ac.uk/rr/closed#"/>
+        <entry key="closed" value="http://vocab.bris.ac.uk/rr/closed#"/>
 
     </util:map>
 
@@ -53,9 +53,9 @@
     <util:map id="grantFunder" map-class="java.util.HashMap">
         <entry key="facetType" value="Flat"/>
         <entry key="facetTitle" value="Funder"/>
-        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#funds"/>
+        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding#funds"/>
         <entry key="constraintType"
-               value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+               value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
         <entry key="linkInvert" value="true"/>
         <entry key="paramName" value="funder"/>
     </util:map>
@@ -63,12 +63,12 @@
     <util:map id="deptNames" map-class="java.util.HashMap">
         <entry key="facetType" value="Hierarchical"/>
         <entry key="facetTitle" value="Department Names"/>
-        <entry key="linkProperty" value="http://vocab.ilrt.bris.ac.uk/rr/closed#hostedBy"/>
+        <entry key="linkProperty" value="http://vocab.bris.ac.uk/rr/closed#hostedBy"/>
         <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
         <entry key="facetBase"
-               value="http://resrev.ilrt.bris.ac.uk/research-revealed-merb/organisation_units/UNIV#org"/>
+               value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org"/>
         <entry key="constraintType"
-               value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+               value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
         <entry key="paramName" value="dept"/>
     </util:map>
 
@@ -76,9 +76,9 @@
     <util:map id="grantValues" map-class="java.util.HashMap">
         <entry key="facetType" value="SimpleNumberRange"/>
         <entry key="facetTitle" value="Grant Values"/>
-        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#value"/>
+        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding#value"/>
         <entry key="constraintType"
-               value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+               value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
         <entry key="numericRange" value="0:50000,50000:100000,100000:250000,250000:500000,500000:1000000,1000000:5000000"/>
         <entry key="numericRangeType" value="http://www.w3.org/2001/XMLSchema#integer"/>
         <entry key="numericRangeFormat" value="£###,###"/>
@@ -89,9 +89,9 @@
     <util:map id="grantStartYear" map-class="java.util.HashMap">
         <entry key="facetType" value="SimpleNumberRange"/>
         <entry key="facetTitle" value="Start Year"/>
-        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#startDate"/>
+        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding#startDate"/>
         <entry key="constraintType"
-               value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+               value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
         <entry key="numericRange" value="2004-01-01:2005-01-01,2005-01-01:2006-01-01,2006-01-01:2007-01-01,2007-01-01:2008-01-01,2008-01-01:2009-01-01,2009-01-01:2010-01-01,2010-01-01:2011-01-01,2011-01-01:2012-01-01"/>
         <entry key="numericRangeType" value="http://www.w3.org/2001/XMLSchema#date"/>
         <entry key="paramName" value="grantStartYear"/>
@@ -100,9 +100,9 @@
     <util:map id="grantEndYear" map-class="java.util.HashMap">
         <entry key="facetType" value="SimpleNumberRange"/>
         <entry key="facetTitle" value="End Year"/>
-        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#endDate"/>
+        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding#endDate"/>
         <entry key="constraintType"
-               value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+               value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
         <entry key="numericRange" value="2004-01-01:2005-01-01,2005-01-01:2006-01-01,2006-01-01:2007-01-01,2007-01-01:2008-01-01,2008-01-01:2009-01-01,2009-01-01:2010-01-01,2010-01-01:2011-01-01,2011-01-01:2012-01-01,2012-01-01:2013-01-01,2013-01-01:2014-01-01,2014-01-01:2015-01-01,2015-01-01:2016-01-01,2016-01-01:2017-01-01,2017-01-01:2018-01-01,2018-01-01:2019-01-01"/>
         <entry key="numericRangeType" value="http://www.w3.org/2001/XMLSchema#date"/>
         <entry key="paramName" value="grantEndYear"/>
@@ -121,7 +121,7 @@
         <entry key="viewName" value="Grants"/>
         <entry key="facetList" value-ref="grantFacets"/>
         <entry key="viewId" value="grants"/>
-        <entry key="viewType" value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+        <entry key="viewType" value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
     </util:map>
 
     <!-- Organisation facets -->
@@ -137,13 +137,13 @@
         <entry key="facetTitle" value="Department Names"/>
         <entry key="linkProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
         <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
-        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-merb/organisation_units/UNIV#org"/>
+        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org"/>
         <entry key="constraintType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
         <entry key="paramName" value="orgDept"/>
     </util:map>
     <util:list id="orgFacets" list-class="java.util.ArrayList">
         <ref bean="orgName"/>
-        <!--<ref bean="orgDeptNames"/>-->
+        <ref bean="orgDeptNames"/>
     </util:list>
 
     <util:map id="orgProps" map-class="java.util.HashMap">
@@ -164,10 +164,10 @@
     <util:map id="peopleDeptNames" map-class="java.util.HashMap">
         <entry key="facetType" value="Hierarchical"/>
         <entry key="facetTitle" value="Department"/>
-        <entry key="linkProperty" value="http://vocab.ilrt.bris.ac.uk/rr/closed#member"/>
+        <entry key="linkProperty" value="http://vocab.bris.ac.uk/rr/closed#member"/>
         <entry key="linkInvert" value="true"/>
         <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
-        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-merb/organisation_units/UNIV#org"/>
+        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org"/>
         <entry key="constraintType" value="http://xmlns.com/foaf/0.1/Person"/>
         <entry key="paramName" value="pdept"/>
     </util:map>
@@ -182,10 +182,50 @@
         <entry key="viewType" value="http://xmlns.com/foaf/0.1/Person"/>
     </util:map>
 
+    <!-- Publications -->
+
+    <util:map id="pubType" map-class="java.util.HashMap">
+        <entry key="facetType" value="Flat"/>
+        <entry key="facetTitle" value="Kind"/>
+        <entry key="linkProperty" value="http://purl.org/dc/terms/type"/>
+        <entry key="constraintType"
+               value="http://purl.org/dc/terms/Publication"/>
+        <entry key="paramName" value="pubtype"/>
+    </util:map>
+    <util:map id="pubDept" map-class="java.util.HashMap">
+        <entry key="facetType" value="Hierarchical"/>
+        <entry key="facetTitle" value="Department"/>
+        <entry key="linkProperty" value="http://vocab.bris.ac.uk/resrev#department"/>
+        <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
+        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
+        <entry key="paramName" value="pubdept"/>
+    </util:map>
+    <util:map id="pubYear" map-class="java.util.HashMap">
+        <entry key="facetType" value="Flat"/>
+        <entry key="facetTitle" value="Year"/>
+        <entry key="linkProperty" value="http://purl.org/dc/terms/date"/>
+        <entry key="constraintType"
+               value="http://purl.org/dc/terms/Publication"/>
+        <entry key="paramName" value="pubtype"/>
+    </util:map>
+    <util:list id="pubFacets" list-class="java.util.ArrayList">
+        <ref bean="pubType"/>
+        <ref bean="pubDept"/>
+        <ref bean="pubYear"/>
+    </util:list>
+    <util:map id="pubProps" map-class="java.util.HashMap">
+        <entry key="viewName" value="Publications"/>
+        <entry key="facetList" value-ref="pubFacets"/>
+        <entry key="viewId" value="pubs"/>
+        <entry key="viewType" value="http://purl.org/dc/terms/Publication"/>
+    </util:map>
+
     <util:map id="viewList" map-class="java.util.HashMap">
         <entry key="grant" value-ref="grantProps"/>
         <entry key="org" value-ref="orgProps"/>
         <entry key="people" value-ref="personProps"/>
+        <entry key="pubs" value-ref="pubProps"/>
     </util:map>
 
     <!-- scan for controllers -->
@@ -217,7 +257,7 @@
         <constructor-arg value="${sparql.endpoint}"/>
     </bean>
 
-    <bean id="sparqlQueryService" class="org.ilrt.wf.facets.sparql.SPARQLOneShotQueryService">
+    <bean id="sparqlQueryService" class="org.ilrt.wf.facets.sparql.SPARQLQueryService">
         <constructor-arg ref="sparqlQEFactory"/>
     </bean>
 
