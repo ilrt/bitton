@@ -188,6 +188,9 @@ public class ResRevController extends AbstractController {
             if (type.equals("http://xmlns.com/foaf/0.1/Person")) {
                 return PROFILE_VIEW_NAME;
             }
+            if (type.equals("http://purl.org/dc/terms/Publication")) {
+                return PUBLICATION_VIEW_NAME;
+            }
 
         }
 
@@ -207,6 +210,7 @@ public class ResRevController extends AbstractController {
     public static String PROFILE_VIEW_NAME = "profileView";
     public static String GRANT_VIEW_NAME = "grantView";
     public static String ORGANISATION_VIEW_NAME = "orgView";
+    public static String PUBLICATION_VIEW_NAME = "pubView";
     public static String DEFAULT_VIEW = "defaultView";
 
     private final String FACETVIEW_SESSION = "facetView";
