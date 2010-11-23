@@ -274,3 +274,5 @@ body {
     border:1px solid #c92f2f;
     background-color:#efcbcb;
 }
+
+th { font-weight: bold;}
