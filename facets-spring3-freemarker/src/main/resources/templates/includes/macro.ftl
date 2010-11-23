@@ -1,7 +1,9 @@
 <#assign foaf = "http://xmlns.com/foaf/0.1/">
+<#assign rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 <#assign rdfs = "http://www.w3.org/2000/01/rdf-schema#">
 <#assign dc = "http://purl.org/dc/terms/">
 <#assign closed = "http://vocab.ilrt.bris.ac.uk/rr/closed#">
+<#assign resrev = "http://vocab.bris.ac.uk/resrev#">
 <#assign aiiso = "http://purl.org/vocab/aiiso/schema#">
 
 <#-- display a default label for a resource -->
