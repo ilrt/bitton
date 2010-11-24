@@ -5,16 +5,18 @@
 
 package org.ilrt.wf.facets.impl;
 
+import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.vocabulary.RDFS;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Comparator;
 import java.util.List;
 import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetEnvironment;
@@ -22,7 +24,6 @@ import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.QNameUtility;
-import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
 
 /**
@@ -69,6 +70,16 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
                         Arrays.asList(typeConstraint, valConstraint));
                 refinements.add(refine);
             }
+
+            // Not convinced about this.
+            Collections.sort(refinements, new Comparator() {
+
+                @Override
+                public int compare(Object t, Object t1) {
+                    return ((FacetState) t).getName().compareTo(((FacetState) t1).getName());
+                }
+            });
+
             state.setRefinements(refinements);
 
         } else {
@@ -88,17 +99,29 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
     }
 
     private String toParamVal(RDFNode node) {
-        if (node.isLiteral()) return "L" + ((Literal) node).getLexicalForm();
+        if (node.isLiteral()){
+            return "L" + ((Literal) node).getLexicalForm() + " " +
+                    qNameUtility.getQName(((Literal) node).getDatatypeURI());
+        }
         else if (node.isURIResource())
             return "U" + qNameUtility.getQName(((Resource) node).getURI());
         else return "B" + ((Resource) node).getId().getLabelString();
     }
 
+    private final TypeMapper TM = TypeMapper.getInstance();
+
     private RDFNode fromParamVal(String val) {
         if (val.startsWith("U")) return ResourceFactory.createResource(qNameUtility.expandQName(val.substring(1)));
         // Erm, what should we do here? Fail?
         else if (val.startsWith("B")) return ResourceFactory.createResource();
-        else return ResourceFactory.createPlainLiteral(val.substring(1));
+        else {
+            int index = val.lastIndexOf(" ");
+            String lex = val.substring(1, index);
+            String dt = qNameUtility.expandQName(val.substring(index + 1));
+            return (dt.isEmpty()) ? 
+                ResourceFactory.createPlainLiteral(lex) :
+                ResourceFactory.createTypedLiteral(lex, TM.getSafeTypeByName(dt));
+        }
     }
 
     private String getLabel(RDFNode node) {
@@ -106,9 +129,10 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
         else if (node.isAnon()) return ((Resource) node).getId().getLabelString();
         else {
             Resource r = (Resource) node;
-            String label = facetQueryService.getLabelFor(r);
-            if (label == null) return qNameUtility.getQName(r.getURI());
-            else return label;
+            String label = (r.hasProperty(RDFS.label)) ?
+                r.getProperty(RDFS.label).getLiteral().getLexicalForm() :
+                qNameUtility.getQName(r.getURI());
+            return label;
         }
     }
 }

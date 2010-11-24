@@ -13,9 +13,11 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResIterator;
@@ -30,17 +32,19 @@ import com.hp.hpl.jena.sparql.algebra.op.OpDistinct;
 import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
+import com.hp.hpl.jena.sparql.algebra.op.OpLeftJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.algebra.op.OpSlice;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.sparql.expr.E_Aggregator;
 import com.hp.hpl.jena.sparql.expr.E_LessThan;
 import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
 import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
 import com.hp.hpl.jena.sparql.expr.E_Regex;
 import com.hp.hpl.jena.sparql.expr.E_Str;
+import com.hp.hpl.jena.sparql.expr.Expr;
+import com.hp.hpl.jena.sparql.expr.ExprList;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.aggregate.AggCount;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
@@ -85,7 +89,7 @@ public class SPARQLQueryService implements FacetQueryService {
 
         // TODO: Work around. Remove this when ARQ is fixed
 
-        System.setProperty("http.keepAlive", "false");
+        //System.setProperty("http.keepAlive", "false");
     }
 
     @Override
@@ -346,12 +350,14 @@ public class SPARQLQueryService implements FacetQueryService {
     protected int getCount(Collection<Constraint> constraints, VarGen vgen) {
         Op op = constraintsToOp(constraints, vgen);
         
-        // Using count(*)
-        op = new OpProject(op, Collections.singletonList(Var.alloc("count")));
+        // Using count(*) -- no idea how to do this in algebra
+
+        // Project out everything. We add count later
+        op = new OpProject(op, Collections.EMPTY_LIST);
         Query q = OpAsQuery.asQuery(op);
         q.setQuerySelectType();
         q.setQueryResultStar(false);
-        E_Aggregator agg = q.allocAggregate(AggCount.get());
+        Expr agg = q.allocAggregate(new AggCount());
         q.addResultVar("count", agg);
         QueryExecution qe = qef.get(q);
 
@@ -516,6 +522,7 @@ public class SPARQLQueryService implements FacetQueryService {
     public Collection<RDFNode> getValuesOfPropertyForType(Resource type, Property property, boolean invert) {
         Var thing = Var.alloc("thing");
         Var val = Var.alloc("val");
+        Var label = Var.alloc("label");
 
         BasicPattern bgp = new BasicPattern();
         bgp.add(Triple.create(thing, RDF.type.asNode(), type.asNode()));
@@ -523,10 +530,16 @@ public class SPARQLQueryService implements FacetQueryService {
             bgp.add(Triple.create(val, property.asNode(), thing));
         else
             bgp.add(Triple.create(thing, property.asNode(), val));
-
+        
+        // Bit to get label (if available)
+        BasicPattern labelBGP = new BasicPattern();
+        labelBGP.add(Triple.create(val, RDFS.label.asNode(), label));
+        Op opGetLabel = new OpGraph(Var.alloc("lg"), new OpBGP(labelBGP));
+        
         Op op = new OpBGP(bgp);
         op = new OpGraph(Var.alloc("g"), op);
-        op = new OpProject(op, Collections.singletonList(val)); // select ?v
+        op = OpLeftJoin.create(op, opGetLabel, (ExprList) null);
+        op = new OpProject(op, Arrays.asList(val, label)); // select ?val, ?label
         op = new OpDistinct(op);
 
         Query q = OpAsQuery.asQuery(op);
@@ -534,7 +547,20 @@ public class SPARQLQueryService implements FacetQueryService {
         ResultSet results = qe.execSelect();
         Collection<RDFNode> vals = new ArrayList<RDFNode>();
 
-        while (results.hasNext()) vals.add(results.next().get("val"));
+        RDFNode aValue;
+        RDFNode aLabel;
+        QuerySolution result;
+        Model resModel = ModelFactory.createDefaultModel();
+        while (results.hasNext()) {
+            result = results.next();
+            aValue = result.get("val");
+            aLabel = result.get("label");
+            if (aLabel != null) {
+                aValue = aValue.inModel(resModel); // attach to our model
+                aValue.asResource().addProperty(RDFS.label, aLabel);
+            }
+            vals.add(aValue);
+        }
 
         return vals;
     }

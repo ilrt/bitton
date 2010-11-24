@@ -207,7 +207,7 @@
         <entry key="linkProperty" value="http://purl.org/dc/terms/date"/>
         <entry key="constraintType"
                value="http://purl.org/dc/terms/Publication"/>
-        <entry key="paramName" value="pubtype"/>
+        <entry key="paramName" value="pubyear"/>
     </util:map>
     <util:list id="pubFacets" list-class="java.util.ArrayList">
         <ref bean="pubType"/>
