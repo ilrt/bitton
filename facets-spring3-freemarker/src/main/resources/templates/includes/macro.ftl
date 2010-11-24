@@ -2,6 +2,7 @@
 <#assign rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 <#assign rdfs = "http://www.w3.org/2000/01/rdf-schema#">
 <#assign dc = "http://purl.org/dc/terms/">
+<#assign elements = "http://purl.org/dc/elements/1.1/">
 <#assign closed = "http://vocab.bris.ac.uk/rr/closed#">
 <#assign resrev = "http://vocab.bris.ac.uk/resrev#">
 <#assign aiiso = "http://purl.org/vocab/aiiso/schema#">
