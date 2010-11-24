@@ -41,9 +41,17 @@
             </div>
         </#if>
 
+<!--
+        <table class="debug">
+            <#list resource?keys as key>
+                <#list resource[key] as value>
+                    <tr><td>${key}</td><td>${value}</td></tr>
+                </#list>
+            </#list>
+        </table>
+-->
 
         <#if view??><p><em><a href="javascript:history.go(-1)">Return to results</a></em></p></#if>
-
 
      </div>
 
