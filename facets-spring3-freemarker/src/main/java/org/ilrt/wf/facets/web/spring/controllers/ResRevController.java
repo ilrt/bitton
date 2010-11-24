@@ -3,6 +3,7 @@ package org.ilrt.wf.facets.web.spring.controllers;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.apache.log4j.Logger;
@@ -177,19 +178,23 @@ public class ResRevController extends AbstractController {
 
         if (resource.hasProperty(RDF.type)) {
 
-            String type = resource.getProperty(RDF.type).getResource().getURI();
+            StmtIterator iter = resource.listProperties(RDF.type);
+            while (iter.hasNext())
+            {
+                String type = iter.nextStatement().getResource().getURI();
 
-            if (type.equals("http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant")) {
-                return GRANT_VIEW_NAME;
-            }
-            if (type.equals("http://purl.org/vocab/aiiso/schema#Institution")) {
-                return ORGANISATION_VIEW_NAME;
-            }
-            if (type.equals("http://xmlns.com/foaf/0.1/Person")) {
-                return PROFILE_VIEW_NAME;
-            }
-            if (type.equals("http://purl.org/dc/terms/Publication")) {
-                return PUBLICATION_VIEW_NAME;
+                if (type.equals("http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant")) {
+                    return GRANT_VIEW_NAME;
+                }
+                else if (type.equals("http://purl.org/vocab/aiiso/schema#Institution")) {
+                    return ORGANISATION_VIEW_NAME;
+                }
+                else if (type.equals("http://xmlns.com/foaf/0.1/Person")) {
+                    return PROFILE_VIEW_NAME;
+                }
+                else if(type.equals("http://purl.org/dc/terms/Publication")) {
+                    return PUBLICATION_VIEW_NAME;
+                }
             }
 
         }
