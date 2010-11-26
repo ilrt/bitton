@@ -89,7 +89,7 @@ public class SPARQLQueryService implements FacetQueryService {
 
         // TODO: Work around. Remove this when ARQ is fixed
 
-        //System.setProperty("http.keepAlive", "false");
+        System.setProperty("http.keepAlive", "false");
     }
 
     @Override
