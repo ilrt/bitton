@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <!-- Registered prefixes -->
+
+    <util:map id="prefixes" map-class="java.util.HashMap">
+
+        <!-- People, organizations and agents -->
+        <entry key="foaf" value="http://xmlns.com/foaf/0.1/"/>
+
+        <!-- Organisational structure -->
+        <entry key="aiiso" value="http://purl.org/vocab/aiiso/schema#"/>
+
+        <!-- Grants -->
+        <entry key="proj" value="http://vocab.ouls.ox.ac.uk/projectfunding#"/>
+
+        <!-- title, abstract, source (provenance) -->
+        <entry key="dc" value="http://purl.org/dc/terms"/>
+
+        <!--  label -->
+        <entry key="rdfs" value="http://www.w3.org/2000/01/rdf-schema#"/>
+
+        <!-- sameAs -->
+        <entry key="owl" value="http://www.w3.org/2002/07/owl#"/>
+
+        <!-- Inferred hierarchical info -->
+        <entry key="closed" value="http://vocab.bris.ac.uk/rr/closed#"/>
+
+    </util:map>
+
+    <!-- scan for controllers -->
+
+    <context:component-scan base-package="org.ilrt.wf.facets.ui.widgets.controllers"/>
+
+    <!-- Properties -->
+
+    <!-- creates a java.util.Properties instance with values loaded from the supplied location -->
+    <util:properties id="appProperties" location="classpath:widgets.properties"/>
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="appProperties" />
+    </bean>
+
+    <!-- SPARQL Endpoint Service -->
+
+    <bean id="sparqlQEFactory" class="org.ilrt.wf.facets.sparql.RemoteQEFactory">
+        <constructor-arg value="${sparql.endpoint}"/>
+    </bean>
+
+    <bean id="sparqlQueryService" class="org.ilrt.wf.facets.sparql.SPARQLQueryService">
+        <constructor-arg ref="sparqlQEFactory"/>
+    </bean>
+
+    <!-- FreeMarker configuration -->
+
+    <bean id="freemarkerConfig"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/classes/templates/"/>
+        <!--
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="object_wrapper">org.ilrt.wf.facets.freemarker.JenaObjectWrapper</prop>
+            </props>
+        </property>
+        -->
+    </bean>
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="cache" value="false"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+    </bean>
+
+</beans>

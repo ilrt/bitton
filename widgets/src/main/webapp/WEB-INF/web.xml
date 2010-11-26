@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <display-name>Research Revealed Facet Widget repo</display-name>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <!-- ========== CONTEXT PARAMETERS ========== -->
+    <!-- root key -->
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>widgets.rootkey</param-value>
+    </context-param>
+    <!-- log4j configuration file -->
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j.properties</param-value>
+    </context-param>
+    <!--
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/resrev-servlet.xml
+            /WEB-INF/resrev-security.xml</param-value>
+    </context-param>
+    
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>-->
+    <!-- ========== SECURITY FILTER ==========
+    <filter>
+        <filter-name>CAS Single Sign Out Filter</filter-name>
+        <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CAS Single Sign Out Filter</filter-name>
+        <url-pattern>/resrev/*</url-pattern>
+        <url-pattern>/j_spring_cas_security_check</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/resrev/*</url-pattern>
+        <url-pattern>/j_spring_cas_security_check</url-pattern>
+    </filter-mapping>
+     -->
+    <!-- ========== LISTENERS ========== -->
+    <!-- log4j listener -->
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    <!-- ========== SERVLETS ========== -->
+    <!-- Spring dispatcher servlet -->
+    <servlet>
+        <servlet-name>widgets</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- ========== SERVLET MAPPINGS ========== -->
+    <!-- Mapping for the Spring MVC controller -->
+    <servlet-mapping>
+        <servlet-name>widgets</servlet-name>
+        <url-pattern>/widgets/*</url-pattern>
+    </servlet-mapping>
+</web-app>
