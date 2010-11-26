@@ -7,7 +7,7 @@
 <#assign resrev = "http://vocab.bris.ac.uk/resrev#">
 <#assign aiiso = "http://purl.org/vocab/aiiso/schema#">
 <#assign bibo = "http://purl.org/ontology/bibo/">
-
+<#assign relationship = "http://purl.org/vocab/relationship/">
 
 <#-- display a default label for a resource -->
 <#macro label resource>
