@@ -103,7 +103,7 @@
     </dependencies>
     <properties>
         <spring-security.version>3.0.3.RELEASE</spring-security.version>
-        <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
+        <netbeans.hint.deploy.server>Tomcat60</netbeans.hint.deploy.server>
     </properties>
 </project>
 

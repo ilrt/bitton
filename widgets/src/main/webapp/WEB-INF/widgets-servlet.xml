@@ -38,9 +38,11 @@
 
     </util:map>
 
-    <!-- scan for controllers -->
-
-    <context:component-scan base-package="org.ilrt.wf.facets.ui.widgets.controllers"/>
+    <!-- Define Controllers -->
+    
+    <bean id="local-service" class="org.ilrt.wf.facets.ui.widgets.controllers.TopFacetController">
+        <constructor-arg value="http://tc-p2.ilrt.bris.ac.uk:8266/data-server/sparql"/>
+    </bean>
 
     <!-- Properties -->
 
