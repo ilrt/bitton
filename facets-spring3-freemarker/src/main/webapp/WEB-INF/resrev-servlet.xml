@@ -195,7 +195,7 @@
     <util:map id="pubDept" map-class="java.util.HashMap">
         <entry key="facetType" value="Hierarchical"/>
         <entry key="facetTitle" value="Department"/>
-        <entry key="linkProperty" value="http://vocab.bris.ac.uk/resrev#department"/>
+        <entry key="linkProperty" value="http://vocab.bris.ac.uk/rr/closed#department"/>
         <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
         <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org"/>
         <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
