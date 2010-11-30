@@ -2,14 +2,11 @@ package org.ilrt.wf.facets.ui.widgets.controllers;
 
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.ilrt.wf.facets.FacetViewService;
 import org.ilrt.wf.facets.FacetViewServiceException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import org.ilrt.wf.facets.FacetQueryService;
 import org.slf4j.LoggerFactory;
 
 /**
