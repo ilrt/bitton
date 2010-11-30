@@ -41,7 +41,8 @@
     <!-- Define Controllers -->
     
     <bean id="local-service" class="org.ilrt.wf.facets.ui.widgets.controllers.TopFacetController">
-        <constructor-arg value="http://tc-p2.ilrt.bris.ac.uk:8266/data-server/sparql"/>
+        <property name="endpoint" value="http://tc-p2.ilrt.bris.ac.uk:8266/data-server/sparql"/>
+        <property name="viewname" value="topFacetView"/>
     </bean>
 
     <!-- Properties -->
