@@ -56,9 +56,7 @@
                 <tr>
                     <th>Publisher:</th>
                     <td>
-                        ${resource[elem</th>
-                <td>
-                   ents + 'publisher']?first}
+                        ${resource[elements + 'publisher']?first}
                     </td>
                 </tr>
             </#if>
