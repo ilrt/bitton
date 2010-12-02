@@ -22,20 +22,20 @@ import org.springframework.web.servlet.ModelAndView;
 public abstract class AbstractController {
     public static String CONTEXT_PATH_KEY = "contextPath";
     public static String SERVLET_PATH_KEY = "servletPath";
-    private static String viewName = "";
+    private String viewName = "";
     protected Logger log;
     
     /**
      * @return the viewName
      */
-    public static String getViewName() {
+    public String getViewName() {
         return viewName;
     }
 
     /**
      * @param aViewName the viewName to set
      */
-    public static void setViewName(String aViewName) {
+    public void setViewName(String aViewName) {
         viewName = aViewName;
     }
 
