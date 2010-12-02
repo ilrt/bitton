@@ -56,7 +56,7 @@
                 .bottom(20)
                 .left(40)
                 .right(10)
-                .top(5);
+                .top(20);
 
             /* X-axis ticks. */
             vis.add(pv.Rule)
@@ -80,11 +80,44 @@
                 .text(y.tickFormat);
 
             /* The line. */
-            vis.add(pv.Line)
+            var line = vis.add(pv.Line)
                 .data(data)
                 .left(function(d) x(d.x))
                 .bottom(function(d) y(d.y))
                 .lineWidth(3);
+
+            /* The floating dot */
+            var i = -1;
+            var dot = line.add(pv.Dot)
+                .visible(function() i >= 0)
+                .data(function() [data[i]])
+                .fillStyle(function() line.strokeStyle())
+                .strokeStyle("#000")
+                .size(20)
+                .lineWidth(1)
+                .anchor(function(){return data[i].y > data[i-1].y ? "left" : "right"}).add(pv.Label)
+                .textShadow("0.1em 0.1em 0.1em #4B1")
+                .font("bold 11px")
+                .textAngle("0.785398163")
+                .text(function(d) d.y);
+
+            /*Lastly, we need to specify event handlers to wire everything up.
+            Ideally, we could add those directly to the root panel and be done with it,
+            but there are some minor flickering issues caused by child elements.
+            So for now, we use an invisible bar to capture the events flicker-free. */
+            vis.add(pv.Bar)
+                .fillStyle("rgba(0,0,0,.001)")
+                .event("mouseout", function() {
+                    i = -1;
+                    return vis;
+                  })
+                .event("mousemove", function() {
+                    var mx = x.invert(vis.mouse().x);
+                    i = pv.search(data.map(function(d) d.x), mx);
+                    i = i < 0 ? (-i - 2) : i;
+                    return vis;
+                  });
+
 
             vis.render();
         </script>
