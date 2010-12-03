@@ -106,6 +106,14 @@
                     </td>
                 </tr>
             </#if>
+            <#if resource[dc + 'bibliographicCitation']??>
+                <tr>
+                    <th>Citation:</th>
+                    <td>
+                        <cite>${resource[dc + 'bibliographicCitation']?first}</cite>
+                    </td>
+                </tr>
+            </#if>
         </table>
 
         <#if resource[rdfs + 'seeAlso']??>
