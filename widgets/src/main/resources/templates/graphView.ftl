@@ -3,21 +3,63 @@
 <script type="text/javascript">
     var dataHash = new Array();
 
+    var types = new Array();
+    <#list types as type>
+        types[types.length] = '${type}';
+    </#list>
+
+    for (type in types) { dataHash[types[type]] = new Array(); }
+
     <#list results as result>
-        dataHash['${result['year']}'] = ${result['count']};
+        var o = new Object();
+        o.year = ${result['year']};
+        o.count = ${result['count']};
+        dataHash['${result['type']}'].push(o);
     </#list>
 
     var data = new Array();
     var minX = ${results[0]['year']};
     var maxX = ${results[results?size-1]['year']};
 
+    var maxCount = 0;
+
     var items = maxX - minX;
+    for (type in types)
+    {
+        yearForType = dataHash[types[type]];
+        data[type] = new Array();
+
+        for (i=minX; i<maxX; i++)
+        {
+            var o = new Object();
+            o.x = i;
+            var value = 0;
+            for (j in yearForType) { if (yearForType[j].year == i) value = yearForType[j].count; }
+            o.y = value;
+            data[type][data[type].length] = o;
+        }
+    }
+
+    // calculate year totals
     for (i=minX; i<maxX; i++)
     {
-        var o = new Object();
-        o.x = i;
-        o.y = dataHash[i] ? dataHash[i] : 0;
-        data[data.length] = o;
+        var yearCount = 0;
+
+        for (type in types)
+        {
+            yearForType = dataHash[types[type]];
+            for (j in yearForType) { if (yearForType[j].year == i) yearCount += yearForType[j].count; }
+        }
+
+        if (yearCount > maxCount) maxCount = yearCount;
+    }
+
+    // work out the colours
+    var index = 0;
+    var colours = new Array();
+    for (type in types)
+    {
+         colours[type] =  pv.ramp("#aad", "#556").by(Math.random);
     }
 </script>
 
@@ -28,6 +70,11 @@
     height: 250px;
     position:absolute;
     top:0px;
+}
+
+#legend p
+{
+    margin:1px;
 }
 
 #center
@@ -79,12 +126,21 @@
                 .anchor("left").add(pv.Label)
                 .text(y.tickFormat);
 
-            /* The line. */
+            /* The line.
             var line = vis.add(pv.Line)
                 .data(data)
                 .left(function(d) x(d.x))
                 .bottom(function(d) y(d.y))
                 .lineWidth(3);
+*/
+
+            /* The stack layout. */
+            vis.add(pv.Layout.Stack)
+                .layers(data)
+                .x(function(d) x(d.x))
+                .y(function(d) y(d.y))
+                .layer.add(pv.Area)
+                .fillStyle(colours[index++]);
 
             /* The floating dot */
             var i = -1;
@@ -120,8 +176,18 @@
 
 
             vis.render();
+            var div = document.getElementById("legend");
+
+            for (type in types)
+            {
+                var colour = colours[type]().color;
+                var pubType = types[type];
+                div.innerHTML += "<p style=\'color:"+ colour +";\'>"+pubType.substring(pubType.lastIndexOf('/')+1)+"</p>";
+            }
         </script>
     </div>
 
+    <div id="legend"><p><u>Legend:</u></p></div>
+
 </div>
-</body></html
+</body></html>

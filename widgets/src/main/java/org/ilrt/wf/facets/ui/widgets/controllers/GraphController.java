@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  */
 @Controller
 public class GraphController extends AbstractController {
-
+    String publicationType = "http://purl.org/dc/terms/Publication";
     GraphController()
     {
         log = LoggerFactory.getLogger(GraphController.class);
@@ -43,15 +43,17 @@ public class GraphController extends AbstractController {
            + "}"
            + "ORDER BY ?year";
 
-    final String pubsByYearCount = prefix +
-            "SELECT (count(?a) AS ?pubscount)"
-            + "{"
-            + "  GRAPH ?g "
-            + "  {"
-            + "    ?a a <http://purl.org/ontology/bibo/Article>;"
-            + "         <http://purl.org/dc/terms/date> \"%s\"^^<http://www.w3.org/2001/XMLSchema-datatypes#gYear>. "
-            + "  }"
-            + "}";
+    final String pubsByYearAndTypeCount = prefix +
+            "SELECT (count(?a) AS ?pubscount) ?type"+
+            "{"+
+            "  GRAPH ?g "+
+            "    {"+
+            "       ?a a <"+publicationType+">;"+
+            "            rdf:type ?type;"+
+            "            dc:date \"%s\"^^<http://www.w3.org/2001/XMLSchema-datatypes#gYear>. "+
+            "    }"+
+            "  }"+
+            "GROUP BY ?type";
 
 
     // ---------- public methods that are mapped to URLs
@@ -63,6 +65,7 @@ public class GraphController extends AbstractController {
         ModelAndView mav = createModelAndView(request);
 
         ArrayList<HashMap> resultsList = new ArrayList();
+        ArrayList<String> types = new ArrayList();
 
         ResultSet results = querySelect(publishingYears,new Object[]{});
         while (results.hasNext())
@@ -70,20 +73,28 @@ public class GraphController extends AbstractController {
             QuerySolution qs = results.next();
             String year = qs.get("year").asLiteral().getString();
             System.out.println("Got " + year);
-            ResultSet resultForGrouping = querySelect(pubsByYearCount,new Object[]{year});
-            if (resultForGrouping.hasNext())
+            ResultSet resultForGrouping = querySelect(pubsByYearAndTypeCount,new Object[]{year});
+            while (resultForGrouping.hasNext())
             {
                 QuerySolution sol = resultForGrouping.next();
-                String numberOfPapers = sol.getLiteral("pubscount").getString();
+                String typeOfPublication = "UNKNOWN";
+                if (sol.contains("type"))
+                {
+                    typeOfPublication = sol.getResource("type").getURI();
+                }
+                String numberOfPublication = sol.getLiteral("pubscount").getString();
                 HashMap<String,String> resultList = new HashMap();
-                resultList.put("count",numberOfPapers);
-                resultList.put("year",year);
+                resultList.put("count", numberOfPublication);
+                resultList.put("type", typeOfPublication);
+                resultList.put("year", year);
                 resultsList.add(resultList);
+                if (!types.contains(typeOfPublication)) types.add(typeOfPublication);
             }
         }
 
         mav.addObject("facet", "Published Work");
         mav.addObject("results", resultsList);
+        mav.addObject("types", types);
         return mav;
     }
 }
