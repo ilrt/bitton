@@ -6,7 +6,10 @@
 package org.ilrt.wf.facets.impl;
 
 import com.hp.hpl.jena.datatypes.TypeMapper;
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -104,14 +107,26 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
                     qNameUtility.getQName(((Literal) node).getDatatypeURI());
         }
         else if (node.isURIResource())
-            return "U" + qNameUtility.getQName(((Resource) node).getURI());
+            return "U" + qNameUtility.getQName(((Resource) node).getURI()) + '#' + getLabel(node);
         else return "B" + ((Resource) node).getId().getLabelString();
     }
 
     private final TypeMapper TM = TypeMapper.getInstance();
 
     private RDFNode fromParamVal(String val) {
-        if (val.startsWith("U")) return ResourceFactory.createResource(qNameUtility.expandQName(val.substring(1)));
+        if (val.startsWith("U"))
+        {
+            String param = val.substring(1);
+            String uri = param.substring(0,param.lastIndexOf("#")); // obtain uri from parameter
+            String label = param.substring(param.lastIndexOf("#")+1); // obtain label from parameter
+
+            // create a resource using these properties
+            Resource r = ResourceFactory.createResource(qNameUtility.expandQName(uri));
+            Model m = ModelFactory.createDefaultModel();
+            r = r.inModel(m);
+            r.addProperty(RDFS.label, label);
+            return r;
+        }
         // Erm, what should we do here? Fail?
         else if (val.startsWith("B")) return ResourceFactory.createResource();
         else {
