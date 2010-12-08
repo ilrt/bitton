@@ -4,6 +4,8 @@
 <!-- main content -->
 <div id="main-content">
 
+<h1>Test</h1>
+
     <div id="left-column">
         <#include "includes/facet.ftl"/>
     </div>
