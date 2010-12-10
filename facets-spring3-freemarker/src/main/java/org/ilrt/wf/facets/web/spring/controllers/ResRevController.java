@@ -88,6 +88,23 @@ public class ResRevController extends AbstractController {
         return createModelAndView(CONTACT_VIEW_NAME, request);
     }
 
+    @RequestMapping(value = RESEARCH_PATH, method = RequestMethod.GET)
+    public ModelAndView researchView(HttpServletRequest request) throws FacetViewServiceException {
+        String username = request.getRemoteUser();
+
+        // get the session object
+        HttpSession session = request.getSession(true);
+
+        // do a fresh query the service
+        ModelAndView mav = createModelAndView(RESEARCH_VIEW, request);
+
+        Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
+
+        mav.addObject("resource",  new ResourceHashModel(resource));
+
+        return mav;
+    }
+
     @RequestMapping(value = PROFILE_PATH, method = RequestMethod.GET)
     public ModelAndView profileView(HttpServletRequest request) throws FacetViewServiceException {
         String username = request.getRemoteUser();
@@ -217,6 +234,7 @@ public class ResRevController extends AbstractController {
     public static String ORGANISATION_VIEW_NAME = "orgView";
     public static String PUBLICATION_VIEW_NAME = "pubView";
     public static String DEFAULT_VIEW = "defaultView";
+    public static String RESEARCH_VIEW = "researchView";
 
     private final String FACETVIEW_SESSION = "facetView";
     private final String VIEW_KEY = "view";
@@ -228,6 +246,7 @@ public class ResRevController extends AbstractController {
     private final String ABOUT_PATH = "/about/";
     private final String CONTACT_PATH = "/contact/";
     private final String PROFILE_PATH = "/profile";
+    private final String RESEARCH_PATH = "/research";
 
     private Logger log = Logger.getLogger(ResRevController.class);
 }
