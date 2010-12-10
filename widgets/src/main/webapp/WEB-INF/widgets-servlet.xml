@@ -48,6 +48,10 @@
         <property name="endpoint" value="http://tc-p2.ilrt.bris.ac.uk:8266/data-server/sparql"/>
         <property name="viewName" value="graphView"/>
     </bean>
+    <bean class="org.ilrt.wf.facets.ui.widgets.controllers.ResourceListController">
+        <property name="endpoint" value="http://tc-p2.ilrt.bris.ac.uk:8266/data-server/sparql"/>
+        <property name="viewName" value="resourceListView"/>
+    </bean>
 
     <!-- Properties -->
 
