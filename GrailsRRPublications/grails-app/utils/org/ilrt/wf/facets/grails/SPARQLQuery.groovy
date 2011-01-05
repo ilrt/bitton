@@ -32,17 +32,17 @@ class SPARQLQuery {
 
 
     def static getResultSet(LinkedHashMap params) {
-		String uri = RDF.getURI()
+        String uri = RDF.getURI()
 
         
-		String prefix = "PREFIX rdf: <${uri}>\n" +
+	String prefix = "PREFIX rdf: <${uri}>\n" +
         "PREFIX rdfs: <" + RDFS.getURI() + ">\n" +
         "PREFIX dc: <http://purl.org/dc/terms/>\n" +
         "PREFIX aiiso: <http://purl.org/vocab/aiiso/schema#>\n" +
         "PREFIX closed: <http://vocab.bris.ac.uk/rr/closed#>\n";
 
         String person = "http://resrev.ilrt.bris.ac.uk/research-revealed-hub/people/11652#person";
-String publicationsForContributor = "${prefix} SELECT DISTINCT ?res ?label ?date ?citation\n" +
+        String publicationsForContributor = "${prefix} SELECT DISTINCT ?res ?label ?date ?citation\n" +
            "{\n" +
            "  GRAPH ?g " +
            "  { " +
