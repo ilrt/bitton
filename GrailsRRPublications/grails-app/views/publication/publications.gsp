@@ -265,9 +265,10 @@
 
 </div>
 
-  <p><h2>TODO</h2>
+  <h2>TODO</h2>
   <ul>
     <li>Order results</li>
     <li>Show more info e.g. impacts/citation</li>
-  </ul>Show number of results</p>
+  </ul>
+  <p>Show number of results</p>
 </body></html>
