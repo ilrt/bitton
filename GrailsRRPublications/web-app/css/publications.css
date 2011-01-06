@@ -1,0 +1,105 @@
+/* 
+    Document   : publications
+    Created on : 05-Jan-2011, 13:11:37
+    Author     : cmcpb
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+#selector .fig
+{
+    height: 100px;
+    margin-left:80px;
+    margin-right:80px;
+    margin-bottom:1em;
+}
+
+#selector .slider-container .slider-outer
+{
+    width: 100%;
+    float: left;
+    margin-right: -80px;
+}
+
+#selector .slider-container .slider-inner
+{
+    margin-right: 80px;
+}
+
+#selector .slider-container .slider-range
+{
+    margin-left: 80px;
+}
+
+#selector .slider-container input
+{
+    width: 80px;
+    text-align:center;
+    color:#f6931f;
+    font-weight:bold;
+    padding:0px;
+    margin:0px;
+    border:0px solid;
+    background-color:#eee;
+}
+
+#selector .slider-container .valueLeft
+{
+    float: left;
+}
+
+#selector .slider-container .valueRight
+{
+    float: right;
+}
+
+.clearing
+{
+  height: 0;
+  clear: both;
+}
+
+#selector .results .controls
+{
+    text-align:center;
+}
+
+#selector .results .controls .prev, #selector .results .controls .next
+{
+    color:blue;
+    text-decoration:underline;
+    padding:0.2em;
+    cursor:pointer;
+    border:1px solid lightblue;
+}
+
+
+#selector .resultstotal
+{
+    color:#888;
+}
+
+#selector .results .body
+{
+    border:1px solid #ccc;
+    padding:0.6em;
+    margin-top:1em;
+    margin-bottom:1em;
+}
+
+.results .title
+{
+    text-decoration: underline;
+}
+
+.results .citation
+{
+    display:block;
+    color:#555;
+    font-style:italic;
+}

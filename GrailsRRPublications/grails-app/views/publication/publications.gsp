@@ -13,12 +13,14 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js"></script>
 
     <g:javascript src="protovis-r3.2.js" />
+    <g:javascript src="publications.js" />
 
     <link rel='stylesheet' href='${createLinkTo(dir:'css',file:'publications.css')}' />
   </head>
   <body>
 
     <script type="text/javascript">
+        // global vars
         var maxPageSize = 5;
         var currentPage = 0;
 
@@ -31,92 +33,6 @@
         o.citation = "${result['citation']}";
         results[results.length] = o;
         <%}%>
-
-        results.sort();
-
-        // group by year
-        var years = new Array();
-        for (obj in results)
-        {
-            years[years.length] = results[obj].year;
-        }
-
-        // sort list
-        years.sort();
-
-        var minYear = years[0];
-        var maxYear = years[years.length-1];
-
-        var data = new Array();
-        var labels = new Array();
-        for (i=minYear; i<=maxYear; i++)
-        {
-            var count = 0;
-            for (j in years) { if (years[j] == i) count++; }
-            data[data.length] = count;
-            labels[labels.length] = i;
-        }
-
-        function showResults(page)
-        {
-          if (page == null)
-          {
-              page = 0;
-              currentPage = 0;
-          }
-
-          $("#selector .body").empty();
-
-          var min = $("#selector .slider-container .startYear").val();
-          var max = $("#selector .slider-container .endYear").val();
-
-          var matchingResults = new Array();
-          for (obj in results)
-          {
-              var year = results[obj].year;
-
-              if (min <= year && year <= max)
-              {
-                  matchingResults[matchingResults.length] = results[obj];
-              }
-          }
-
-          if (matchingResults.length > 0)
-          {
-            matchingResults = matchingResults.sort(sortResults);
-
-            var start = page *maxPageSize;
-            var end = (start + maxPageSize) > matchingResults.length ? matchingResults.length : (start + maxPageSize);
-
-            // now display the requested page
-            for (var i = start; i < end; i++)
-            {
-                var record = "<p>";
-                record += "<span class='title' property='dc:title'>"+matchingResults[i].label+"</span>"+ " ";
-                record += "<span class='year' property='dc:date'>("+matchingResults[i].year+")</span>" + " ";
-                record += "<span class='citation' property='dcterms:bibliographicCitation'>"+matchingResults[i].citation+"</span>";
-                record += "</p>";
-                $("#selector .body").append(record);
-            }
-
-            $("#selector .controls .prev").show();
-            $("#selector .controls .next").show();
-            if (page < 1) $("#selector .controls .prev").hide();
-            if (start + maxPageSize >= matchingResults.length) $("#selector .controls .next").hide();
-            $("#selector .resultstotal").html("Showing "+(start+1)+"-"+end+" of "+matchingResults.length+" ("+results.length+" total)");
-          }
-          else
-          {
-            // no results
-            $("#selector .resultstotal").html("Showing 0 of 0 ("+results.length+" total)");
-            $("#selector .body").append("No results");
-          }
-        }
-
-        function sortResults(a, b)
-        {
-          return a.label >= b.label;
-        }
     </script>
 
     <div id="selector">
@@ -166,37 +82,6 @@
                 $('#selector .fig').resize();
             </script>
 
-            <script type="text/javascript">
-            $(window).resize(function() {
-              $('#selector .fig').resize();
-            });
-            $(function() {
-                    $( "#selector .slider-container .startYear" ).val( minYear );
-                    $( "#selector .slider-container .endYear" ).val( maxYear+1 );
-                    $( "#selector .slider-container .slider-range" ).slider({
-                            range: true,
-                            min: minYear,
-                            max: maxYear+1,
-                            values: [ minYear, maxYear+1 ],
-                            slide: function( event, ui ) {
-
-                                    $( "#selector .slider-container .startYear" ).val( ui.values[ 0 ] );
-                                    $( "#selector .slider-container .endYear" ).val( ui.values[ 1 ] );
-                                    showResults();
-                            }
-                    });
-            });
-
-            $(document).ready(function() { 
-                showResults();
-                $("#selector .prev").click(function(){
-                    showResults(--currentPage);
-                });
-                $("#selector .next").click(function(){
-                  showResults(++currentPage);
-                });
-            });
-            </script>
         </div><!-- END #fig -->
 
         <div class="slider-container">
@@ -234,6 +119,8 @@
         <span class="resultstotal"></span>
         <span class="next">Next</span>
       </div>
+
+      <select class="ordering"></select>
     </div>
 
 </div>
