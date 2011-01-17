@@ -5,7 +5,7 @@
 <div id="main-content">
 
     <div>
-        <p>Please choose a view to search</p>
+        <h1>Explore</h1>
         <ul>
             <#list facetView?keys as prop>
                 <li><a href="./${prop}">${facetView[prop]}</a></li>
