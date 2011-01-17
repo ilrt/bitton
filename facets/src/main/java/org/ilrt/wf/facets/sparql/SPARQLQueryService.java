@@ -292,8 +292,11 @@ public class SPARQLQueryService implements FacetQueryService {
         Op opBasic = constraintsToOp(statesToConstraints(currentFacetStates), new VarGen());
         Op op = opBasic;
         op = new OpProject(op, Collections.singletonList(SUBJECT));
+        
         // Apply limit and offset
-        op = new OpSlice(op, offset, number);
+        // We do that locally below. At this point we ask for 100
+        op = new OpSlice(op, 0, 100);
+        
         Query q = OpAsQuery.asQuery(op);
         q.addDescribeNode(SUBJECT);
         q.setQueryDescribeType();
@@ -305,8 +308,20 @@ public class SPARQLQueryService implements FacetQueryService {
         // We now have a model containing the things we were interested in
         // plus a bunch of info about them. We want to return pointer to those
         // original things (backed by this model), so we execute the same query.
-
+        
+        
+        // That doesn't always work :-(
+        // Try looking for typed things
+        opBasic = new OpBGP(BasicPattern.wrap(
+                    Collections.singletonList(
+                        Triple.create(SUBJECT, RDF.type.asNode(), Var.alloc("type"))
+                    )
+                ));
+        opBasic = new OpGraph( Var.alloc("g") , opBasic );
+        opBasic = new OpDistinct(opBasic);
+        opBasic = new OpSlice(opBasic, offset, number);
         q = OpAsQuery.asQuery(opBasic);
+        log.warn("Query subjs: {}", opBasic);
         q.addResultVar(SUBJECT);
         q.setQuerySelectType();
         DataSource ds = DatasetFactory.create();
