@@ -31,6 +31,7 @@ import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpDistinct;
 import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
+import com.hp.hpl.jena.sparql.algebra.op.OpGroup;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpLeftJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
@@ -38,6 +39,7 @@ import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.algebra.op.OpSlice;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
+import com.hp.hpl.jena.sparql.expr.E_Aggregator;
 import com.hp.hpl.jena.sparql.expr.E_LessThan;
 import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
 import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
@@ -69,6 +71,7 @@ import org.ilrt.wf.facets.constraints.RangeConstraint;
 import org.ilrt.wf.facets.constraints.RegexpConstraint;
 import org.ilrt.wf.facets.constraints.UnConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
+import org.ilrt.wf.facets.impl.FacetStateCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -205,13 +208,56 @@ public class SPARQLQueryService implements FacetQueryService {
         Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
         VarGen vgen = new VarGen();
         for (FacetState state: currentFacetStates) {
-            getStateCounts(state, currentFacetStates, counts, vgen);
+            // 
+            if (state instanceof FacetStateCollector) getFastStateCounts((FacetStateCollector) state, currentFacetStates, counts, vgen);
+            else getStateCounts(state, currentFacetStates, counts, vgen);
         }
         if (log.isDebugEnabled()) log.debug("getCounts took: {} ms",
                 System.currentTimeMillis() - startTime);
         return counts;
     }
+    
+    private void getFastStateCounts(FacetStateCollector state, List<? extends FacetState> currentFacetStates, 
+            Map<FacetState, Integer> counts, VarGen vgen) {
+        
+        Property prop = state.getProperty();
+        Var val = Var.alloc("val");
+        Var count = Var.alloc("count"); 
+        // Match current state
+        Op matcher = constraintsToOp(statesToConstraints(currentFacetStates), vgen);
+        Op op = new OpGraph(vgen.genVar(),
+                OpJoin.create(
+                    tripleToBGP(SUBJECT, prop.asNode(), val, state.getInvert()),
+                    matcher)
+                );
+        Query q = OpAsQuery.asQuery(op);
+        //q.setQueryResultStar(false);
+        E_Aggregator counter = q.allocAggregate(new AggCount());
+        q.setResultVars();
+        q.addResultVar(val);
+        q.addResultVar(count, counter);
+        q.addGroupBy(val);
+        q.setQueryResultStar(false);
+                
+        QueryExecution qe = qef.get(q);
+        ResultSet intResults = qe.execSelect();
+        
+        // Curses: which refinement does this correspond to?
+        
+        while (intResults.hasNext()) {
+            QuerySolution row = intResults.next();
+            RDFNode value = row.get("val");
+            int number = row.getLiteral("count").getInt();
+            
+            for (FacetState st: state.getRefinements()) {
+                for (Constraint c: st.getConstraints()) {
+                    if (c.getProperty().equals(prop) && c.matches(value)) counts.put(st, number);
+                }
+            }
+        }
+    }
 
+    
     @Override
     public int getCount(List<? extends FacetState> currentFacetStates) {
         long startTime = 0;
@@ -298,21 +344,6 @@ public class SPARQLQueryService implements FacetQueryService {
         ResultSet r = qe.execSelect();
         int count = r.next().getLiteral("count").getInt();
         qe.close();
-
-        // just get subject
-        /*
-        op = new OpProject(op, Collections.singletonList(SUBJECT));
-
-
-
-        Query q = OpAsQuery.asQuery(op);
-        QueryExecution qe = qef.get(q);
-
-        int count = 0;
-        ResultSet r = qe.execSelect();
-        while (r.hasNext()) { count++; r.next(); }
-
-        qe.close();*/
         
         return count;
     }

@@ -61,7 +61,9 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
                     prop,
                     invert);
 
-            state = new FacetStateImpl("Base", null, null, Collections.singletonList(typeConstraint));
+            state = new FacetStateCollector("Base", null, null, Collections.singletonList(typeConstraint));
+            ((FacetStateCollector) state).setProperty(prop);
+            ((FacetStateCollector) state).setInvert(invert);
             state.setRoot(true);
             List<FacetState> refinements = new ArrayList(vals.size());
             for (RDFNode val: vals) {
