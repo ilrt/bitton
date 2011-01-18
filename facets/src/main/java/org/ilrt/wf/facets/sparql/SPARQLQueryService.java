@@ -222,125 +222,44 @@ public class SPARQLQueryService implements FacetQueryService {
         return toReturn;
     }
 
-    /*
-    private List<Resource> describeSubjects(Op constraints, int offset, int number) {
-        long startTime = 0;
-        if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
-        
-        // We did use DESCRIBE, but this had scalability issues and didn't go backwards
-        // Hence shifted to CONSTRUCT
-
-        Triple forward = Triple.create(SUBJECT, genVar(), genVar());
-
-        TemplateGroup template = new TemplateGroup();
-        template.addTriple(forward);
-
-        BasicPattern bgpF = new BasicPattern();
-        bgpF.add(forward);
-
-        // Join the subject restriction to the info gatherer
-        Op op = OpJoin.create(constraints, new OpGraph(genVar(), new OpBGP(bgpF)));
-
-        op = new OpSlice(op, offset, number);
-
-        Query q = OpAsQuery.asQuery(op);
-        
-        q.setQueryConstructType();
-        q.setConstructTemplate(template);
-
-        QueryExecution qe = qef.get(q);
-        Model m = qe.execConstruct();
-        qe.close();
-
-        // We have our results! Now we work out what matched the constraint...
-
-        // Just subject, please...
-        op = new OpProject(constraints, Collections.singletonList(SUBJECT));
-        q = OpAsQuery.asQuery(op);
-        q.setQuerySelectType();
-
-        log.info("Local seleect:\n{}", q);
-
-        DataSource ds = DatasetFactory.create();
-        ds.addNamedModel("urn:x-ilrt:graph", m);
-        qe = QueryExecutionFactory.create(q, ds);
-        ResultSet res = qe.execSelect();
-
-        List<Resource> results = new LinkedList<Resource>();
-        while (res.hasNext()) {
-            Resource result = res.next().getResource(SUBJECT.getVarName());
-            // We need to reattach to original model. Nasty.
-            result = result.isAnon() ?
-                m.createResource(result.getId()) :
-                m.getResource(result.getURI()) ;
-            results.add(result);
-        }
-
-        qe.close();
-
-        if (log.isDebugEnabled()) log.debug("getResults took: {} ms",
-                System.currentTimeMillis() - startTime);
-
-        return results;
-    }*/
-
     @Override
     public List<Resource> getResults(List<? extends FacetState> currentFacetStates, int offset, int number) {
         long startTime = 0;
         if (log.isDebugEnabled()) startTime = System.currentTimeMillis();
-        // Remember this query. We'll use it later.
-        Op opBasic = constraintsToOp(statesToConstraints(currentFacetStates), new VarGen());
-        Op op = opBasic;
+        
+        Op op = constraintsToOp(statesToConstraints(currentFacetStates), new VarGen());
         op = new OpProject(op, Collections.singletonList(SUBJECT));
+        op = new OpDistinct(op);
         
         // Apply limit and offset
-        // We do that locally below. At this point we ask for 100
-        op = new OpSlice(op, 0, 100);
+        op = new OpSlice(op, offset, number);
         
         Query q = OpAsQuery.asQuery(op);
-        q.addDescribeNode(SUBJECT);
-        q.setQueryDescribeType();
 
         QueryExecution qe = qef.get(q);
-        Model m = qe.execDescribe();
+        ResultSet intResults = qe.execSelect();
+        List<Resource> toDescribe = new ArrayList(number);
+        while (intResults.hasNext()) toDescribe.add(intResults.next().getResource(SUBJECT.getVarName()));
         qe.close();
 
-        // We now have a model containing the things we were interested in
-        // plus a bunch of info about them. We want to return pointer to those
-        // original things (backed by this model), so we execute the same query.
+        // We now have a list of matches. Let's get their descriptions
         
-        
-        // That doesn't always work :-(
-        // Try looking for typed things
-        opBasic = new OpBGP(BasicPattern.wrap(
-                    Collections.singletonList(
-                        Triple.create(SUBJECT, RDF.type.asNode(), Var.alloc("type"))
-                    )
-                ));
-        opBasic = new OpGraph( Var.alloc("g") , opBasic );
-        opBasic = new OpDistinct(opBasic);
-        opBasic = new OpSlice(opBasic, offset, number);
-        q = OpAsQuery.asQuery(opBasic);
-        log.warn("Query subjs: {}", opBasic);
-        q.addResultVar(SUBJECT);
-        q.setQuerySelectType();
-        DataSource ds = DatasetFactory.create();
-        ds.addNamedModel("urn:x-ilrt:graph", m);
-        qe = QueryExecutionFactory.create(q, ds);
-        ResultSet res = qe.execSelect();
-
-        List<Resource> results = new LinkedList<Resource>();
-        while (res.hasNext()) {
-            Resource result = res.next().getResource(SUBJECT.getVarName());
-            // We need to reattach to original model. Nasty.
-            result = result.isAnon() ?
-                m.createResource(result.getId()) :
-                m.getResource(result.getURI()) ;
-            results.add(result);
+        Query desc = QueryFactory.make();
+        for (Resource node: toDescribe) {
+            desc.addDescribeNode(node.asNode());
         }
-
-        qe.close();
-
+        desc.setQueryDescribeType();
+        
+        QueryExecution getDescs = qef.get(desc);
+        Model m = getDescs.execDescribe();
+        
+        List<Resource> results = new ArrayList(number);
+        
+        // Associate resources with result model
+        for (Resource node: toDescribe) {
+            results.add((Resource) m.getRDFNode(node.asNode()));
+        }
+        
         if (log.isDebugEnabled()) log.debug("getResults took: {} ms",
                 System.currentTimeMillis() - startTime);
 
