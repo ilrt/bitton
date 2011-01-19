@@ -210,53 +210,12 @@ public class SPARQLQueryService implements FacetQueryService {
         Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
         VarGen vgen = new VarGen();
         for (FacetState state: currentFacetStates) {
-            // 
-            if (state instanceof FacetStateCollector) getFastStateCounts((FacetStateCollector) state, currentFacetStates, counts, vgen);
-            else getStateCounts(state, currentFacetStates, counts, vgen);
+            getStateCounts(state, currentFacetStates, counts, vgen);
         }
         if (log.isDebugEnabled()) log.debug("getCounts took: {} ms",
                 System.currentTimeMillis() - startTime);
         return counts;
     }
-    
-    private void getFastStateCounts(FacetStateCollector state, List<? extends FacetState> currentFacetStates, 
-            Map<FacetState, Integer> counts, VarGen vgen) {
-        
-        Property prop = state.getProperty();
-        Var val = Var.alloc("val");
-        Var count = Var.alloc("count"); 
-        // Match current state
-        Op matcher = constraintsToOp(statesToConstraints(currentFacetStates), vgen);
-        Op op = new OpGraph(vgen.genVar(),
-                OpJoin.create(
-                    tripleToBGP(SUBJECT, prop.asNode(), val, state.getInvert()),
-                    matcher)
-                );
-        op = new OpProject(op, Collections.singletonList(val));
-        Query q = OpAsQuery.asQuery(op);
-        //AggCount counter = new AggCount();
-        E_Aggregator counter = q.allocAggregate(new AggCountVar(new ExprVar(val)));
-        q.addResultVar(count, counter);
-        q.addGroupBy(val);
-                
-        QueryExecution qe = qef.get(q);
-        ResultSet intResults = qe.execSelect();
-        
-        // Curses: which refinement does this correspond to?
-        
-        while (intResults.hasNext()) {
-            QuerySolution row = intResults.next();
-            RDFNode value = row.get("val");
-            int number = row.getLiteral("count").getInt();
-            
-            for (FacetState st: state.getRefinements()) {
-                for (Constraint c: st.getConstraints()) {
-                    if (c.getProperty().equals(prop) && c.matches(value)) counts.put(st, number);
-                }
-            }
-        }
-    }
-
     
     @Override
     public int getCount(List<? extends FacetState> currentFacetStates) {
