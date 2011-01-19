@@ -49,6 +49,8 @@ import com.hp.hpl.jena.sparql.expr.Expr;
 import com.hp.hpl.jena.sparql.expr.ExprList;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.aggregate.AggCount;
+import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVar;
+import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVarDistinct;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -230,14 +232,12 @@ public class SPARQLQueryService implements FacetQueryService {
                     tripleToBGP(SUBJECT, prop.asNode(), val, state.getInvert()),
                     matcher)
                 );
+        op = new OpProject(op, Collections.singletonList(val));
         Query q = OpAsQuery.asQuery(op);
-        //q.setQueryResultStar(false);
-        E_Aggregator counter = q.allocAggregate(new AggCount());
-        q.setResultVars();
-        q.addResultVar(val);
+        //AggCount counter = new AggCount();
+        E_Aggregator counter = q.allocAggregate(new AggCountVar(new ExprVar(val)));
         q.addResultVar(count, counter);
         q.addGroupBy(val);
-        q.setQueryResultStar(false);
                 
         QueryExecution qe = qef.get(q);
         ResultSet intResults = qe.execSelect();
