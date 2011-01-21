@@ -453,9 +453,9 @@ public class SPARQLQueryService implements FacetQueryService {
 
         BasicPattern bgp2 = new BasicPattern();
         if (invert) // reverse
-            bgp.add(Triple.create(val, property.asNode(), thing));
+            bgp2.add(Triple.create(val, property.asNode(), thing));
         else
-            bgp.add(Triple.create(thing, property.asNode(), val));
+            bgp2.add(Triple.create(thing, property.asNode(), val));
 
         // Bit to get label (if available)
         BasicPattern labelBGP = new BasicPattern();
@@ -464,9 +464,9 @@ public class SPARQLQueryService implements FacetQueryService {
 
         Op op = new OpBGP(bgp);
         op = new OpGraph(Var.alloc("g"), op);
-//        Op op2 = new OpBGP(bgp2);
-//        op2 = new OpGraph(Var.alloc("g1"), op2);
-//        op = OpJoin.create(op, op2);
+        Op op2 = new OpBGP(bgp2);
+        op2 = new OpGraph(Var.alloc("g1"), op2);
+        op = OpJoin.create(op, op2);
 
         if (requireLabel)
             op = OpJoin.create(op, opGetLabel);
