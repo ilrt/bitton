@@ -50,7 +50,7 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
         String invertVal = environment.getConfig().get(Facet.LINK_INVERT);
         String label = environment.getConfig().get(Facet.REQUIRE_LABEL);
         boolean invert = (invertVal != null && invertVal.equalsIgnoreCase("true"));
-        boolean requireLabel = (label != null && invertVal.equalsIgnoreCase("true"));
+        boolean requireLabel = (label != null && label.equalsIgnoreCase("true"));
         Property prop = ResourceFactory.createProperty(property);
         String param = environment.getConfig().get(Facet.PARAM_NAME);
         ValueConstraint typeConstraint = createTypeConstraint(type);
