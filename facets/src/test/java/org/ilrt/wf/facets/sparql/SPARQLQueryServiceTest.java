@@ -30,6 +30,8 @@ import org.ilrt.wf.facets.constraints.RegexpConstraint;
 import org.ilrt.wf.facets.constraints.UnConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
 import org.junit.Test;
+import sun.org.mozilla.javascript.ObjToIntMap.Iterator;
+
 import static org.junit.Assert.*;
 
 /**
@@ -78,9 +80,13 @@ public class SPARQLQueryServiceTest {
         assertEquals("Got correct narrower refinements", 4, a.size());
     }
 
+    @Test
     public void testGetValues() {
         SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
-        Collection<RDFNode> a = instance.getValuesOfPropertyForType(TYPE, prop, true);
+        Collection<RDFNode> a = instance.getValuesOfPropertyForType(TYPE, prop, false, true);
+        assertEquals("Got right number of values", 1, a.size());
+
+        a = instance.getValuesOfPropertyForType(TYPE, prop, false, false);
 
         assertEquals("Got right number of values", 2, a.size());
     }

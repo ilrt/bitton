@@ -21,6 +21,7 @@ ns:a ns:narrower ns:n1, ns:n2, ns:n3, ns:n4 .
 [] a ns:Thing ; ns:prop ns:novalue ; ns:range 7 ; ns:label "beta" .
 [] a ns:Thing ; ns:prop ns:value ; ns:range 8 ; ns:label "gamma" .
 [] a ns:Thing ; ns:prop ns:novalue ; ns:range 8 ; ns:label "gamma" .
+ns:value rdfs:label "Dummy Label".
 
 ns:y1 ns:broader ns:x .
 ns:y2 ns:broader ns:x .

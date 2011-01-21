@@ -48,7 +48,9 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
         String type = environment.getConfig().get(Facet.CONSTRAINT_TYPE);
         String property = environment.getConfig().get(Facet.LINK_PROPERTY);
         String invertVal = environment.getConfig().get(Facet.LINK_INVERT);
+        String label = environment.getConfig().get(Facet.REQUIRE_LABEL);
         boolean invert = (invertVal != null && invertVal.equalsIgnoreCase("true"));
+        boolean requireLabel = (label != null && invertVal.equalsIgnoreCase("true"));
         Property prop = ResourceFactory.createProperty(property);
         String param = environment.getConfig().get(Facet.PARAM_NAME);
         ValueConstraint typeConstraint = createTypeConstraint(type);
@@ -59,7 +61,8 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
             Collection<RDFNode> vals = facetQueryService.getValuesOfPropertyForType(
                     ResourceFactory.createResource(type),
                     prop,
-                    invert);
+                    invert,
+                    requireLabel);
 
             state = new FacetStateCollector("Base", null, null, Collections.singletonList(typeConstraint));
             ((FacetStateCollector) state).setProperty(prop);

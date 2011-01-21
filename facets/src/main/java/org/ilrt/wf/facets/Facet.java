@@ -20,6 +20,7 @@ public interface Facet {
     String BROADER_PROPERTY = "widerProperty";
     String FACET_BASE = "facetBase";
     String CONSTRAINT_TYPE = "constraintType";
+    String REQUIRE_LABEL = "requireLabel";
     String PARAM_NAME = "paramName";
     String PREFIX = "prefix";
     String START_YEAR = "startYear";

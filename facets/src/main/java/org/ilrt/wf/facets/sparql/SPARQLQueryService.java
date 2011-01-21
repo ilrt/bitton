@@ -443,26 +443,36 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     @Override
-    public Collection<RDFNode> getValuesOfPropertyForType(Resource type, Property property, boolean invert) {
+    public Collection<RDFNode> getValuesOfPropertyForType(Resource type, Property property, boolean invert, boolean requireLabel) {
         Var thing = Var.alloc("thing");
         Var val = Var.alloc("val");
         Var label = Var.alloc("label");
 
         BasicPattern bgp = new BasicPattern();
         bgp.add(Triple.create(thing, RDF.type.asNode(), type.asNode()));
+
+        BasicPattern bgp2 = new BasicPattern();
         if (invert) // reverse
             bgp.add(Triple.create(val, property.asNode(), thing));
         else
             bgp.add(Triple.create(thing, property.asNode(), val));
-        
+
         // Bit to get label (if available)
         BasicPattern labelBGP = new BasicPattern();
         labelBGP.add(Triple.create(val, RDFS.label.asNode(), label));
         Op opGetLabel = new OpGraph(Var.alloc("lg"), new OpBGP(labelBGP));
-        
+
         Op op = new OpBGP(bgp);
         op = new OpGraph(Var.alloc("g"), op);
-        op = OpLeftJoin.create(op, opGetLabel, (ExprList) null);
+//        Op op2 = new OpBGP(bgp2);
+//        op2 = new OpGraph(Var.alloc("g1"), op2);
+//        op = OpJoin.create(op, op2);
+
+        if (requireLabel)
+            op = OpJoin.create(op, opGetLabel);
+        else
+            op = OpLeftJoin.create(op, opGetLabel, (ExprList) null);
+
         op = new OpProject(op, Arrays.asList(val, label)); // select ?val, ?label
         op = new OpDistinct(op);
 
