@@ -61,14 +61,12 @@
     </util:map>
 
     <util:map id="deptNames" map-class="java.util.HashMap">
-        <entry key="facetType" value="Hierarchical"/>
-        <entry key="facetTitle" value="Department Names"/>
+        <entry key="facetType" value="Flat"/>
+        <entry key="facetTitle" value="Department"/>
         <entry key="linkProperty" value="http://vocab.bris.ac.uk/rr/closed#hostedBy"/>
-        <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
-        <entry key="facetBase"
-               value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org"/>
         <entry key="constraintType"
                value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="requireLabel" value="true"/>
         <entry key="paramName" value="dept"/>
     </util:map>
 
@@ -162,12 +160,11 @@
         <entry key="paramName" value="pname"/>
     </util:map>
     <util:map id="peopleDeptNames" map-class="java.util.HashMap">
-        <entry key="facetType" value="Hierarchical"/>
+        <entry key="facetType" value="Flat"/>
         <entry key="facetTitle" value="Department"/>
         <entry key="linkProperty" value="http://vocab.bris.ac.uk/rr/closed#member"/>
         <entry key="linkInvert" value="true"/>
-        <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
-        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org"/>
+        <entry key="requireLabel" value="true"/>
         <entry key="constraintType" value="http://xmlns.com/foaf/0.1/Person"/>
         <entry key="paramName" value="pdept"/>
     </util:map>
@@ -193,11 +190,10 @@
         <entry key="paramName" value="pubtype"/>
     </util:map>
     <util:map id="pubDept" map-class="java.util.HashMap">
-        <entry key="facetType" value="Hierarchical"/>
+        <entry key="facetType" value="Flat"/>
         <entry key="facetTitle" value="Department"/>
+        <entry key="requireLabel" value="true"/>
         <entry key="linkProperty" value="http://vocab.bris.ac.uk/rr/closed#department"/>
-        <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
-        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org"/>
         <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
         <entry key="paramName" value="pubdept"/>
     </util:map>
