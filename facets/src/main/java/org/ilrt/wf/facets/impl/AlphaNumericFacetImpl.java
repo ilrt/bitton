@@ -60,7 +60,7 @@ public class AlphaNumericFacetImpl extends AbstractFacetFactoryImpl implements F
         }
 
         // create the facet
-        return new FacetImpl(getFacetTitle(environment), facetState, getParameterName(environment));
+        return new FacetImpl(getFacetTitle(environment), facetState, getParameterName(environment), "alphanumeric");
     }
 
 

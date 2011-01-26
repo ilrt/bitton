@@ -499,6 +499,44 @@ public class SPARQLQueryService implements FacetQueryService {
         return vals;
     }
 
+//    @Override
+    public Collection<RDFNode> getMatchingLabels(Resource type, String [] currentVals) {
+
+        Query query = QueryFactory.create(
+                String.format(
+                "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+                "select ?val ?label " +
+                "{ " +
+                "  graph ?g1 { ?s a <%1>. } \n" +
+                "  graph ?g2 { ?s rdfs:label ?label. \n" +
+                "                    FILTER regex(?label, \"^%2\", \"i\") }\n" +
+                "}",
+                   type.getURI(),currentVals[0]
+                ));
+
+        QueryExecution qe = qef.get( query );
+
+        ResultSet results = qe.execSelect();
+        Collection<RDFNode> vals = new ArrayList<RDFNode>();
+
+        RDFNode aValue;
+        RDFNode aLabel;
+        QuerySolution result;
+        Model resModel = ModelFactory.createDefaultModel();
+        while (results.hasNext()) {
+            result = results.next();
+            aValue = result.get("val");
+            aLabel = result.get("label");
+            if (aLabel != null) {
+                aValue = aValue.inModel(resModel); // attach to our model
+                aValue.asResource().addProperty(RDFS.label, aLabel);
+            }
+            vals.add(aValue);
+        }
+
+        return vals;
+    }
+
     /**
      * This is for cleaning up the query having created it
      */

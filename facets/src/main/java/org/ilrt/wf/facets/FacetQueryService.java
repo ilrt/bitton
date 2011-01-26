@@ -28,6 +28,8 @@ public interface FacetQueryService {
      */
     Collection<RDFNode> getValuesOfPropertyForType(Resource type, Property property, boolean invert, boolean requireLabel);
 
+    Collection<RDFNode> getMatchingLabels(Resource type, String [] currentVals);
+
     /**
      * Extract a full tree hierarchy. The result may include labels on the resources.
      * @param base Where to start building the tree.

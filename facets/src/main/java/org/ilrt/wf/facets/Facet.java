@@ -12,6 +12,8 @@ public interface Facet {
 
     String getParam();
 
+    String getType();
+
     // possible parameter values in the facet configuration
     String FACET_TYPE = "facetType";
     String FACET_TITLE = "facetTitle";

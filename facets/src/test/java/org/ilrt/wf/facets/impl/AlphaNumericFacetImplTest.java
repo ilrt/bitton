@@ -139,7 +139,7 @@ public class AlphaNumericFacetImplTest extends AbstractFacetTest {
 
         // mock the facet and add it to the refinementStateList
         Facet mockFacet = new FacetImpl(alphaNumericTestName, mockRootState,
-                alphaNumericTestParamName);
+                alphaNumericTestParamName, "base");
         final List<Facet> facets = new ArrayList<Facet>();
         facets.add(mockFacet);
 

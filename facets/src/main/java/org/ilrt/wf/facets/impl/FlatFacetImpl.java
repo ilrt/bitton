@@ -6,7 +6,6 @@
 package org.ilrt.wf.facets.impl;
 
 import com.hp.hpl.jena.datatypes.TypeMapper;
-import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -103,7 +102,7 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
                     );
         }
 
-        return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment));
+        return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment),"flat");
     }
 
     private String toParamVal(RDFNode node) {

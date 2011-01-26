@@ -99,7 +99,7 @@ public class SimpleNumberRangeFacetImplTest extends AbstractFacetTest {
         }});
 
         // mock the facet and add it to the refinementStateList
-        Facet mockFacet = new FacetImpl(facetTestName, mockRootState, facetParamName);
+        Facet mockFacet = new FacetImpl(facetTestName, mockRootState, facetParamName, "test");
         final List<Facet> facets = new ArrayList<Facet>();
         facets.add(mockFacet);
 
