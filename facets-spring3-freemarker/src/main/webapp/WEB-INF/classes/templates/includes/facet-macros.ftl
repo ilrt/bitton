@@ -5,7 +5,10 @@
         <div class="facet">
             <h4 class="facet-title">${facet.name}</h4>
             <p>
-                <input type="search" name="${facet.param}" id="${facet.param}" value="Search"/>
+                <form action="${facetStateUrl(Request)}" method="get">
+                    <input type="text" name="${facet.param}" id="${facet.param}" value="<#if facet.state.paramValue??>${facet.state.paramValue}</#if>"/>
+                    <input type="submit" value="Go"/>
+                </form>
             </p>
         </div>
         <#else>
