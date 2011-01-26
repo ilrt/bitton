@@ -72,7 +72,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
                 10, facetOneRootState);
         facetOneRootState.getRefinements().add(facetOneRefinementTwo);
 
-        Facet facetOne = new FacetImpl("Departments", facetOneRootState, "depts");
+        Facet facetOne = new FacetImpl("Departments", facetOneRootState, "depts", "test");
 
 
         // ----------- subjects facet
@@ -96,7 +96,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
         currentState.getRefinements().add(refinementTwo);
         currentState.getRefinements().add(refinementThree);
 
-        Facet facetTwo = new FacetImpl(subjects_title, currentState, "subjects");
+        Facet facetTwo = new FacetImpl(subjects_title, currentState, "subjects", "test");
 
 
         // ------------ alpha numeric
@@ -106,7 +106,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
         FacetState facetThreeCurrentState = createTestState(false, "Z*", "z*", 0,
                 facetThreeParentState);
 
-        Facet facetThree = new FacetImpl(staff_title, facetThreeCurrentState, "staff");
+        Facet facetThree = new FacetImpl(staff_title, facetThreeCurrentState, "staff", "test");
 
 
         // ------------- a completely selected hierarchical facet
@@ -125,7 +125,7 @@ public class FacetTemplateTest extends AbstractTemplateTest {
         FacetState facetFourCurrentState = createTestState(false, bristol_label, "loc:bristol",
                 0, facetFourParentState);
 
-        Facet facetFour = new FacetImpl(location_title, facetFourCurrentState, "location");
+        Facet facetFour = new FacetImpl(location_title, facetFourCurrentState, "location", "test");
 
 
         // ---------- add to view

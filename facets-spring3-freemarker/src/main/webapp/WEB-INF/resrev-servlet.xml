@@ -180,7 +180,13 @@
     </util:map>
 
     <!-- Publications -->
-
+    <util:map id="pubSearch" map-class="java.util.HashMap">
+        <entry key="facetType" value="TextSearch"/>
+        <entry key="facetTitle" value="Search"/>
+        <entry key="linkProperty" value="http://www.w3.org/2000/01/rdf-schema#label"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
+        <entry key="paramName" value="search"/>
+    </util:map>
     <util:map id="pubType" map-class="java.util.HashMap">
         <entry key="facetType" value="Flat"/>
         <entry key="facetTitle" value="Kind"/>
@@ -206,6 +212,7 @@
         <entry key="paramName" value="pubyear"/>
     </util:map>
     <util:list id="pubFacets" list-class="java.util.ArrayList">
+        <ref bean="pubSearch"/>
         <ref bean="pubType"/>
         <ref bean="pubDept"/>
         <ref bean="pubYear"/>

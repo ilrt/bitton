@@ -61,7 +61,7 @@ public class FacetParentListMethodTest {
         rootState.setRoot(true);
 
         // freemarker will wrap the Facet class in a StringModel
-        Facet facet = new FacetImpl(null, rootState, null);
+        Facet facet = new FacetImpl(null, rootState, null, "base");
         StringModel m = new StringModel(facet, new DefaultObjectWrapper());
         args.add(m);
 
@@ -91,7 +91,7 @@ public class FacetParentListMethodTest {
         childState.setParent(parentState);
 
         // freemarker will wrap the Facet class in a StringModel
-        Facet facet = new FacetImpl(null, childState, null);
+        Facet facet = new FacetImpl(null, childState, null, "base");
         StringModel m = new StringModel(facet, new DefaultObjectWrapper());
         args.add(m);
 
