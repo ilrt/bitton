@@ -152,12 +152,18 @@
     </util:map>
 
     <!-- People facets -->
-    <util:map id="peopleName" map-class="java.util.HashMap">
+    <!--<util:map id="peopleName" map-class="java.util.HashMap">
         <entry key="facetType" value="AlphaNumeric"/>
         <entry key="facetTitle" value="Name"/>
         <entry key="linkProperty" value="http://www.w3.org/2000/01/rdf-schema#label"/>
         <entry key="constraintType" value="http://xmlns.com/foaf/0.1/Person"/>
         <entry key="paramName" value="pname"/>
+    </util:map>-->
+    <util:map id="peopleSearch" map-class="java.util.HashMap">
+        <entry key="facetType" value="TextSearch"/>
+        <entry key="facetTitle" value="Search People"/>
+        <entry key="constraintType" value="http://xmlns.com/foaf/0.1/Person"/>
+        <entry key="paramName" value="psearch"/>
     </util:map>
     <util:map id="peopleDeptNames" map-class="java.util.HashMap">
         <entry key="facetType" value="EnumFlat"/>
@@ -170,7 +176,7 @@
         <entry key="paramName" value="pdept"/>
     </util:map>
     <util:list id="pFacets" list-class="java.util.ArrayList">
-        <ref bean="peopleName"/>
+        <ref bean="peopleSearch"/>
         <ref bean="peopleDeptNames"/>
     </util:list>
     <util:map id="personProps" map-class="java.util.HashMap">
