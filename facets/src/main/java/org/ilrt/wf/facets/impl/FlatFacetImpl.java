@@ -102,7 +102,7 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
                     );
         }
 
-        return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment),"flat");
+        return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment), Facet.FLAT_FACET_TYPE);
     }
 
     protected String toParamVal(RDFNode node) {

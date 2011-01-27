@@ -1,7 +1,7 @@
 <#-- display a facet -->
 <#macro displayFacet facet>
     <#if facet?? && facet.state??>
-        <#if facet.type = "search">
+        <#if facet.type = "TextSearch">
         <div class="facet">
             <h4 class="facet-title">${facet.name}</h4>
             <p>

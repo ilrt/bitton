@@ -59,7 +59,7 @@ public class TextSearchFacetImpl extends AbstractFacetFactoryImpl {
 
 
 
-        return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment), "search");
+        return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment), Facet.TEXT_SEARCH_FACET);
     }
 
     private String toParamVal(RDFNode node) {
