@@ -24,6 +24,7 @@ public interface Facet {
     String CONSTRAINT_TYPE = "constraintType";
     String REQUIRE_LABEL = "requireLabel";
     String PARAM_NAME = "paramName";
+    String REQUIRE_COUNTS = "requireCounts";
     String PREFIX = "prefix";
     String START_YEAR = "startYear";
     String END_YEAR = "endYear";

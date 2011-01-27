@@ -8,6 +8,8 @@ package org.ilrt.wf.facets.impl;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -19,8 +21,8 @@ import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.QNameUtility;
-import org.ilrt.wf.facets.constraints.ValueConstraint;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import org.ilrt.wf.facets.constraints.ValueConstraint;
 
 /**
  *
@@ -38,7 +40,9 @@ public class EnumFlatFacetImpl extends FlatFacetImpl {
         String type = environment.getConfig().get(Facet.CONSTRAINT_TYPE);
         String property = environment.getConfig().get(Facet.LINK_PROPERTY);
         String invertVal = environment.getConfig().get(Facet.LINK_INVERT);
+        String requireCountS = environment.getConfig().get(Facet.REQUIRE_COUNTS);
         boolean invert = (invertVal != null && invertVal.equalsIgnoreCase("true"));
+        boolean requireCount = (requireCountS != null && requireCountS.equalsIgnoreCase("true"));
         Property prop = ResourceFactory.createProperty(property);
         String param = environment.getConfig().get(Facet.PARAM_NAME);
         String enumList = environment.getConfig().get(Facet.ENUM_LIST);
@@ -59,16 +63,14 @@ public class EnumFlatFacetImpl extends FlatFacetImpl {
             {
                 try
                 {
-                    String enumType = s.substring(0,s.indexOf("|"));
-                    String enumLabel = s.substring(s.indexOf("|")+1);
-
-                    ValueConstraint valConstraint = new ValueConstraint(RDFS.label,  ResourceFactory.createPlainLiteral(enumType), invert);
+                    RDFNode val = fromEnumParamVal(s);
+                    ValueConstraint valConstraint = new ValueConstraint(prop, val, invert);
                     FacetStateImpl refine = new FacetStateImpl(
-                            enumLabel,
+                            getLabel(val),
                             state,
-                            "U" +enumType + '#' + enumLabel,
+                            toParamVal(val),
                             Arrays.asList(typeConstraint, valConstraint));
-                    refine.setCountable(false);
+                    refine.setCountable(requireCount);
                     refinements.add(refine);
                 }
                 catch (StringIndexOutOfBoundsException sioobe) {}
@@ -92,5 +94,17 @@ public class EnumFlatFacetImpl extends FlatFacetImpl {
         }
 
         return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment), Facet.ENUM_FLAT_FACET);
+    }
+
+    protected RDFNode fromEnumParamVal(String s) {
+        String uri = s.substring(0,s.indexOf("|"));
+        String label = s.substring(s.indexOf("|")+1);
+
+        // create a resource using these properties
+        Resource r = ResourceFactory.createResource(qNameUtility.expandQName(uri));
+        Model m = ModelFactory.createDefaultModel();
+        r = r.inModel(m);
+        r.addProperty(RDFS.label, label);
+        return r;
     }
 }

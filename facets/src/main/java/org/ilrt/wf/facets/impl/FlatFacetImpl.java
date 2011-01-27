@@ -34,7 +34,7 @@ import org.ilrt.wf.facets.constraints.ValueConstraint;
  */
 public class FlatFacetImpl extends AbstractFacetFactoryImpl {
     private final FacetQueryService facetQueryService;
-    private final QNameUtility qNameUtility;
+    protected final QNameUtility qNameUtility;
 
     public FlatFacetImpl(FacetQueryService facetQueryService, QNameUtility qNameUtility) {
         this.facetQueryService = facetQueryService;
