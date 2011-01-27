@@ -1,0 +1,419 @@
+/*
+ * Research Revealed - ILRT Web Futures project, funded by JISC
+ * Main styles
+ * Ben Hayes, January 2011
+ * */
+
+
+/* Eric Meyer's reset styles: */
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, cite, code, del, em, img, strong, sub, sup, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td { margin: 0; padding: 0; border: 0; outline: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline; } input, textarea { font-family: inherit; } body { color: black; background: white; } ol, ul { list-style: none; } table { border-collapse: separate; border-spacing: 0; } caption, th, td { text-align: left; font-weight: normal; } blockquote:before, blockquote:after, q:before, q:after { content: ""; } blockquote, q { quotes: "" ""; }
+
+
+/* =typography
+ *  * =========================================== */
+body, input, textarea, select {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: #000;
+	font-size: 100%;
+}
+
+a:link {
+	color: #48780D;
+	text-decoration: underline;
+}
+
+a:visited {
+	color: #48780D;
+}
+
+a:hover, a:active { color: #D1461F; }
+
+a:focus {
+	outline: 1px dotted #000;
+}
+
+strong { font-weight: bold; color: #333; }
+em { font-style: italic; }
+
+#page {
+	font-size: 0.875em;
+	line-height: 1.5em;
+}	
+
+p, ul, ol, dl, blockquote {
+	margin: 14px 0;
+}
+
+h1, h2 {
+	color: #D1461F;
+	font-weight: bold;
+}
+
+.panel h1, .panel h2 {
+	background: #fff url(images/bkgd-panel-heading.png) left bottom repeat-x;
+	border-bottom: 1px solid #ccc;
+	padding: 4px 10px;
+}
+
+h3, h4 {
+	color: #666666;
+	font-weight: bold;
+	margin: 21px 0 -7px;
+}
+
+h1 {
+	margin-top: 0;
+	font-size: 1.7142857em;
+	line-height: 28px;
+}
+
+h2 {
+	font-size: 1.2142857em;
+	line-height: 28px;
+}
+
+h3, h4 {
+	font-size: 1.142857em;
+	line-height: 21px;
+}
+
+.top { margin-top: 0; }
+
+ul {
+	list-style-type: disc;
+	margin-left: 20px;
+}
+
+ul ul { 
+	margin-top: 0; 
+	margin-bottom: 0; 
+}
+
+ol {
+	list-style-type: decimal;
+	margin-left: 20px;
+}
+
+ol ol {
+	list-style-type: lower-alpha;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+ol ol ol { list-style-type: lower-roman; }
+
+dt {
+	font-weight: bold;
+	margin-top: 7px;
+}
+
+
+/* =structure
+ * ----------------------------------------------- */
+body {
+	background: #fff url(../images/bkgd-main.png) left top repeat-x;
+}
+
+#page {
+	width: 964px;
+	margin: 0 auto;
+	/* Grid for debugging layout
+	background: transparent url(images/debug-grid.png) center top repeat-y;
+	 * */
+}
+
+#header {
+}
+
+#logos {
+	height: 85px;
+}
+
+a#logo-uob {
+	display: block;
+	float: left;
+	width: 144px;
+	height: 48px;
+	margin-right: 10px;
+	margin-top: 18px;
+}
+
+a#logo-resrev {
+	display: block;
+	float: left;
+	height: 48px;
+	width: 328px;
+	margin-top: 18px;
+}
+
+form#topsearch {
+	float: right;
+	margin-top: 21px;
+	padding-right: 0;
+}
+
+#content {
+	padding-top: 20px;
+	overflow: auto;
+	width: 100%;
+}
+
+.panelcontent {
+	padding: 0 10px;
+}
+
+
+
+
+
+
+.col1of2 {
+	float: left;
+	width: 472px;
+	padding-bottom: 28px;
+}
+
+.col2of2 {
+	float: right;
+	width: 472px;
+	padding-bottom: 28px;
+}
+
+.col1of3, .col2of3, .col3of3 {
+	float: left;
+	width: 320px;
+}
+
+.col1of4, .col2of4, .col3of4, .col4of4 {
+	float: left;
+	width: 240px;
+}
+
+
+
+
+#footer {
+	background: transparent url(../images/shadow-footer.png) center top no-repeat;
+	padding: 14px 0 0;
+	margin-top: 20px;
+	color: #777;
+	height: 8em;
+}
+
+#footernav {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	font-weight: bold;
+}
+
+#footernav li {
+	float: left;
+	margin: 0 6px 0 0;
+	padding: 0 6px 0 0;
+	background: transparent url(../images/pipe-grey.png) right center no-repeat;
+}
+
+#footernav li.last {
+	margin: 0;
+	padding: 0;
+	background-image: none;
+}
+
+#credits {
+	clear: left;
+	float: left;
+	margin-top: 15px;
+}
+
+a#logo-ilrt {
+	display: block;
+	float: left;
+	width: 53px;
+	height: 30px;
+	margin-right: 10px;
+}
+
+a#logo-jisc {
+	display: block;
+	float: left;
+	width: 62px;
+	height: 34px;
+	margin-right: 10px;
+}
+
+#credits p {
+	float: left;
+	width: 400px;
+	margin: 0;
+	font-size: 0.85714em;
+	line-height: 1.3em;
+}
+
+
+/* =navigation
+ * ----------------------------------------------- */
+
+#mainnav {	
+	list-style-type: none;
+	margin: 0;
+	float: left;
+}
+
+#researchernav {
+	float: right;
+	list-style-type: none;
+	margin: 0;
+}
+
+#mainnav li, #researchernav li {
+	display: block;
+	float: left;
+	height: 40px;
+	margin-right: 4px;
+	overflow: hidden;
+}
+
+#mainnav li a:link, #mainnav li a:visited,
+#researchernav li a:link, #researchernav li a:visited {	
+	display: block;	
+	background-color: transparent;
+	background-position: left bottom;
+	height: 40px;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	text-indent: -999em;
+}
+
+#mainnav li a:hover, #researchernav li a:hover,
+#mainnav li a:focus, #researchernav li a:focus {
+	background-position: left top;
+}
+
+#nav-home { width: 81px; }
+#nav-outputs { width: 112px; }
+#nav-grants { width: 126px; }
+#nav-people { width: 93px; }
+#nav-departments { width: 138px; }
+#nav-home a { background-image: url(../images/tab-home.png); }
+#nav-outputs a { background-image: url(../images/tab-outputs.png); }
+#nav-grants a { background-image: url(../images/tab-grants.png); }
+#nav-people a { background-image: url(../images/tab-people.png); }
+#nav-departments a { background-image: url(../images/tab-departments.png); }
+
+#nav-home a.current { background-image: url(../images/tab-home-current.png); }
+#nav-outputs a.current { background-image: url(../images/tab-outputs-current.png); }
+#nav-grants a.current { background-image: url(../images/tab-grants-current.png); }
+#nav-people a.current { background-image: url(../images/tab-people-current.png); }
+#nav-departments a.current { background-image: url(../images/tab-departments-current.png); }
+
+#nav-myresearch { width: 113px; }
+#researchernav #nav-mydepartment { width: 129px; margin-right: 0; }
+#researchernav #nav-myresearch a { background-image: url(../images/tab-myresearch.png); }
+#researchernav #nav-mydepartment a { background-image: url(../images/tab-mydepartment.png); }
+
+
+/* =forms
+ *  * =========================================== */
+
+form {
+	background: #DDECF5;
+	padding: 10px;
+}
+
+form#topsearch {
+	background: transparent;
+}
+
+form#topsearch label {
+	display: none;
+}
+
+input.button, input[type=submit], button, input[type=button] {
+	background: #3B9ACC url(../images/btn-background.png) left bottom repeat-x;
+	color: #fff;
+	border-width: 0;
+	display: inline-block;
+	padding: 0.3em 0.6em;
+	letter-spacing: 0.03em;
+	text-shadow: #145070 0px 1px 2px;
+	-moz-box-shadow: 0 0 2px #999;
+	-webkit-box-shadow: 0 0 2px #999;
+	box-shadow: 0 0 2px #999;
+}
+
+input.button:hover, input[type=submit]:hover, button:hover, input[type=button]:hover {
+	cursor: pointer;
+	background-image: none;
+}
+
+form#topsearch input[type=submit] {
+	-moz-box-shadow: 0 0 2px #444;
+	-webkit-box-shadow: 0 0 2px #444;
+	box-shadow: 0 0 2px #444;
+}
+
+input[type=text] {
+	padding: 2px;
+}
+
+form#topsearch input[type=text] {
+	width: 240px;
+}
+
+input.placeholder {
+	color: #aaa;
+	font-style: italic;
+}
+
+/* =tables
+ *  * =========================================== */
+
+table {
+margin: 14px 0;
+}
+
+th {
+padding: 5px 5px;
+border-bottom: 1px solid #e4e4e4;
+vertical-align: top;
+font-weight: bold;
+}
+
+td {
+padding: 5px 5px;
+border-bottom: 1px solid #e4e4e4;
+vertical-align: top;
+}
+
+
+.highlight {
+	background: #D5F0FA;
+}
+
+/* =homepage styles
+ * ----------------------------------------------- */
+
+a.more {
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+a.more span {
+	text-decoration: underline;
+	font-size: 14px;
+}
+
+a.expand {
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 11px;
+	white-space: nowrap;
+}
+
+a.expand span {
+	text-decoration: underline;
+	font-size: 13px;
+}
