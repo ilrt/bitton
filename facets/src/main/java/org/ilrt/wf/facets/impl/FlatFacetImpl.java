@@ -34,7 +34,7 @@ import org.ilrt.wf.facets.constraints.ValueConstraint;
  */
 public class FlatFacetImpl extends AbstractFacetFactoryImpl {
     private final FacetQueryService facetQueryService;
-    private final QNameUtility qNameUtility;
+    protected final QNameUtility qNameUtility;
 
     public FlatFacetImpl(FacetQueryService facetQueryService, QNameUtility qNameUtility) {
         this.facetQueryService = facetQueryService;
@@ -102,10 +102,10 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
                     );
         }
 
-        return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment),"flat");
+        return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment), Facet.FLAT_FACET_TYPE);
     }
 
-    private String toParamVal(RDFNode node) {
+    protected String toParamVal(RDFNode node) {
         if (node.isLiteral()){
             return "L" + ((Literal) node).getLexicalForm() + " " +
                     qNameUtility.getQName(((Literal) node).getDatatypeURI());
@@ -117,7 +117,7 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
 
     private final TypeMapper TM = TypeMapper.getInstance();
 
-    private RDFNode fromParamVal(String val) {
+    protected RDFNode fromParamVal(String val) {
         if (val.startsWith("U"))
         {
             String param = val.substring(1);
@@ -143,7 +143,7 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
         }
     }
 
-    private String getLabel(RDFNode node) {
+    protected String getLabel(RDFNode node) {
         if (node.isLiteral()) return ((Literal) node).getLexicalForm();
         else if (node.isAnon()) return ((Resource) node).getId().getLabelString();
         else {

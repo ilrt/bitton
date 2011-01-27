@@ -210,7 +210,7 @@ public class SPARQLQueryService implements FacetQueryService {
         Map<FacetState, Integer> counts = new HashMap<FacetState, Integer>();
         VarGen vgen = new VarGen();
         for (FacetState state: currentFacetStates) {
-            getStateCounts(state, currentFacetStates, counts, vgen);
+                getStateCounts(state, currentFacetStates, counts, vgen);
         }
         if (log.isDebugEnabled()) log.debug("getCounts took: {} ms",
                 System.currentTimeMillis() - startTime);
@@ -278,7 +278,15 @@ public class SPARQLQueryService implements FacetQueryService {
         List<FacetState> otherStates = new LinkedList<FacetState>(currentFacetStates);
         otherStates.remove(state);
         for (FacetState futureState: state.getRefinements()) {
-            counts.put(futureState, getCount(futureState, otherStates, vgen));
+            // skip those states we don't want to count
+            if (futureState.isCountable())
+            {
+                counts.put(futureState, getCount(futureState, otherStates, vgen));
+            }
+            else
+            {
+                counts.put(futureState, 0);
+            }
         }
     }
 

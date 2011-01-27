@@ -27,6 +27,7 @@ public class FacetStateImpl implements FacetState {
         }
     }
 
+
     // ---------- getter methods defined in the interface
 
     @Override
@@ -63,6 +64,12 @@ public class FacetStateImpl implements FacetState {
     public Collection<Constraint> getConstraints() {
         return constraint;
     }
+    
+    @Override
+    public boolean isCountable()
+    {
+        return isCountable;
+    }
 
     // ---------- setter methods provided in the class implementation
 
@@ -90,9 +97,15 @@ public class FacetStateImpl implements FacetState {
         this.paramValue = paramValue;
     }
 
+    public void setCountable(boolean b)
+    {
+        this.isCountable = b;
+    }
+
     private String name = "Untitled";
     private int count = 0;
     private boolean isRoot = false;
+    private boolean isCountable = true;
     private List<FacetState> refinements = new ArrayList<FacetState>();
     private FacetState parent = null;
     private String paramValue = null;

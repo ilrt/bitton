@@ -24,9 +24,11 @@ public interface Facet {
     String CONSTRAINT_TYPE = "constraintType";
     String REQUIRE_LABEL = "requireLabel";
     String PARAM_NAME = "paramName";
+    String REQUIRE_COUNTS = "requireCounts";
     String PREFIX = "prefix";
     String START_YEAR = "startYear";
     String END_YEAR = "endYear";
+    String ENUM_LIST = "enumList";
     String NUMERIC_RANGE = "numericRange";
     String NUMERIC_RANGE_TYPE = "numericRangeType";
     String NUMERIC_RANGE_FORMAT = "numericRangeFormat";
@@ -38,4 +40,5 @@ public interface Facet {
     String DATE_TIME_FACET_TYPE = "DateTime";
     String FLAT_FACET_TYPE = "Flat";
     String TEXT_SEARCH_FACET = "TextSearch";
+    String ENUM_FLAT_FACET = "EnumFlat";
 }

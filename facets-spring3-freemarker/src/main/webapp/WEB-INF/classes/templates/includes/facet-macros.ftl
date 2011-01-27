@@ -1,7 +1,7 @@
 <#-- display a facet -->
 <#macro displayFacet facet>
     <#if facet?? && facet.state??>
-        <#if facet.type = "search">
+        <#if facet.type = "TextSearch">
         <div class="facet">
             <h4 class="facet-title">${facet.name}</h4>
             <p>
@@ -56,8 +56,13 @@
 <#macro refinementList refinements paramKey>
     <@facetList/>
         <#list refinements as refinement>
-            <@displayRefinementWithCount refinement=refinement paramKey=paramKey
-                paramValue=refinement.paramValue/>
+            <#if refinement.countable>
+                <@displayRefinementWithCount refinement=refinement paramKey=paramKey
+                    paramValue=refinement.paramValue/>
+            <#else>
+                <@displayRefinementWithoutCount name=refinement.name count=refinement.count paramKey=paramKey
+                    paramValue=refinement.paramValue/>
+            </#if>
         </#list>
     </ul>
 </#macro>
@@ -79,4 +84,8 @@
 <#-- display refinement details -->
 <#macro displayRefinementListItem name count paramKey paramValue>
     <@listItem/><a href="${facetStateUrl(Request, paramKey, paramValue)}">${name}</a> (${count})</li>
+</#macro>
+
+<#macro displayRefinementWithoutCount name count paramKey paramValue>
+    <@listItem/><a href="${facetStateUrl(Request, paramKey, paramValue)}">${name}</a></li>
 </#macro>

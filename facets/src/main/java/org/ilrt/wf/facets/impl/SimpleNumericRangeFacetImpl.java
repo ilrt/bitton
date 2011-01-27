@@ -74,7 +74,7 @@ public class SimpleNumericRangeFacetImpl extends AbstractFacetFactoryImpl implem
         }
 
         // create the facet
-        return new FacetImpl(getFacetTitle(environment), facetState, getParameterName(environment), "numeric");
+        return new FacetImpl(getFacetTitle(environment), facetState, getParameterName(environment), Facet.SIMPLE_NUMBER_RANGE_FACET_TYPE);
     }
 
 

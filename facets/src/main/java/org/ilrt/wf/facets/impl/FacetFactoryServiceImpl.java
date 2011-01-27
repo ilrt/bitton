@@ -31,6 +31,7 @@ public class FacetFactoryServiceImpl implements FacetFactoryService {
         alphaNumericFacetImpl = new AlphaNumericFacetImpl();
         simpleNumericRangeFacetImpl = new SimpleNumericRangeFacetImpl();
         textSearchFacetImpl = new TextSearchFacetImpl(facetQueryService, qNameUtility);
+        enumFlatFacetImpl = new EnumFlatFacetImpl(facetQueryService, qNameUtility);
     }
 
     // ---------- public methods implementing the interface
@@ -50,6 +51,8 @@ public class FacetFactoryServiceImpl implements FacetFactoryService {
             return simpleNumericRangeFacetImpl.create(environment);
         } else if (facetType.equals(Facet.TEXT_SEARCH_FACET)) {
             return textSearchFacetImpl.create(environment);
+        } else if (facetType.equals(Facet.ENUM_FLAT_FACET)) {
+            return enumFlatFacetImpl.create(environment);
         } else {
             throw new FacetException("Unrecognized facet type: " + facetType);
         }
@@ -86,5 +89,6 @@ public class FacetFactoryServiceImpl implements FacetFactoryService {
     private final FacetFactory alphaNumericFacetImpl;
     private final FacetFactory simpleNumericRangeFacetImpl;
     private final TextSearchFacetImpl textSearchFacetImpl;
+    private final EnumFlatFacetImpl enumFlatFacetImpl;
     private final FlatFacetImpl flatFacetImpl;
 }

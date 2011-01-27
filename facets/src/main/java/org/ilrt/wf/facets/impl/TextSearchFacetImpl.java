@@ -12,7 +12,6 @@ import org.ilrt.wf.facets.Facet;
 import org.ilrt.wf.facets.FacetEnvironment;
 import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetQueryService;
-import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.QNameUtility;
 import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
@@ -45,7 +44,6 @@ public class TextSearchFacetImpl extends AbstractFacetFactoryImpl {
 
         String[] currentVals = environment.getParameters().get(environment.getConfig().get(Facet.PARAM_NAME));
 
-        
         FacetStateImpl baseState = new FacetStateImpl();
         
         if (currentVals ==null || currentVals.length == 0) state = baseState;
@@ -54,7 +52,7 @@ public class TextSearchFacetImpl extends AbstractFacetFactoryImpl {
             state = new FacetStateImpl(currentVals[0], baseState, currentVals[0], Collections.singletonList(c));
         }
 
-        return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment), "search");
+        return new FacetImpl(getFacetTitle(environment), state, getParameterName(environment), Facet.TEXT_SEARCH_FACET);
     }
 }
   

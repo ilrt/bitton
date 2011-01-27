@@ -391,6 +391,11 @@ public class SPARQLQueryServiceTest {
         }
 
         @Override
+        public boolean isCountable() {
+            return true;
+        }
+
+        @Override
         public List<FacetState> getRefinements() {
             return refinements;
         }

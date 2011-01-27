@@ -53,7 +53,7 @@ public class HierarchicalFacetImpl extends AbstractFacetFactoryImpl implements F
         // create the facet
 
         return new FacetImpl(getFacetTitle(environment), currentFacetState,
-                getParameterName(environment), "hierarchical");
+                getParameterName(environment), Facet.HIERARCHICAL_FACET_TYPE);
     }
 
     // ---------- methods relating to hierarchical facets
