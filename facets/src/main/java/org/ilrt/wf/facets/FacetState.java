@@ -23,6 +23,8 @@ public interface FacetState {
 
     String getParamValue();
 
+    boolean isCountable();
+
     /**
      * @return How this state constrains values
      */
