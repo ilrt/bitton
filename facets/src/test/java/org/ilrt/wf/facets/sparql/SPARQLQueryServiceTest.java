@@ -30,7 +30,6 @@ import org.ilrt.wf.facets.constraints.RegexpConstraint;
 import org.ilrt.wf.facets.constraints.UnConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
 import org.junit.Test;
-import sun.org.mozilla.javascript.ObjToIntMap.Iterator;
 
 import static org.junit.Assert.*;
 
