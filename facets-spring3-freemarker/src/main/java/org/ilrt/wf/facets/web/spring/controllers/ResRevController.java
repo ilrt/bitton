@@ -45,7 +45,11 @@ public class ResRevController extends AbstractController {
 
         String resource = request.getParameter(RESOURCE_PARAMETER);
 
-        return displayResource(session, request, resource);
+        ModelAndView mav = displayResource(session, request, resource);
+        
+        mav.addObject("viewcontext", "resource");
+        
+        return mav;
     }
 
     @RequestMapping(value = VIEW_PATH, method = RequestMethod.GET)
@@ -64,7 +68,8 @@ public class ResRevController extends AbstractController {
         // provide view context so that we can determine if resource is being viewed within a view
         mav.addObject(VIEW_KEY, wrapper.getView());
         mav.addObject(FACET_VIEW_KEY, new FacetViewFreeMarkerWrapper(facetView));
-
+        mav.addObject("viewcontext", wrapper.getView());
+        
         return mav;
     }
 
@@ -73,19 +78,24 @@ public class ResRevController extends AbstractController {
 
         ModelAndView mav = createModelAndView(HOME_VIEW_NAME, request);
         mav.addObject(FACET_VIEW_KEY,this.facetViewService.listViews());
+        mav.addObject("viewcontext", "home");
         return mav;
     }
 
     @RequestMapping(value = ABOUT_PATH, method = RequestMethod.GET)
     public ModelAndView aboutView(HttpServletRequest request) throws FacetViewServiceException {
 
-        return createModelAndView(ABOUT_VIEW_NAME, request);
+        ModelAndView mav = createModelAndView(ABOUT_VIEW_NAME, request);
+        mav.addObject("viewcontext", "about");
+        return mav;
     }
 
     @RequestMapping(value = CONTACT_PATH, method = RequestMethod.GET)
     public ModelAndView contactView(HttpServletRequest request) throws FacetViewServiceException {
 
-        return createModelAndView(CONTACT_VIEW_NAME, request);
+        ModelAndView mav = createModelAndView(CONTACT_VIEW_NAME, request);
+        mav.addObject("viewcontext", "contact");
+        return mav;
     }
 
     @RequestMapping(value = RESEARCH_PATH, method = RequestMethod.GET)
@@ -101,7 +111,9 @@ public class ResRevController extends AbstractController {
         Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
 
         mav.addObject("resource",  new ResourceHashModel(resource));
-
+        
+        mav.addObject("viewcontext", "research");
+        
         return mav;
     }
 
@@ -122,6 +134,8 @@ public class ResRevController extends AbstractController {
 
         // add flag to allow proview view to differentiate between displaying regular users and current user's profile view
         mav.addObject("profileview",  "true");
+        
+        mav.addObject("viewcontext", "profile");
         
         return mav;
     }
