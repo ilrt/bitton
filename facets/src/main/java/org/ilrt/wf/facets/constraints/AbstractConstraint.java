@@ -12,8 +12,8 @@ import com.hp.hpl.jena.rdf.model.Property;
  * @author pldms
  */
 public abstract class AbstractConstraint implements Constraint {
-    private final Property property;
-    private final boolean inverted;
+    protected final Property property;
+    protected final boolean inverted;
 
     public AbstractConstraint(Property property) {
         this(property, false);

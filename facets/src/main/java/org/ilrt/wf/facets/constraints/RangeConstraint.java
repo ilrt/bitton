@@ -42,4 +42,30 @@ public class RangeConstraint extends AbstractConstraint {
             return false;
         }
     }
+    
+    @Override
+    public int hashCode() {
+        return fromV.hashCode() ^ ~toV.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RangeConstraint other = (RangeConstraint) obj;
+        
+        if (this.isPropertyInverted() != other.isPropertyInverted()) return false;
+        
+        if (this.fromV != other.fromV && (this.fromV == null || !this.fromV.equals(other.fromV))) {
+            return false;
+        }
+        if (this.toV != other.toV && (this.toV == null || !this.toV.equals(other.toV))) {
+            return false;
+        }
+        return (this.inverted == other.inverted) && this.property.equals(other.property);
+    }
 }

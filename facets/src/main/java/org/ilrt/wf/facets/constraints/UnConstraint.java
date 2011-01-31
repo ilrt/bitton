@@ -33,4 +33,20 @@ public class UnConstraint implements Constraint {
     public boolean isPropertyInverted() {
         throw new UnsupportedOperationException("Irrelevant");
     }
+    
+    @Override
+    public int hashCode() {
+        return 123451;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        return true;
+    }
 }

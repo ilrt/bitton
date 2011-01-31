@@ -62,6 +62,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -315,7 +316,7 @@ public class SPARQLQueryService implements FacetQueryService {
         return count;
     }
 
-    protected Op constraintsToOp(Collection<Constraint> cons, VarGen vgen) {
+    protected Op constraintsToOp(Collection<Constraint> cons, VarGen vgen) {        
         Op op = null;
         for (Constraint con: cons) {
             Op newOp = constraintToOp(con, vgen);
@@ -378,7 +379,9 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     protected Collection<Constraint> statesToConstraints(Collection<? extends FacetState> states, FacetState... moreStates) {
-        Collection<Constraint> cs = new LinkedList<Constraint>();
+        //Collection<Constraint> cs = new LinkedList<Constraint>();
+        // Dedupe constraints, but in order
+        Collection<Constraint> cs = new LinkedHashSet<Constraint>();
         for (FacetState s: states) cs.addAll(s.getConstraints());
         for (FacetState s: moreStates) cs.addAll(s.getConstraints());
         return cs;

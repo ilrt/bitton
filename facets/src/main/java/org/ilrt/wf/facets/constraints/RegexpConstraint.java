@@ -37,4 +37,24 @@ public class RegexpConstraint extends AbstractConstraint {
         else if (node.isURIResource()) return ((Resource) node).getURI();
         else return ((Resource) node).getId().getLabelString();
     }
+    
+    @Override
+    public int hashCode() {
+        return 0xefef ^ regexp.hashCode() ^ property.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final RegexpConstraint other = (RegexpConstraint) obj;
+        if ((this.regexp == null) ? (other.regexp != null) : !this.regexp.equals(other.regexp)) {
+            return false;
+        }
+        return (this.inverted == other.inverted) && this.property.equals(other.property);
+    }
 }

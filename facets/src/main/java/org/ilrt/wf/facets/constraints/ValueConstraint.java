@@ -33,4 +33,24 @@ public class ValueConstraint extends AbstractConstraint {
 
     @Override
     public String toString() { return super.toString() + " value: " + value; }
+    
+    @Override
+    public int hashCode() {
+        return 0xf8e87da ^ value.hashCode() ^ ~property.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ValueConstraint other = (ValueConstraint) obj;
+        if (this.value != other.value && (this.value == null || !this.value.equals(other.value))) {
+            return false;
+        }
+        return (this.inverted == other.inverted) && this.property.equals(other.property);
+    }
 }
