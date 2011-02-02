@@ -196,7 +196,7 @@
     </util:map>
     <util:map id="pubType" map-class="java.util.HashMap">
         <entry key="facetType" value="Flat"/>
-        <entry key="facetTitle" value="Kind"/>
+        <entry key="facetTitle" value="Type"/>
         <entry key="linkProperty" value="http://purl.org/dc/terms/type"/>
         <entry key="constraintType"
                value="http://purl.org/dc/terms/Publication"/>

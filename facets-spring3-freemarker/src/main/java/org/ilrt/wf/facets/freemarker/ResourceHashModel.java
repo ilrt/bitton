@@ -113,23 +113,28 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
     @Override
     public TemplateModel get(String s) throws TemplateModelException {
 
-
+        // Invert search 
+        boolean invert = s.startsWith("<-");
+        
+        if (invert) s = s.substring(2);
+        
         String uri = prefixMapping.expandPrefix(s);      
 
         Property property = ResourceFactory.createProperty(uri);
-
-        if (!resource.hasProperty(property)) {
-            return null; // bail
-        }
-
+        
+        StmtIterator iter = invert ?
+                resource.getModel().listStatements(null, property, resource) :
+                resource.listProperties(property) ;
+        
+        if (!iter.hasNext()) return null; // bail
+        
         List<TemplateModel> list = new ArrayList<TemplateModel>();
-
-        StmtIterator iter = resource.listProperties(property);
-
+        
         while (iter.hasNext()) {
-            list.add(resolveModel(iter.next().getObject()));
+            RDFNode item = invert ? iter.next().getSubject() : iter.next().getObject() ;
+            list.add(resolveModel(item));
         }
-
+        
         return new SimpleSequence(list);
     }
 

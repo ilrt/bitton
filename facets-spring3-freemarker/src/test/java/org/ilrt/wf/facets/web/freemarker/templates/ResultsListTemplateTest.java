@@ -94,30 +94,30 @@ public class ResultsListTemplateTest extends AbstractTemplateTest {
 
         writer.flush();
 
-        //System.out.println(output);
+        System.out.println(output);
 
         // ---------- run the tests
 
         XPath engine = XPathFactory.newInstance().newXPath();
 
         // check we have the expected label
-        assertEquals("Unexpected label", labelOne, engine.evaluate("/div/p[1]/a/text()",
+        assertEquals("Unexpected label", labelOne, engine.evaluate("/div/div[1]/p/a/text()",
                 new InputSource(new StringReader(output))).trim());
 
         // check we have the expected label
-        assertEquals("Unexpected label", labelTwo, engine.evaluate("/div/p[2]/a/text()",
+        assertEquals("Unexpected label", labelTwo, engine.evaluate("/div/div[2]/p/a/text()",
                 new InputSource(new StringReader(output))).trim());
 
         // check we have the expected label
-        assertEquals("Unexpected label", labelThree, engine.evaluate("/div/p[3]/a/text()",
+        assertEquals("Unexpected label", labelThree, engine.evaluate("/div/div[3]/p/a/text()",
                 new InputSource(new StringReader(output))).trim());
 
         // check we have the expected label
-        assertEquals("Unexpected label", labelFour, engine.evaluate("/div/p[4]/a/text()",
+        assertEquals("Unexpected label", labelFour, engine.evaluate("/div/div[4]/p/a/text()",
                 new InputSource(new StringReader(output))).trim());
 
         // check we have the expected label
-        assertEquals("Unexpected label", labelFive, engine.evaluate("/div/p[5]/a/text()",
+        assertEquals("Unexpected label", labelFive, engine.evaluate("/div/div[5]/p/a/text()",
                 new InputSource(new StringReader(output))).trim());
     }
 

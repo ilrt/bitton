@@ -51,3 +51,7 @@
         <#if !org[rdfs + 'label']??>${org}</#if>
     </a>
 </#macro>
+
+<#macro linkToPageFor item>
+    <a href="<@drillForResult result=item/>"><@label resource=item/></a>
+</#macro>
