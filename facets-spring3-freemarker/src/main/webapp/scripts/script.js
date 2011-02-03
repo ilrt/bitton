@@ -6,6 +6,15 @@
 var slider_uID = 1;
 
 $(document).ready(function(){
+    $('select.autocomplete').select_autocomplete();
+    $('select.autocomplete+input').click(function(){
+        console.log(this.value);
+        console.log($(this).prev().children("option")[0].text);
+        if (this.value == $(this).prev().children("option")[0].text)
+        {
+            this.value = "";
+        }
+    });
     
     var link = "[<span>+</span>]&nbsp;";
     if ($(".collapsible .content:hidden").length > 0)

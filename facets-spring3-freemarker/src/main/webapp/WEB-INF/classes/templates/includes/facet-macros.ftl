@@ -2,15 +2,31 @@
 <#macro displayFacet facet>
     <#if facet?? && facet.state??>
         <#if facet.type = "TextSearch">
-        <div class="facet">
-            <h4 class="facet-title">${facet.name}</h4>
-            <p>
-                <form action="${facetStateUrl(Request)}" method="get">
-                    <input type="text" name="${facet.param}" id="${facet.param}" value="<#if facet.state.paramValue??>${facet.state.paramValue}</#if>"/>
-                    <input type="submit" value="Go"/>
-                </form>
-            </p>
-        </div>
+            <div class="facet">
+                <h4 class="facet-title">${facet.name}</h4>
+                <p>
+                    <form action="${facetStateUrl(Request)}" method="get">
+                        <input type="text" name="${facet.param}" id="${facet.param}" value="<#if facet.state.paramValue??>${facet.state.paramValue}</#if>"/>
+                        <input type="submit" value="Go"/>
+                    </form>
+                </p>
+            </div>
+        <#elseif facet.name = "Department">
+            <div class="facet">
+                <h4 class="facet-title">${facet.name}</h4>
+                    <#if facet.state.refinements?size &gt; 0>
+                    <form action="${facetStateUrl(Request)}" method="get">
+                        <select name="${facet.param}" id="${facet.param}" class="autocomplete">
+                            <option value="">Type the name of a dept</option>
+                            <@listRefinementsAsSelect refinements=facet.state.refinements paramKey=facet.param/>
+                       </select>
+                        <input type="submit" value="Go"/>
+                    </form>
+<#else><p>
+${facet.state.paramValue}</p>
+</#if>
+                
+            </div>
         <#else>
             <div class="facet">
                 <h4 class="facet-title">${facet.name}</h4>
@@ -62,6 +78,18 @@
             <#else>
                 <@displayRefinementWithoutCount name=refinement.name count=refinement.count paramKey=paramKey
                     paramValue=refinement.paramValue/>
+            </#if>
+        </#list>
+    </ul>
+</#macro>
+
+<#macro listRefinementsAsSelect refinements paramKey>
+    <@facetList/>
+        <#list refinements as refinement>
+            <#if refinement.countable>
+                <option value="${refinement.paramValue}">${refinement.name} (${refinement.count})</option>
+            <#else>
+                 <option value="${refinement.paramValue}">${refinement.name}</option>
             </#if>
         </#list>
     </ul>
