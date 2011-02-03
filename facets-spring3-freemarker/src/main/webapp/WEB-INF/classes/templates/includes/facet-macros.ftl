@@ -15,17 +15,18 @@
             <div class="facet">
                 <h4 class="facet-title">${facet.name}</h4>
                     <#if facet.state.refinements?size &gt; 0>
-                    <form action="${facetStateUrl(Request)}" method="get">
-                        <select name="${facet.param}" id="${facet.param}" class="autocomplete">
-                            <option value="">Type the name of a dept</option>
-                            <@listRefinementsAsSelect refinements=facet.state.refinements paramKey=facet.param/>
-                       </select>
-                        <input type="submit" value="Go"/>
-                    </form>
-<#else><p>
-${facet.state.paramValue}</p>
-</#if>
-                
+                        <form action="${facetStateUrl(Request)}" method="get">
+                            <select name="${facet.param}" id="${facet.param}" class="autocomplete">
+                                <option value="">Type the name of a dept</option>
+                                <@listRefinementsAsSelect refinements=facet.state.refinements paramKey=facet.param/>
+                           </select>
+                            <input type="submit" value="Go"/>
+                        </form>
+                    <#else>
+                        <p>
+                            ${facet.state.name} [<a href="${facetStateUrl(Request, facet.param, facet.paramValue)}">x</a>]
+                        </p>
+                    </#if>
             </div>
         <#else>
             <div class="facet">
