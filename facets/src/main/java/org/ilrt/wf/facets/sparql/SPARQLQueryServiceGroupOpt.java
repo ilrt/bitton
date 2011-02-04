@@ -8,6 +8,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.algebra.Op;
 import com.hp.hpl.jena.sparql.algebra.OpAsQuery;
+import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
@@ -63,14 +64,28 @@ public class SPARQLQueryServiceGroupOpt extends SPARQLQueryService {
         Var count = Var.alloc("count"); 
         // Match current state
         Op matcher = constraintsToOp(statesToConstraints(currentFacetStates), vgen);
-        Op op = new OpGraph(vgen.genVar(),
-                OpJoin.create(
-                    tripleToBGP(SUBJECT, prop.asNode(), val, state.getInvert()),
-                    matcher)
+        
+        Op getter = new OpGraph(vgen.genVar(), tripleToBGP(SUBJECT, prop.asNode(), val, state.getInvert()));
+        
+        Op op;
+        
+        // Kind of a hack: text matching really, really, really needs to be first
+        // This enables that by spotting a BGP (which we only use for TM)
+        if ((matcher instanceof OpJoin) && ((OpJoin) matcher).getLeft() instanceof OpBGP) {
+            Op bgp = ((OpJoin) matcher).getLeft();
+            Op right = ((OpJoin) matcher).getRight();
+            op = OpJoin.create(bgp,
+                    OpJoin.create(getter, right)
+                    );
+        } else {
+            op = OpJoin.create(
+                    new OpGraph(vgen.genVar(), tripleToBGP(SUBJECT, prop.asNode(), val, state.getInvert())),
+                    matcher
                 );
+        }
+        
         op = new OpProject(op, Collections.singletonList(val));
         Query q = OpAsQuery.asQuery(op);
-        //AggCount counter = new AggCount();
         E_Aggregator counter = q.allocAggregate(new AggCountVar(new ExprVar(val)));
         q.addResultVar(count, counter);
         q.addGroupBy(val);

@@ -31,7 +31,6 @@ import com.hp.hpl.jena.sparql.algebra.op.OpBGP;
 import com.hp.hpl.jena.sparql.algebra.op.OpDistinct;
 import com.hp.hpl.jena.sparql.algebra.op.OpFilter;
 import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
-import com.hp.hpl.jena.sparql.algebra.op.OpGroup;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpLeftJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
@@ -39,7 +38,6 @@ import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.algebra.op.OpSlice;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
-import com.hp.hpl.jena.sparql.expr.E_Aggregator;
 import com.hp.hpl.jena.sparql.expr.E_LessThan;
 import com.hp.hpl.jena.sparql.expr.E_LessThanOrEqual;
 import com.hp.hpl.jena.sparql.expr.E_LogicalAnd;
@@ -49,8 +47,6 @@ import com.hp.hpl.jena.sparql.expr.Expr;
 import com.hp.hpl.jena.sparql.expr.ExprList;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
 import com.hp.hpl.jena.sparql.expr.aggregate.AggCount;
-import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVar;
-import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVarDistinct;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -72,9 +68,9 @@ import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.RangeConstraint;
 import org.ilrt.wf.facets.constraints.RegexpConstraint;
+import org.ilrt.wf.facets.constraints.TextMatchConstraint;
 import org.ilrt.wf.facets.constraints.UnConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
-import org.ilrt.wf.facets.impl.FacetStateCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +81,9 @@ import org.slf4j.LoggerFactory;
 public class SPARQLQueryService implements FacetQueryService {
 
     private final static Logger log = LoggerFactory.getLogger(SPARQLQueryService.class);
-
+    
+    private final static Node PFMATCH = Node.createURI("http://jena.hpl.hp.com/ARQ/property#textMatch");
+    
     protected final static Var SUBJECT = Var.alloc("s");
 
     protected final QEFactory qef;
@@ -318,8 +316,16 @@ public class SPARQLQueryService implements FacetQueryService {
 
     protected Op constraintsToOp(Collection<Constraint> cons, VarGen vgen) {        
         Op op = null;
+        
+        List<Op> textConstraints = new LinkedList<Op>();
+        
         for (Constraint con: cons) {
             Op newOp = constraintToOp(con, vgen);
+            // Treat these specially
+            if (con instanceof TextMatchConstraint) {
+                textConstraints.add(newOp);
+                continue;
+            }
             if (newOp instanceof OpNull) continue;
             // We wrap each constraint in a new graph
             // TODO prettify queries. this messes up previous work
@@ -327,7 +333,11 @@ public class SPARQLQueryService implements FacetQueryService {
             else op = OpJoin.create(op, new OpGraph(vgen.genVar(), newOp));
 
         }
-
+        
+        for (Op textop: textConstraints) {
+            op = (op == null) ? op : OpJoin.create(textop, op);
+        }
+        
         // Completelty unconstrained is not permitted
         if (op == null) throw new RuntimeException("Operation is completely unconstrained");
         op = Transformer.transform(new QueryCleaner(), op);
@@ -368,6 +378,9 @@ public class SPARQLQueryService implements FacetQueryService {
                       ),
                     tripleToBGP(SUBJECT, constraint.getProperty().asNode(), val, constraint.isPropertyInverted())
                     );
+        } else if (constraint instanceof TextMatchConstraint) {
+            String match = ((TextMatchConstraint) constraint).getMatcher();
+            return tripleToBGP(SUBJECT, PFMATCH,  Node.createLiteral(match), false);
         } else throw new RuntimeException("Unknown constraint type");
     }
 
