@@ -91,9 +91,11 @@ public interface FacetQueryService {
     /**
      * Get information about this thing from the store
      * @param thing Thing to get information about
+     * @param relatedSubjects Things related to this 
      * @return Thing with details
      */
-    Resource getInformationAbout(Resource thing);
+    Resource getInformationAbout(Resource thing, 
+            Collection<Property> relatedSubjects, Collection<Property> relatedObjects);
     
     /**
      * Get information about the thing identified by (property, value)
@@ -102,7 +104,8 @@ public interface FacetQueryService {
      * @param value The value of the property
      * @return Details about the thing identified by the property value
      */
-    Resource getInformationAboutIndirect(Property property, RDFNode value);
+    Resource getInformationAboutIndirect(Property property, RDFNode value, 
+            Collection<Property> relatedSubjects, Collection<Property> relatedObjects);
     
     /**
      * A simple tree implemenation for returning the hierarchy.

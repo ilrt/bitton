@@ -311,7 +311,7 @@ public class SPARQLQueryServiceTest {
     public void checkGetDescription() {
         SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
 
-        Resource described = instance.getInformationAbout(desc);
+        Resource described = instance.getInformationAbout(desc, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
         assertEquals(desc.getURI(), described.getURI());
         assertTrue(described.hasProperty(ifp, "pldms"));
@@ -324,7 +324,8 @@ public class SPARQLQueryServiceTest {
         SPARQLQueryService instance = new SPARQLQueryService(new ModelQEFactory(model));
 
         Resource described = instance.getInformationAboutIndirect(ifp,
-                ResourceFactory.createPlainLiteral("pldms"));
+                ResourceFactory.createPlainLiteral("pldms"),
+                Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
         assertEquals(desc.getURI(), described.getURI());
         assertTrue(described.hasProperty(ifp, "pldms"));

@@ -1,11 +1,13 @@
 package org.ilrt.wf.facets.web.spring.controllers;
 
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
 import com.hp.hpl.jena.vocabulary.RDF;
+import java.util.Collections;
 import org.apache.log4j.Logger;
 import org.ilrt.wf.facets.FacetView;
 import org.ilrt.wf.facets.FacetViewService;
@@ -108,7 +110,7 @@ public class ResRevController extends AbstractController {
         // do a fresh query the service
         ModelAndView mav = createModelAndView(RESEARCH_VIEW, request);
 
-        Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
+        Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
         mav.addObject("resource",  new ResourceHashModel(resource));
         
@@ -128,7 +130,7 @@ public class ResRevController extends AbstractController {
         // do a fresh query the service
         ModelAndView mav = createModelAndView(PROFILE_VIEW_NAME, request);
 
-        Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
+        Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
         mav.addObject("resource",  new ResourceHashModel(resource));
 
@@ -136,6 +138,32 @@ public class ResRevController extends AbstractController {
         mav.addObject("profileview",  "true");
         
         mav.addObject("viewcontext", "profile");
+        
+        return mav;
+    }
+    
+    @RequestMapping(value = DEPARTMENT_PATH, method = RequestMethod.GET)
+    public ModelAndView departmentView(HttpServletRequest request) throws FacetViewServiceException {
+        String username = request.getRemoteUser();
+
+        // get the session object
+        HttpSession session = request.getSession(true);
+
+        // do a fresh query the service
+        ModelAndView mav = createModelAndView(ORGANISATION_VIEW_NAME, request);
+
+        Resource user = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+        // TODO: some people are associated with more than one department
+        ResIterator it = user.getModel().listResourcesWithProperty(memberProp, user);
+        Resource dept = it.next();
+        if (it.hasNext()) log.warn("User: " + username + " has more than one department");
+        
+        Resource department = facetQueryService.getInformationAbout(dept, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+        
+        mav.addObject("user",  new ResourceHashModel(user));
+        mav.addObject("resource", new ResourceHashModel(department));
+        
+        mav.addObject("viewcontext", "department");
         
         return mav;
     }
@@ -158,7 +186,7 @@ public class ResRevController extends AbstractController {
     private ModelAndView displayResourceOrFail(String uri, HttpServletRequest request) {
 
         Resource r = new ResourceImpl(uri);
-        Resource resource = facetQueryService.getInformationAbout(r);
+        Resource resource = facetQueryService.getInformationAbout(r, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
         if (resource == null) {
             throw new NotFoundException("Unable to find the requested resource");
         } else {
@@ -238,6 +266,7 @@ public class ResRevController extends AbstractController {
 
     private final String FOAF = "http://xmlns.com/foaf/0.1/";
     private final Property userNameProp = ResourceFactory.createProperty(FOAF, "nick");
+    private final Property memberProp = ResourceFactory.createProperty(FOAF, "member");
 
     public static String HOME_VIEW_NAME = "homeView";
     public static String MAIN_VIEW_NAME = "mainView";
@@ -261,6 +290,7 @@ public class ResRevController extends AbstractController {
     private final String CONTACT_PATH = "/contact/";
     private final String PROFILE_PATH = "/profile";
     private final String RESEARCH_PATH = "/research";
+    private final String DEPARTMENT_PATH = "/mydepartment";
 
     private Logger log = Logger.getLogger(ResRevController.class);
 }

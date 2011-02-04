@@ -425,11 +425,49 @@ public class SPARQLQueryService implements FacetQueryService {
         qe.close();
         return lab;
     }
-
+    
+    private Op getNearbyQuery(Node thing, VarGen vgen, Collection<Property> relatedSubjects, 
+            Collection<Property> relatedObjects) {
+            Op op = null;
+            
+            for (Property prop: relatedSubjects) {
+                Op match = new OpGraph(vgen.genGraphVar(),
+                        tripleToBGP(thing, prop.asNode(), vgen.genVar(), true) // true: get subject
+                        );
+                if (op == null) op = match;
+                else op = OpJoin.create(match, op);
+            }
+            
+            for (Property prop: relatedSubjects) {
+                Op match = new OpGraph(vgen.genGraphVar(),
+                        tripleToBGP(thing, prop.asNode(), vgen.genVar(), false)
+                        );
+                if (op == null) op = match;
+                else op = OpJoin.create(match, op);
+            }
+            
+            return op;
+    }
+    
     @Override
-    public Resource getInformationAbout(Resource thing) {
+    public Resource getInformationAbout(Resource thing,
+            Collection<Property> relatedSubjects, Collection<Property> relatedObjects) {
         if (thing.isAnon()) throw new IllegalArgumentException("Described nodes must be ground");
-        Query q = QueryFactory.create(String.format("DESCRIBE <%s>", thing.getURI()));
+        
+        VarGen vgen = new VarGen();
+        Op op = getNearbyQuery(thing.asNode(), vgen, relatedSubjects, relatedObjects);
+        
+        Query q;
+        if (op == null) { // no related things
+            q = QueryFactory.make();
+        } else {
+            op = new OpProject(op, vgen.getGeneratedVars());
+            q = OpAsQuery.asQuery(op);
+        }
+        
+        q.addDescribeNode(thing.asNode());
+        q.setQueryDescribeType();
+        q.setQueryResultStar(false);
         QueryExecution qe = qef.get(q);
         Model m = qe.execDescribe();
         qe.close();
@@ -437,32 +475,36 @@ public class SPARQLQueryService implements FacetQueryService {
     }
 
     @Override
-    public Resource getInformationAboutIndirect(Property property, RDFNode value) {
-        Var thing = Var.alloc("thing");
-        Op op = tripleToBGP(thing, property.asNode(), value.asNode(), false);
-        op = new OpGraph(Var.alloc("g"), op);
-        op = new OpProject(op, Arrays.asList(thing));
+    public Resource getInformationAboutIndirect(Property property, RDFNode value,
+            Collection<Property> relatedSubjects, Collection<Property> relatedObjects) {
+        VarGen vgen = new VarGen();
+        Var thing = vgen.genVar();
+        Op op = getNearbyQuery(thing, vgen, relatedSubjects, relatedObjects);
+        
+        Op find = new OpGraph(vgen.genGraphVar(), tripleToBGP(thing, property.asNode(), value.asNode(), false));
+        
+        if (op == null) op = find; // no nearby things
+        else op = OpJoin.create(find, op);
+        
+        op = new OpProject(op, vgen.getGeneratedVars());
         Query q = OpAsQuery.asQuery(op);
         q.setQueryDescribeType();
+        q.setQueryResultStar(false);
         QueryExecution qe = qef.get(q);
         Model m = qe.execDescribe();
         qe.close();
-
-        // Ok, now the same thing locally to find out what we described
-
-        q.setQuerySelectType(); // select this time
-        DataSource ds = DatasetFactory.create();
-        ds.addNamedModel("http://example.com", m);
-        qe = QueryExecutionFactory.create(q, ds);
-        ResultSet results = qe.execSelect();
-        Resource t;
-        if (results.hasNext()) {
-            t = results.next().getResource("thing");
-            t = m.createResource(t.getURI()); // ensure t is associated with model
-        } else {
-            t = null;
-        }
-        qe.close();
+        
+        System.err.println("Query ind: " + q);
+        
+        // Ok, now what did we find?
+        ResIterator rs = m.listResourcesWithProperty(property, value);
+        
+        if (!rs.hasNext()) return null;
+        
+        Resource t = rs.next();
+        
+        rs.close();
+        
         return t;
     }
 
@@ -638,10 +680,24 @@ public class SPARQLQueryService implements FacetQueryService {
      */
     protected static class VarGen {
         private int num = 0;
+        private int gnum = 0;
         
         public Var genVar() {
             num++;
             return Var.alloc("v" + num);
+        }
+        
+        public Var genGraphVar() {
+            gnum++;
+            return Var.alloc("g" + num);
+        }
+        
+        public List<Var> getGeneratedVars() {
+            List<Var> vars = new LinkedList<Var>();
+            for (int i = 1; i <= num; i++) {
+                vars.add(Var.alloc("v" + i));
+            }
+            return vars;
         }
     }
 }
