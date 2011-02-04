@@ -103,13 +103,21 @@ public class FacetViewServiceImpl implements FacetViewService {
         // ---------- results list
 
         // TODO handle index and off set from parameter values
-        List<Resource> results = facetFactoryService.results(states, offset, number);
-        facetView.setResults(results);
+        
+        // implementing poor man's offset
+        List<Resource> results = facetFactoryService.results(states, 0, (offset+number));
+        List<Resource> resultsSubset = new ArrayList(number);
+        for (int i = offset; i<(offset+number) && i < results.size(); i++)
+        {
+            resultsSubset.add(results.get(i));
+        }
+        facetView.setResults(resultsSubset);
 
         // ---------- add the total count
 
         int total = facetFactoryService.totalResults(states);
         facetView.setTotal(total);
+        facetView.calculateCurrentPage(offset, number);
 
         return facetView;
     }
@@ -181,8 +189,8 @@ public class FacetViewServiceImpl implements FacetViewService {
     final int DEFAULT_OFFSET = 0;
     final int DEFAULT_NUMBER = 10;
 
-    final String NUMBER_PARAM = "number";
-    final String OFFSET_PARAM = "offset";
+    final static public String NUMBER_PARAM = "number";
+    final static public String OFFSET_PARAM = "offset";
 
     //final private Logger log = Logger.getLogger(FacetViewServiceImpl.class);
 }

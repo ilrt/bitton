@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.ilrt.wf.facets.impl.FacetViewServiceImpl;
 
 /**
  * Freemarker class/method to create URLs for rendering new facet states.
@@ -63,6 +64,10 @@ public class FacetStateUrlMethod implements TemplateMethodModelEx {
             params = new HashMap();
         }
 
+        // remove pagination params
+        params.remove(FacetViewServiceImpl.NUMBER_PARAM);
+        params.remove(FacetViewServiceImpl.OFFSET_PARAM);
+        
         // we need to check whether or not the parameter already exists. if
         // it doesn't exist we are looking at a new state. if it exists then we
         // need to replace the value with the new one

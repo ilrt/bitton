@@ -45,7 +45,15 @@ public class FacetViewFreeMarkerWrapper {
     public List<TemplateModel> getResults() {
         return results;
     }
-
+    
+    public SimpleNumber getTotalPages() {
+        return new SimpleNumber(view.getTotalPages());
+    }
+    
+    public SimpleNumber getCurrentPage() {
+        return new SimpleNumber(view.getCurrentPage());
+    }
+    
     List<TemplateModel> results;
 
     List<StringModel> facets;

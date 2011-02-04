@@ -12,7 +12,12 @@ public interface FacetView {
 
     int getTotal();
 
+    int getTotalPages();
+
     List<Facet> getFacets();
 
     List<Resource> getResults();
+    
+    int getCurrentPage();
+    
 }

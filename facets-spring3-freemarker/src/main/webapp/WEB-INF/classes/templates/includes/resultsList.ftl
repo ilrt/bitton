@@ -1,7 +1,7 @@
 <#include "macro.ftl">
 <div id="results">
 
-    <h2>Results</h2>
+    <h2>${facetView.total} Results</h2>
 
     <#list facetView.results as result>
       <div>
@@ -13,7 +13,7 @@
     </#list>
 
     <#if facetView.results?size < facetView.total>
-        <p class="more-results"><a href="<@moreResults/>">More results ...</a></p>
+        <@moreResults facetView=facetView/>
     </#if>
 
 </div>

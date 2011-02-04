@@ -8,6 +8,7 @@
 <#assign aiiso = "http://purl.org/vocab/aiiso/schema#">
 <#assign bibo = "http://purl.org/ontology/bibo/">
 <#assign relationship = "http://purl.org/vocab/relationship/">
+<#assign proj = "http://vocab.ouls.ox.ac.uk/projectfunding#">
 
 <#-- display a default label for a resource -->
 <#macro label resource>
@@ -24,7 +25,57 @@
 
 <#macro drillForResult result>${contextPath}${servletPath}/item?res=${result?url('UTF-8')}<#list RequestParameters?keys as key>&amp;${key}=${RequestParameters[key]}</#list></#macro>
 
-<#macro moreResults>${contextPath}${servletPath}/${view}/?<#if RequestParameters.number?exists>number=${RequestParameters.number?number + 10}<#else>number=20</#if><#list RequestParameters?keys as key><#if key != 'number'>&amp;${key}=${RequestParameters[key]}</#if></#list></#macro>
+<#macro moreResults facetView>
+    <#assign neighbour=3/>
+
+    <#if RequestParameters.number?exists>
+        <#assign number=RequestParameters.number?number/>
+    <#else>
+         <#assign number=10/>
+    </#if>
+
+    <p>
+        <#if facetView.totalPages < 10>
+            <#list 1..facetView.totalPages as i>
+                <@displayPageLink page=i currentPage=facetView.currentPage number=number/>&nbsp;
+            </#list>
+        <#else>
+            <#if facetView.currentPage < 10>
+                <!-- fewer then 10 pages -->
+                <#list 1..10 as i>
+                    <@displayPageLink page=i currentPage=facetView.currentPage number=number/>
+                </#list>
+                <#if 10 < facetView.totalPages>
+                ... ${facetView.totalPages}
+                </#if>
+            <#else>
+                <#if facetView.totalPages <= facetView.currentPage+neighbour>
+                    <!-- more then 10 pages but close to end of list -->
+                    <@displayPageLink page=1 currentPage=facetView.currentPage number=number/> ...
+                    <#list facetView.currentPage-neighbour..facetView.totalPages as i>
+                        <@displayPageLink page=i currentPage=facetView.currentPage number=number/>
+                    </#list>
+                <#else>
+                    <!-- lost in the middle of the list -->
+                    <@displayPageLink page=1 currentPage=facetView.currentPage number=number/> ...
+                    <#list facetView.currentPage-neighbour..facetView.currentPage+neighbour as i>
+                        <@displayPageLink page=i currentPage=facetView.currentPage number=number/>
+                    </#list>
+                    ... ${facetView.totalPages}
+                </#if>
+            </#if>
+            
+        </#if>
+    </p>
+</#macro>
+
+<#macro displayPageLink page currentPage number>
+    <#if page == currentPage>
+        ${page}
+    <#else>
+        <a href="${facetStateUrl(Request)}&offset=${(page-1)*number}&number=${number}">${page}</a>
+    </#if>&nbsp;
+</#macro>
 
 <#-- check that we are not dealing with a bnode -> http://invalid.org -->
 <#macro displayHost host>
