@@ -1,4 +1,12 @@
-<b>£${result['http://vocab.ouls.ox.ac.uk/projectfunding#value']?first}</b>
-<@linkToPageFor item=result['http://vocab.ouls.ox.ac.uk/projectfunding#hasPrincipalInvestigator']?first/>,
-<@linkToPageFor item=result['http://vocab.ouls.ox.ac.uk/projectfunding#hostedBy']?first/>,
-<@linkToPageFor item=result['<-http://vocab.ouls.ox.ac.uk/projectfunding#funds']?first/>
+<#if result[proj + 'value']??>
+    <b>£${result[proj + 'value']?first}</b>
+</#if>
+<#if result[proj + 'hasPrincipalInvestigator']??>
+    <@linkToPageFor item=result[proj + 'hasPrincipalInvestigator']?first/>,
+</#if>
+<#if result[proj + 'hostedBy']??>
+    <@linkToPageFor item=result[proj + 'hostedBy']?first/>,
+</#if>
+<#if result[proj + 'funds']??>
+    <@linkToPageFor item=result[proj + 'funds']?first/>
+</#if>
