@@ -214,7 +214,7 @@ public class ResRevController extends AbstractController {
             {
                 String type = iter.nextStatement().getResource().getURI();
 
-                if (type.equals("http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant")) {
+                if (type.equals("http://vocab.ouls.ox.ac.uk/projectfunding#Grant")) {
                     return GRANT_VIEW_NAME;
                 }
                 else if (type.equals("http://purl.org/vocab/aiiso/schema#Institution")) {

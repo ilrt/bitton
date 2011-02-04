@@ -8,17 +8,17 @@
 
         <h2>${resource[dc + 'title']?first}</h2>
 
-        <p><strong>Grant Number:</strong> ${resource['proj:grantNumber']?first}</p>
+        <p><strong>Grant Number:</strong> ${resource[proj + 'grantNumber']?first}</p>
         
         <#if resource['proj:startDate']??>
-          <p><strong>Start Date: </strong> ${resource['proj:startDate']?first}</p>
+          <p><strong>Start Date: </strong> ${resource[proj + 'startDate']?first}</p>
         </#if>
         
         <#if resource['proj:endDate']??>
-          <p><strong>End Date: </strong> ${resource['proj:endDate']?first}</p>
+          <p><strong>End Date: </strong> ${resource[proj + 'endDate']?first}</p>
         </#if>
         
-        <p><strong>Value: </strong> ${resource['proj:value']?first}</p>
+        <p><strong>Value: </strong> ${resource[proj + 'value']?first}</p>
 
         <p><strong>Abstract:</strong></p>
         
@@ -28,9 +28,9 @@
         
         <p><strong>Principal Investigators:</strong></p>
 
-        <#if resource['proj:hasPrincipalInvestigator']??>
+        <#if resource[proj + 'hasPrincipalInvestigator']??>
             <ul>
-                <#list resource['proj:hasPrincipalInvestigator'] as pi>
+                <#list resource[proj + 'hasPrincipalInvestigator'] as pi>
                     <li>
                         <@displayPerson person=pi/>
                     </li>
@@ -40,9 +40,9 @@
 
         <p><strong>Co-Investigators:</strong></p>
 
-        <#if resource['proj:hasCoInvestigator']??>
+        <#if resource[proj + 'hasCoInvestigator']??>
             <ul>
-                <#list resource['proj:hasCoInvestigator'] as pi>
+                <#list resource[proj + 'hasCoInvestigator'] as pi>
                     <li>
                         <@displayPerson person=pi/>
                     </li>
@@ -52,12 +52,12 @@
 
         <p><strong>Hosted by:</strong></p>
 
-        <#if resource['proj:hostedBy']??>
+        <#if resource[proj + 'hostedBy']??>
             <ul>
-                <#list resource['proj:hostedBy'] as host>
+                <#list resource[proj + 'hostedBy'] as host>
                     <@displayHost host=host/>
                 </#list>
-                <#list resource['proj:hostedBy'] as host>
+                <#list resource[proj + 'hostedBy'] as host>
                     <@displayHost host=host/>
                 </#list>
             </ul>
