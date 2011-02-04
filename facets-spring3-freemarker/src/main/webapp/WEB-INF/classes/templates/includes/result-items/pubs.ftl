@@ -4,4 +4,6 @@
   </#list>
 </#if>
 
-(${result[dc + 'date']?first})
+<#if result[dc + 'date']??>
+    (${result[dc + 'date']?first})
+</#if>
