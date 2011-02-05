@@ -50,7 +50,7 @@ h1, h2 {
 }
 
 .panel h1, .panel h2 {
-	background: #fff url(images/bkgd-panel-heading.png) left bottom repeat-x;
+	background: #fff url(../images/bkgd-panel-heading.png) left bottom repeat-x;
 	border-bottom: 1px solid #ccc;
 	padding: 4px 10px;
 }
@@ -118,7 +118,7 @@ body {
 	width: 964px;
 	margin: 0 auto;
 	/* Grid for debugging layout
-	background: transparent url(images/debug-grid.png) center top repeat-y;
+	background: transparent url(../images/debug-grid.png) center top repeat-y;
 	 * */
 }
 
@@ -181,7 +181,12 @@ form#topsearch {
 
 .col1of3, .col2of3, .col3of3 {
 	float: left;
-	width: 320px;
+	width: 308px;
+}
+
+.col2-3of3 {
+	float: right;
+	width: 636px;
 }
 
 .col1of4, .col2of4, .col3of4, .col4of4 {

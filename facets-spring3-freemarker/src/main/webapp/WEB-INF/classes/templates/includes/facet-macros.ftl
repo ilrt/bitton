@@ -3,7 +3,7 @@
     <#if facet?? && facet.state??>
         <#if facet.type = "TextSearch">
             <div class="facet">
-                <h4 class="facet-title">${facet.name}</h4>
+                <h3 class="facet-title">${facet.name}</h3>
                 <p>
                     <form action="${facetStateUrl(Request)}" method="get">
                         <input type="text" name="${facet.param}" id="${facet.param}" value="<#if facet.state.paramValue??>${facet.state.paramValue}</#if>"/>
@@ -13,7 +13,7 @@
             </div>
         <#elseif facet.name = "Department">
             <div class="facet">
-                <h4 class="facet-title">${facet.name}</h4>
+                <h3 class="facet-title">${facet.name}</h3>
                     <#if facet.state.refinements?size &gt; 0>
                         <form action="${facetStateUrl(Request)}" method="get">
                             <select name="${facet.param}" id="${facet.param}" class="autocomplete">
@@ -30,7 +30,7 @@
             </div>
         <#else>
             <div class="facet">
-                <h4 class="facet-title">${facet.name}</h4>
+                <h3 class="facet-title">${facet.name}</h3>
                 <#if facet.state.root>
                     <@refinementList refinements=facet.state.refinements paramKey=facet.param/>
                 <#else>

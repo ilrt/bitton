@@ -3,8 +3,6 @@
 <head>
     <title>Research Revealed</title>
     <link rel="stylesheet" type="text/css" href="${contextPath}/style/main.css"/>
-    <link rel="stylesheet" type="text/css" href="${contextPath}/style/reset.css"/>
-    <link rel="stylesheet" type="text/css" href="${contextPath}/style/style.css"/>
     <link rel="stylesheet" type="text/css" href="${contextPath}/style/jquery-ui-1.8.5.custom.css"/>
     <link rel="stylesheet" type="text/css" href="${contextPath}/style/ui.slider.extras.css"/>
     <link rel="stylesheet" type="text/css" href="${contextPath}/style/autocomplete.css"/>

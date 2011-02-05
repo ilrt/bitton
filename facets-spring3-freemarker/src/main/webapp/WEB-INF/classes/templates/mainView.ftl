@@ -2,18 +2,18 @@
 <#include "includes/header.ftl"/>
 
 <!-- main content -->
-<div id="main-content">
+<div id="content">
 
-    <div id="left-column">
+    <div class="col1of3">
         <#include "includes/facet.ftl"/>
-    </div>
+    </div><!-- /col -->
 
-    <div id="right-column">
+    <div class="col2-3of3">
         <#include "includes/resultsList.ftl"/>
-    </div>
+    </div><!-- /col -->
+
+</div><!-- /content -->
 
     <#include "includes/address-footer.ftl"/>
-
-</div>
 
 <#include "includes/footer.ftl"/>

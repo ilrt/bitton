@@ -2,8 +2,6 @@
 <#include "includes/header.ftl"/>
 
 <!-- main content -->
-<div id="main-content">
-
     <div id="content">
 
         <h2>${resource[dc + 'title']?first}</h2>
@@ -135,7 +133,5 @@
      </div>
 
 <#include "includes/address-footer.ftl"/>
-
-</div>
 
 <#include "includes/footer.ftl"/>
