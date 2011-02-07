@@ -454,8 +454,19 @@ span.count {
 /* =results
  *  * =========================================== */
 
+ul.results {
+	margin-left: 4px;
+	padding: 0;
+	list-style-type: none;
+}
+
 ul.results li {
 	margin-bottom: 14px;
+	padding: 0 0 0 25px;
+}
+
+ul.results li.pub {
+	background: transparent url(../images/icon-paper.png) left top no-repeat;
 }
 
 ul.results .contributor {
