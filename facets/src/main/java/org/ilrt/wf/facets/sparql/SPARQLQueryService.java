@@ -15,6 +15,7 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.SortCondition;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -34,6 +35,7 @@ import com.hp.hpl.jena.sparql.algebra.op.OpGraph;
 import com.hp.hpl.jena.sparql.algebra.op.OpJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpLeftJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
+import com.hp.hpl.jena.sparql.algebra.op.OpOrder;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.algebra.op.OpSlice;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
@@ -426,6 +428,52 @@ public class SPARQLQueryService implements FacetQueryService {
         return lab;
     }
     
+    public List<Resource> getRelatedOrdered(Resource thing, Property prop, 
+            boolean invert, Property orderBy, int limit) {
+        VarGen vgen = new VarGen();
+        Op op = invert ?
+                getNearbyQuery(thing.asNode(), vgen, Collections.singletonList(prop), Collections.EMPTY_LIST) :
+                getNearbyQuery(thing.asNode(), vgen, Collections.EMPTY_LIST, Collections.singletonList(prop)) ;
+        Var match = vgen.last();
+        if (orderBy != null) {
+            op = new OpGraph(vgen.genGraphVar(),
+                    tripleToBGP(match, prop.asNode(), vgen.genVar(), false)
+                    );
+            op = new  OpOrder(op, 
+                    Collections.singletonList(
+                    new SortCondition(vgen.last(), Query.ORDER_ASCENDING)));
+        }
+        op = new OpSlice(op, limit, 0);
+        op = new OpProject(op, Collections.singletonList(match));
+        
+        Query q = OpAsQuery.asQuery(op);
+        QueryExecution qe = qef.get(q);
+        ResultSet intResults = qe.execSelect();
+        List<Resource> toDescribe = new ArrayList(limit);
+        while (intResults.hasNext()) toDescribe.add(intResults.next().getResource(match.getVarName()));
+        qe.close();
+
+        // We now have a list of matches. Let's get their descriptions
+        
+        Query desc = QueryFactory.make();
+        for (Resource node: toDescribe) {
+            desc.addDescribeNode(node.asNode());
+        }
+        desc.setQueryDescribeType();
+        
+        QueryExecution getDescs = qef.get(desc);
+        Model m = getDescs.execDescribe();
+        
+        List<Resource> results = new ArrayList(limit);
+        
+        // Associate resources with result model
+        for (Resource node: toDescribe) {
+            results.add((Resource) m.getRDFNode(node.asNode()));
+        }
+
+        return results;
+    }
+    
     private Op getNearbyQuery(Node thing, VarGen vgen, Collection<Property> relatedSubjects, 
             Collection<Property> relatedObjects) {
             Op op = null;
@@ -698,6 +746,10 @@ public class SPARQLQueryService implements FacetQueryService {
                 vars.add(Var.alloc("v" + i));
             }
             return vars;
+        }
+
+        private Var last() {
+            return Var.alloc("v" + num);
         }
     }
 }
