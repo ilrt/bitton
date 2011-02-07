@@ -4,7 +4,7 @@
 <!-- main content -->
     <div id="content">
 
-        <h2>${resource[dc + 'title']?first}</h2>
+        <h1>${resource[dc + 'title']?first}</h1>
 
         <p>Contributors:
             <!-- order alphabetically -->

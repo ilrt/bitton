@@ -195,8 +195,6 @@ form#topsearch {
 }
 
 
-
-
 #footer {
 	background: transparent url(../images/shadow-footer.png) center top no-repeat;
 	padding: 14px 0 0;
@@ -321,9 +319,13 @@ a#logo-jisc {
 /* =forms
  *  * =========================================== */
 
-form {
+form, #facetcontainer {
 	background: #DDECF5;
 	padding: 10px;
+}
+
+#facetcontainer form {
+	padding: 0;
 }
 
 form#topsearch {

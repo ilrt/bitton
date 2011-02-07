@@ -2,13 +2,12 @@
 <#include "includes/header.ftl"/>
 
 <!-- main content -->
-<div id="main-content">
+<div id="content">
 
-    <div id="content">
 
-        <h2>Profile for ${resource[rdfs+'label']?first}</h2>
+        <h1>Profile for ${resource[rdfs+'label']?first}</h1>
 
-        <h3>My Details</h3>
+        <h2>My Details</h2>
         <p><strong>Name: </strong> ${resource[foaf+'name']?first}</p>
         <#if profileview??>
             <p><strong>UoB username: </strong> ${resource[foaf+'nick']?first}</p>
@@ -31,7 +30,6 @@
     ${prop} = ${resource[prop]?first}<br/>
 </#list>
 -->
-     </div>
 
     <#if resource[relationship + 'collaboratesWith']??>
        <div id="collaborators">
@@ -41,8 +39,8 @@
            </#list>
        <div>
     </#if>
-<#include "includes/address-footer.ftl"/>
 
-</div>
+</div><!-- /content -->
+<#include "includes/address-footer.ftl"/>
 
 <#include "includes/footer.ftl"/>
