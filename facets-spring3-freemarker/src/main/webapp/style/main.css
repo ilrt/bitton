@@ -455,7 +455,20 @@ span.count {
  *  * =========================================== */
 
 ul.results li {
-	margin-bottom: 7px;
+	margin-bottom: 14px;
+}
+
+ul.results .contributor {
+}
+
+ul.results .title {
+	/*font-size: 1.1428571em;*/
+	font-weight: bold;
+}
+
+ul.results .otherdetails {
+	font-style: italic;
+	color: #888;
 }
 
 
