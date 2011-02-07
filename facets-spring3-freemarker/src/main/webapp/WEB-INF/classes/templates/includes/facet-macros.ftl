@@ -20,6 +20,39 @@
                         </p>
                     </#if>
             </div>
+
+	    <#elseif facet.name= "Most Popular Departments">
+            <div class="facet">
+                <h3 class="facet-title">${facet.name}</h3>
+                <#if facet.state.root>
+                    <@refinementList refinements=facet.state.refinements paramKey=facet.param/>
+                <#else>
+                    <#assign parents = facetParentList(facet)>
+                    <#-- Display the parents -->
+                    <#if parents?size &gt; 1>
+                        <#list parents as parent>
+                            <#if parent.root>
+                                <@facetList/>
+                            <#else>
+                                <@listItem/>${parent.name} [<a href="${facetStateUrl(Request, facet.param, parent.paramValue)}">x</a>]
+                                <#if parent_has_next>
+                                    <ul>
+                                </#if>
+                            </#if>
+                        </#list>
+                    </#if>
+                    <#-- Display the current facet -->
+                    <ul class="facet-list">
+                        <@listItem/>${facet.state.name} [<a href="${facetStateUrl(Request, facet.param, facet.state.parent.paramValue)}">x</a>]
+                        <#if facet.state.refinements?size &gt; 0>
+                            <@refinementList refinements=facet.state.refinements paramKey=facet.param />
+                        </#if>
+                        <#list parents as parent>
+                            </li></ul>
+                        </#list>
+                </#if>
+            </div>
+
         <#else>
             <div class="facet">
                 <h2 class="facet-title">${facet.name}</h2>

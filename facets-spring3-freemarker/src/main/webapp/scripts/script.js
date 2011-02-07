@@ -3,6 +3,19 @@
  * and open the template in the editor.
  */
 
+$(document).ready(function(){ 
+	$('ul.facet-list').each(function(){ 
+		var $this = $(this), list = $this.find('li:gt(4)').hide(); 
+		if(list.length>0){ 
+			$this.append('<li><a class="more" href="#">See more</a></li>');
+			$('a.more', $this).click(function(){ 
+				list.toggle(); 
+				$(this).text($(this).text() === 'See more' ? 'See less' : 'See more'); 
+			}); 
+		} 
+	}); 
+}); 
+
 var slider_uID = 1;
 
 $(document).ready(function(){
