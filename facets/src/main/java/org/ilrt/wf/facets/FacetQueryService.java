@@ -106,6 +106,8 @@ public interface FacetQueryService {
      */
     Resource getInformationAboutIndirect(Property property, RDFNode value, 
             Collection<Property> relatedSubjects, Collection<Property> relatedObjects);
+
+    List<Resource> getRelated(Resource thing, Property prop, boolean invert, Property orderBy, int limit);
     
     /**
      * A simple tree implemenation for returning the hierarchy.

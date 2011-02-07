@@ -428,7 +428,7 @@ public class SPARQLQueryService implements FacetQueryService {
         return lab;
     }
     
-    public List<Resource> getRelatedOrdered(Resource thing, Property prop, 
+    public List<Resource> getRelated(Resource thing, Property prop, 
             boolean invert, Property orderBy, int limit) {
         VarGen vgen = new VarGen();
         Op op = invert ?
@@ -443,7 +443,7 @@ public class SPARQLQueryService implements FacetQueryService {
                     Collections.singletonList(
                     new SortCondition(vgen.last(), Query.ORDER_ASCENDING)));
         }
-        op = new OpSlice(op, limit, 0);
+        if (limit != -1) op = new OpSlice(op, limit, 0);
         op = new OpProject(op, Collections.singletonList(match));
         
         Query q = OpAsQuery.asQuery(op);
