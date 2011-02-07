@@ -319,13 +319,9 @@ a#logo-jisc {
 /* =forms
  *  * =========================================== */
 
-form, #facetcontainer {
+form {
 	background: #DDECF5;
 	padding: 10px;
-}
-
-#facetcontainer form {
-	padding: 0;
 }
 
 form#topsearch {
@@ -424,3 +420,23 @@ a.expand span {
 	text-decoration: underline;
 	font-size: 13px;
 }
+
+
+/* =facets
+ *  * =========================================== */
+
+#facetcontainer {
+	background: #DDECF5;
+	padding: 10px;
+}
+
+#facetcontainer form {
+	padding: 0;
+}
+
+span.count {
+	color: #888;
+}
+
+
+

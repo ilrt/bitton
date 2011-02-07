@@ -104,7 +104,7 @@
 
 <#-- display refinement details -->
 <#macro displayRefinementListItem name count paramKey paramValue>
-    <@listItem/><a href="${facetStateUrl(Request, paramKey, paramValue)}">${name}</a> (${count})</li>
+<@listItem/><a href="${facetStateUrl(Request, paramKey, paramValue)}">${name}</a> <span class="count">${count}</span></li>
 </#macro>
 
 <#macro displayRefinementWithoutCount name count paramKey paramValue>
