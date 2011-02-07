@@ -1,19 +1,23 @@
 <#include "macro.ftl">
-<div id="results">
+<div id="results" class="panel">
 
-    <h2>${facetView.total} Results</h2>
+    <h1>${facetView.total} results</h1>
+
+    <ul class="results">
 
     <#list facetView.results as result>
-      <div>
-        <p><a href="<@drillForResult result=result/>"><@label resource=result/></a></p>
+    <li>
+        <span><a href="<@drillForResult result=result/>"><@label resource=result/></a></span>
         <#if view??>
           <#include "result-items/" + view + ".ftl">
         </#if>
-      </div>
+    </li>
     </#list>
+
+    </ul>
 
     <#if facetView.results?size < facetView.total>
         <@moreResults facetView=facetView/>
     </#if>
 
-</div>
+</div><!-- /panel -->
