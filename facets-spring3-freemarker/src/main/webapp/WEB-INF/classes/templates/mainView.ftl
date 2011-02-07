@@ -9,6 +9,7 @@
     </div><!-- /col -->
 
     <div class="col2-3of3">
+        <#include "includes/textsearch-facet.ftl"/>
         <#include "includes/resultsList.ftl"/>
     </div><!-- /col -->
 
