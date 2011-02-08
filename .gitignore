@@ -5,7 +5,6 @@
 lib
 target
 build
-classes
 *.iml
 *.ipr
 *.iws
