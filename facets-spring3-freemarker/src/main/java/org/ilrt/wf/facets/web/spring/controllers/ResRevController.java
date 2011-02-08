@@ -110,7 +110,7 @@ public class ResRevController extends AbstractController {
         // do a fresh query the service
         ModelAndView mav = createModelAndView(RESEARCH_VIEW, request);
 
-        Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+        Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
 
         mav.addObject("resource",  new ResourceHashModel(resource));
         
@@ -130,7 +130,7 @@ public class ResRevController extends AbstractController {
         // do a fresh query the service
         ModelAndView mav = createModelAndView(PROFILE_VIEW_NAME, request);
 
-        Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+        Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
 
         mav.addObject("resource",  new ResourceHashModel(resource));
 
@@ -152,13 +152,13 @@ public class ResRevController extends AbstractController {
         // do a fresh query the service
         ModelAndView mav = createModelAndView(ORGANISATION_VIEW_NAME, request);
 
-        Resource user = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username), Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+        Resource user = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
         // TODO: some people are associated with more than one department
         ResIterator it = user.getModel().listResourcesWithProperty(memberProp, user);
         Resource dept = it.next();
         if (it.hasNext()) log.warn("User: " + username + " has more than one department");
         
-        Resource department = facetQueryService.getInformationAbout(dept, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+        Resource department = facetQueryService.getInformationAbout(dept);
         
         mav.addObject("user",  new ResourceHashModel(user));
         mav.addObject("resource", new ResourceHashModel(department));
@@ -186,7 +186,7 @@ public class ResRevController extends AbstractController {
     private ModelAndView displayResourceOrFail(String uri, HttpServletRequest request) {
 
         Resource r = new ResourceImpl(uri);
-        Resource resource = facetQueryService.getInformationAbout(r, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+        Resource resource = facetQueryService.getInformationAbout(r);
         if (resource == null) {
             throw new NotFoundException("Unable to find the requested resource");
         } else {

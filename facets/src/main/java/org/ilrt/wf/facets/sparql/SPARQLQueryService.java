@@ -7,11 +7,8 @@ package org.ilrt.wf.facets.sparql;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.query.DataSource;
-import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -93,7 +90,7 @@ public class SPARQLQueryService implements FacetQueryService {
 
         // TODO: Work around. Remove this when ARQ is fixed
 
-        System.setProperty("http.keepAlive", "false");
+        //System.setProperty("http.keepAlive", "false");
     }
 
     @Override
@@ -426,76 +423,33 @@ public class SPARQLQueryService implements FacetQueryService {
         return lab;
     }
     
-    private Op getNearbyQuery(Node thing, VarGen vgen, Collection<Property> relatedSubjects, 
-            Collection<Property> relatedObjects) {
-            Op op = null;
-            
-            for (Property prop: relatedSubjects) {
-                Op match = new OpGraph(vgen.genGraphVar(),
-                        tripleToBGP(thing, prop.asNode(), vgen.genVar(), true) // true: get subject
-                        );
-                if (op == null) op = match;
-                else op = OpJoin.create(match, op);
-            }
-            
-            for (Property prop: relatedSubjects) {
-                Op match = new OpGraph(vgen.genGraphVar(),
-                        tripleToBGP(thing, prop.asNode(), vgen.genVar(), false)
-                        );
-                if (op == null) op = match;
-                else op = OpJoin.create(match, op);
-            }
-            
-            return op;
-    }
-    
     @Override
-    public Resource getInformationAbout(Resource thing,
-            Collection<Property> relatedSubjects, Collection<Property> relatedObjects) {
+    public Resource getInformationAbout(Resource thing) {
         if (thing.isAnon()) throw new IllegalArgumentException("Described nodes must be ground");
-        
-        VarGen vgen = new VarGen();
-        Op op = getNearbyQuery(thing.asNode(), vgen, relatedSubjects, relatedObjects);
-        
-        Query q;
-        if (op == null) { // no related things
-            q = QueryFactory.make();
-        } else {
-            op = new OpProject(op, vgen.getGeneratedVars());
-            q = OpAsQuery.asQuery(op);
-        }
-        
-        q.addDescribeNode(thing.asNode());
+                
+        Query q = QueryFactory.make();
         q.setQueryDescribeType();
-        q.setQueryResultStar(false);
+        q.addDescribeNode(thing.asNode());
         QueryExecution qe = qef.get(q);
         Model m = qe.execDescribe();
         qe.close();
-        return m.createResource(thing.getURI());
+        return (Resource) m.asRDFNode(thing.asNode());
     }
 
     @Override
-    public Resource getInformationAboutIndirect(Property property, RDFNode value,
-            Collection<Property> relatedSubjects, Collection<Property> relatedObjects) {
+    public Resource getInformationAboutIndirect(Property property, RDFNode value) {
         VarGen vgen = new VarGen();
-        Var thing = vgen.genVar();
-        Op op = getNearbyQuery(thing, vgen, relatedSubjects, relatedObjects);
-        
-        Op find = new OpGraph(vgen.genGraphVar(), tripleToBGP(thing, property.asNode(), value.asNode(), false));
-        
-        if (op == null) op = find; // no nearby things
-        else op = OpJoin.create(find, op);
-        
-        op = new OpProject(op, vgen.getGeneratedVars());
+        Var thing = Var.alloc("thing");
+        Op op = tripleToBGP(thing, property.asNode(), value.asNode(), false);
+        op = new OpGraph(Var.alloc("g"), op);
+        op = new OpProject(op, Collections.singletonList(thing));
         Query q = OpAsQuery.asQuery(op);
         q.setQueryDescribeType();
         q.setQueryResultStar(false);
         QueryExecution qe = qef.get(q);
         Model m = qe.execDescribe();
         qe.close();
-        
-        System.err.println("Query ind: " + q);
-        
+                
         // Ok, now what did we find?
         ResIterator rs = m.listResourcesWithProperty(property, value);
         
@@ -601,6 +555,45 @@ public class SPARQLQueryService implements FacetQueryService {
         }
 
         return vals;
+    }
+
+    @Override
+    public List<Map<String, RDFNode>> performSelect(String selectQuery, boolean describeNodes) {
+        Query q = QueryFactory.create(selectQuery);
+        if (!q.isSelectType()) throw new IllegalArgumentException("SELECT query required");
+        List<Map<String, RDFNode>> results = new LinkedList<Map<String, RDFNode>>();
+        
+        QueryExecution qe = qef.get(q);
+        ResultSet rs = qe.execSelect();
+        
+        // Make get description query if needed
+        Query getReses = describeNodes ? QueryFactory.make() : null ;
+        
+        Model resultModel = ModelFactory.createDefaultModel();
+        
+        while (rs.hasNext()) {
+            QuerySolution soln = rs.next();
+            Map<String, RDFNode> row = new HashMap<String, RDFNode>();
+            for (String var: rs.getResultVars()) {
+                RDFNode node = soln.get(var);
+                // Associate resources with our model
+                // This saves some work later
+                row.put(var, resultModel.asRDFNode(node.asNode()));
+                if (describeNodes && node.isResource()) 
+                    getReses.addDescribeNode(node.asNode());
+            }
+        }
+        qe.close();
+        
+        // We can skip this. Hurrah!
+        if (!describeNodes) return results;
+        
+        getReses.setQueryDescribeType();
+        qe = qef.get(getReses);
+        Model m = qe.execDescribe(resultModel);
+        qe.close();
+        
+        return results;
     }
 
     /**

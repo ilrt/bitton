@@ -94,8 +94,7 @@ public interface FacetQueryService {
      * @param relatedSubjects Things related to this 
      * @return Thing with details
      */
-    Resource getInformationAbout(Resource thing, 
-            Collection<Property> relatedSubjects, Collection<Property> relatedObjects);
+    Resource getInformationAbout(Resource thing);
     
     /**
      * Get information about the thing identified by (property, value)
@@ -104,8 +103,15 @@ public interface FacetQueryService {
      * @param value The value of the property
      * @return Details about the thing identified by the property value
      */
-    Resource getInformationAboutIndirect(Property property, RDFNode value, 
-            Collection<Property> relatedSubjects, Collection<Property> relatedObjects);
+    Resource getInformationAboutIndirect(Property property, RDFNode value);
+    
+    /**
+     * Perform a select query, optionally DESCRIBing returned resources
+     * @param selectQuery The select query
+     * @param describeNodes If true DESCRIBE each of the returned resources
+     * @return a list of result bindings
+     */
+    List<Map<String, RDFNode>> performSelect(String selectQuery, boolean describeNodes);
     
     /**
      * A simple tree implemenation for returning the hierarchy.
