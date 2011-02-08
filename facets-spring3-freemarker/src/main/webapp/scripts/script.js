@@ -19,10 +19,10 @@ $(document).ready(function(){
 var slider_uID = 1;
 
 $(document).ready(function(){
-    //Put in placeholders for browsers that don't do it natively:
-    $( "input, textarea" ).placehold();
-
     $('select.autocomplete').select_autocomplete();
+    
+    //Put in placeholders for browsers that don't do it natively:
+    $( "input, textarea" ).placeholder();
 
     var link = "[<span>+</span>]&nbsp;";
     if ($(".collapsible .content:hidden").length > 0)
