@@ -29,7 +29,7 @@
 			//stick each of it's options in to an items array of objects with name and value attributes 
 			var $this = $(this),
 				data = [],
-				$input = $('<input type="text" />');
+				$input = $('<input type="text" value=""/>');
 			
 			if (this.tagName.toLowerCase() != 'select') { return; }
 				
@@ -72,13 +72,13 @@
            *   there are edge cases where if you leave the field part way through the word, or clear the value when no blank option is available
            *   that force a mismatch between the 2 elements
            */
-          if(this.value != $this[0].options[$this[0].selectedIndex].text){
-            $input.val($this[0].options[$this[0].selectedIndex].text);
-          }  
+//          if(this.value != $this[0].options[$this[0].selectedIndex].text){
+//            $input.val($this[0].options[$this[0].selectedIndex].text);
+//          }  
       });
 		
 			//set the initial text value of the autocomplete input box to the text node of the selected item in the select control
-			$input.val($this[0].options[$this[0].selectedIndex].text);
+			$input.attr('placeholder',($this[0].options[$this[0].selectedIndex].text));
 		
 			//normally, you'd hide the select list but we won't for this demo
 			$this.hide();
