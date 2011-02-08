@@ -284,7 +284,8 @@ $.Autocompleter = function(input, options) {
 
 	function hideResults() {
 		clearTimeout(timeout);
-		timeout = setTimeout(hideResultsNow, 200);
+//		timeout = setTimeout(hideResultsNow, 200);
+                                hideResultsNow();
 	};
 
 	function hideResultsNow() {
@@ -308,9 +309,9 @@ $.Autocompleter = function(input, options) {
 				}
 			);
 		}
-		if (wasVisible)
+//		if (wasVisible)
 			// position cursor at end of input field
-			$.Autocompleter.Selection(input, input.value.length, input.value.length);
+//			$.Autocompleter.Selection(input, input.value.length, input.value.length);
 	};
 
 	function receiveData(q, data) {
