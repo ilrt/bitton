@@ -136,12 +136,12 @@ function hideDepartments()
 {
     if ($("h2.facet-title:contains(Department)+p:contains(x)").length > 0)
     {
-        $("h3.facet-title:contains(Department)").parent().hide();
+        $("h3.facet-title:contains(popular)").parent().hide();
     }
-    else if ($("h3.facet-title:contains(Department)+*:contains(x)").length > 0)
+    else if ($("h3.facet-title:contains(popular)+*:contains(x)").length > 0)
    {
-       var text = $("h3.facet-title:contains(Department)").parent().html();
+       var text = $("h3.facet-title:contains(popular)").parent().html();
         $("h2.facet-title:contains(Department)+form").hide().append(text);
-        $("h3.facet-title:contains(Department)").hide();
+        $("h3.facet-title:contains(popular)").hide();
    }
 }
