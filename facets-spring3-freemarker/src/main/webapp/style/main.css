@@ -35,6 +35,16 @@ a:focus {
 strong { font-weight: bold; color: #333; }
 em { font-style: italic; }
 
+.note {
+	color: #999;
+	font-style: italic;
+	font-size: 0.928571em;
+}
+
+.note strong {
+	color: #888;
+}
+
 #page {
 	font-size: 0.875em;
 	line-height: 1.5em;
@@ -440,7 +450,8 @@ ul.facet-list {
 	margin-left: 0;
 }
 
-span.count {
+#facetcontainer span.count {
+	font-size: 0.928571em;
 	color: #888;
 }
 
@@ -452,9 +463,24 @@ span.count {
 	width: 322px;
 }
 
+#facetcontainer h3 {
+	margin-bottom: -4px;
+	margin-top: 0;
+	font-size: 1em;
+}
+
+#facetcontainer input[type=text] {
+	width: 200px;
+}
+
+strong.facetname {
+	white-space: nowrap;
+}
+
 
 /* =results
  *  * =========================================== */
+
 
 ul.results {
 	margin-left: 4px;
