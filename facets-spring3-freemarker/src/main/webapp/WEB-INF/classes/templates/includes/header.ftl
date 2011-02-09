@@ -14,7 +14,7 @@
     <script src="${contextPath}/scripts/selectToUISlider.jQuery.js"></script>
     <script src="${contextPath}/scripts/jquery.autocomplete.js"></script>
     <script src="${contextPath}/scripts/jquery.select-autocomplete.js"></script>
-    <script src="${contextPath}/scripts/jquery.placeholder.js"></script>
+    <script src="${contextPath}/scripts/jquery.placeholder.min.js"></script>
     <script src="${contextPath}/scripts/script.js"></script>
 </head>
 <body>
