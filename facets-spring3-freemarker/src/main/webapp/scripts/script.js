@@ -23,6 +23,8 @@ $(document).ready(function(){
     
     //Put in placeholders for browsers that don't do it natively:
     $( "input, textarea" ).placeholder();
+    
+    hideDepartments();
 
     var link = "[<span>+</span>]&nbsp;";
     if ($(".collapsible .content:hidden").length > 0)
@@ -121,4 +123,18 @@ function enableSlider(div)
 function handleLoadError(obj)
 {
     $(obj).addClass("loadError").html("Error");//.delay("slow").fadeOut("slow");
+}
+
+function hideDepartments()
+{
+    if ($("h2.facet-title:contains(Department)+p:contains(x)").length > 0)
+    {
+        $("h3.facet-title:contains(Department)").parent().hide();
+    }
+    else if ($("h3.facet-title:contains(Department)+*:contains(x)").length > 0)
+   {
+       var text = $("h3.facet-title:contains(Department)").parent().html();
+        $("h2.facet-title:contains(Department)+form").hide().append(text);
+        $("h3.facet-title:contains(Department)").hide();
+   }
 }
