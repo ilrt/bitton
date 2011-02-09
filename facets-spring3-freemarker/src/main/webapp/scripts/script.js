@@ -19,10 +19,17 @@ $(document).ready(function(){
 var slider_uID = 1;
 
 $(document).ready(function(){
-    $('select.autocomplete').select_autocomplete();
-    
     //Put in placeholders for browsers that don't do it natively:
     $( "input, textarea" ).placeholder();
+
+    $('select.autocomplete').select_autocomplete();
+    $('#pdept').parent().submit(function(){
+        if ($('#pdept').val() == '')
+            {
+                alert('No department selected');
+                return false; 
+            }
+    });
     
     hideDepartments();
 

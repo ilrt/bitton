@@ -11,6 +11,8 @@
 			, width: 310
 			, matchContains: true
 			, autoFill: false
+			, matchSubset: false
+			, mustMatch: true
 			, formatItem: function(row, i, max) {
 				return row.name;
 			}
@@ -60,7 +62,13 @@
 			$input.result(function(event, selected_item, formatted) { 
 				$($this.find('option[value=' + selected_item.value + ']')[0]).attr('selected', true);
 			});
-
+                        
+      $input.click(function(){
+          $(this).removeClass("placeholder");
+        });
+      $input.focus(function(){
+           $(this).removeClass("placeholder");
+        });
       $input.blur(function(){
           // autocomplete has removed blank options
           // ensure that if value is removed we select the blank option if available
@@ -72,14 +80,25 @@
            *   there are edge cases where if you leave the field part way through the word, or clear the value when no blank option is available
            *   that force a mismatch between the 2 elements
            */
-//          if(this.value != $this[0].options[$this[0].selectedIndex].text){
-//            $input.val($this[0].options[$this[0].selectedIndex].text);
-//          }  
+          if(this.value != $this[0].options[$this[0].selectedIndex].text){
+            $input.val($this[0].options[$this[0].selectedIndex].text);
+          } 
+          if ($input.val() == $this[0].options[0].text)
+              {
+                  $input.addClass("placeholder");
+              }
+          else
+              {
+                  $input.removeClass("placeholder");
+              }     
       });
 		
 			//set the initial text value of the autocomplete input box to the text node of the selected item in the select control
-			$input.attr('placeholder',($this[0].options[$this[0].selectedIndex].text));
-		
+			$input.attr('value',($this[0].options[$this[0].selectedIndex].text));
+
+                                                if ($input.val() == $this[0].options[0].text) $input.addClass("placeholder");
+                                                else $input.removeClass("placeholder");
+                                                
 			//normally, you'd hide the select list but we won't for this demo
 			$this.hide();
 		});
