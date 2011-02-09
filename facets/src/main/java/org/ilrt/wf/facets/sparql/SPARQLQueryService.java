@@ -582,11 +582,12 @@ public class SPARQLQueryService implements FacetQueryService {
                 if (describeNodes && node.isResource()) 
                     getReses.addDescribeNode(node.asNode());
             }
+            results.add(row);
         }
         qe.close();
         
         // We can skip this. Hurrah!
-        if (!describeNodes) return results;
+        if (!describeNodes || results.isEmpty()) return results;
         
         getReses.setQueryDescribeType();
         qe = qef.get(getReses);
