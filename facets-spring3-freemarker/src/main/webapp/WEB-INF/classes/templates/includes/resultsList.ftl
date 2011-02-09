@@ -3,15 +3,6 @@
 
     <h1>${facetView.total} results</h1>
 
-	<!--
-	    #DEVNOTE: For the initial search view (no filters or keyword parameters) show following:
-    <p class="note">You are viewing all available research outputs</p>
-    	
-    Otherwise display parameters like this:
-	    -->
-
-    <p class="note">You searched for research outputs of type <strong class="facetname">'Authored book'</strong> published in <strong class="facetname">'1970'</strong> from the department <strong class="facetname">'Faculty of Arts'</strong> with the keyword(s) <strong class="facetname">'Social migration'</strong>:</p>
-
     <ul class="results">
 	    <!--
 	    #DEVNOTE: Some sample markup for pub search results:
