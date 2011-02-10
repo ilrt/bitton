@@ -5,6 +5,11 @@
                     <form id="textsearchfacet" action="${facetStateUrl(Request)}" method="get">
                         <input type="text" name="${facet.param}" id="${facet.param}" value="<#if facet.state.paramValue??>${facet.state.paramValue}</#if>" placeholder="Search within these results" />
                         <input type="submit" value="Go"/>
+			<!--
+			#DEVNOTE:
+			Please make the 'clear' link below clear the text search:
+			-->
+			<#if facet.state.paramValue??><ul class="bubbles"><li>${facet.state.paramValue} (<a href="#">clear</a>)</li></ul></#if>
                     </form>
         </#if>
     </#if>
