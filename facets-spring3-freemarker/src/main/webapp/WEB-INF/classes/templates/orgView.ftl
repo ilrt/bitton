@@ -15,10 +15,28 @@
         <#if resource[aiiso + 'part_of']??>
           <p><strong>Part of: </strong><@displayOrg org=resource[aiiso + 'part_of']?first/></p>
         </#if>
+        
+        <#if recentoutputs??>
+            <div class="recent-outputs">
+                <h2>Recent outputs</h2>
+                <#list recentoutputs as output>
+                    <p><@linkToPageFor item=output/></p>
+                </#list>
+            </div>
+        </#if>
+        
+        <#if recentgrants??>
+            <div class="recent-grants">
+                <h2>Recent grants</h2>
+                <#list recentgrants as grant>
+                    <p><@linkToPageFor item=grant/></p>
+                </#list>
+            </div>
+        </#if>
 
         <#if  resource[foaf + 'member']??>
             <div class="collapsible collapsed">
-                <p class="heading"><strong>Members</strong></p>
+                <h2>Members</h2>
 
                 <ul class="content collapsed">
                     <#if resource[foaf + 'member']??>
@@ -30,17 +48,6 @@
                     </#if>
                 </ul>
             </div>
-        </#if>
-
-        
-        <#if resource['<-http://vocab.bris.ac.uk/resrev#department']??>
-          <div class="pubs">
-            <ul>
-            <#list resource['<-http://vocab.bris.ac.uk/resrev#department'] as pub>
-              <li><@linkToPageFor item=pub/></li>
-            </#list>
-            </ul>
-          </div>
         </#if>
 
         <table class="debug">

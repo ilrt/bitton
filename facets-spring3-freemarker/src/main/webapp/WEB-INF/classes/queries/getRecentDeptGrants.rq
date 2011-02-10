@@ -1,0 +1,10 @@
+prefix proj:   <http://vocab.ouls.ox.ac.uk/projectfunding#>
+prefix closed: <http://vocab.bris.ac.uk/rr/closed#>
+
+select ?s
+{
+    graph ?g1 { ?s closed:hostedBy <%s> }
+    graph ?g2 { ?s proj:startDate ?date }
+}
+order by desc(?date)
+limit 20

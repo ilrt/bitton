@@ -1,13 +1,20 @@
 package org.ilrt.wf.facets.web.spring.controllers;
 
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
+import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
-import java.util.Collections;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.SimpleCollection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.log4j.Logger;
 import org.ilrt.wf.facets.FacetView;
 import org.ilrt.wf.facets.FacetViewService;
@@ -24,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.ilrt.wf.facets.FacetQueryService;
+import org.ilrt.wf.facets.freemarker.JenaObjectWrapper;
 
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
@@ -162,6 +170,8 @@ public class ResRevController extends AbstractController {
         
         mav.addObject("user",  new ResourceHashModel(user));
         mav.addObject("resource", new ResourceHashModel(department));
+        mav.addObject("recentoutputs", getListFromQuery("/queries/getRecentDeptOutputs.rq", dept));
+        mav.addObject("recentgrants", getListFromQuery("/queries/getRecentDeptGrants.rq", dept));
         
         mav.addObject("viewcontext", "department");
         
@@ -260,7 +270,34 @@ public class ResRevController extends AbstractController {
 
         return DEFAULT_VIEW;
     }
-
+    
+    
+    private Object getListFromQuery(String queryFile, Resource resource) {
+        String query = queryFileCache.get(queryFile);
+        
+        if (query == null) {
+            query = FileManager.get().readWholeFileAsUTF8(queryFile);
+            queryFileCache.put(queryFile, query);
+        }
+        
+        String completeQuery = String.format(query, resource.getURI());
+        List<Map<String, RDFNode>> result = 
+                facetQueryService.performSelect(completeQuery, true);
+                
+        // Reduce this down to a list<resource>
+        List<Resource> hits = new ArrayList<Resource>(result.size());
+        for (Map<String, RDFNode> soln: result) {
+            hits.add((Resource) soln.get("s"));
+        }
+        
+        // Return as a viewable thingy 
+        return new SimpleCollection(hits, OBJECT_WRAPPER);
+    }
+    
+    private static ObjectWrapper OBJECT_WRAPPER = new JenaObjectWrapper();
+    private static Map<String, String> queryFileCache = 
+            new HashMap<String, String>();
+    
     private FacetViewService facetViewService;
     private FacetQueryService facetQueryService;
 
