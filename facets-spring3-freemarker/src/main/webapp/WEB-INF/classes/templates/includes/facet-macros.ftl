@@ -17,7 +17,7 @@
                         </form>
                     <#else>
                         <p>
-                            ${facet.state.name} [<a href="${facetStateUrl(Request, facet.param, facet.paramValue)}">clear</a>]
+                            ${facet.state.name} (<a href="${facetStateUrl(Request, facet.param, facet.paramValue)}">clear</a>)
                         </p>
                     </#if>
             </div>
