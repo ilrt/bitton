@@ -1,10 +1,7 @@
 <li class="pub">
 
 <#if result[dc + 'contributor']??>
-  <span class="contributor"><#list result[dc + 'contributor'] as contributor>
-        <#if contributor[rdfs + 'label']??>${contributor[rdfs + 'label']?first}</#if>
-        <#if !contributor[rdfs + 'label']??>${contributor}</#if><#if contributor_has_next>,</#if>
-  </#list>.</span>
+  <span class="contributor"><#list result[dc + 'contributor'] as contributor><#if contributor[rdfs + 'label']??>${contributor[rdfs + 'label']?first}</#if><#if !contributor[rdfs + 'label']??>${contributor}</#if><#if contributor_has_next>, </#if></#list>.</span>
 </#if>
 
 <a class="title" href="<@drillForResult result=result/>"><@label resource=result/></a>.
