@@ -5,6 +5,7 @@ import org.ilrt.wf.facets.freemarker.FacetStateUrlMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import org.ilrt.wf.facets.freemarker.FacetStateInputMethod;
 
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
@@ -17,6 +18,7 @@ public abstract class AbstractController {
         mav.addObject(SERVLET_PATH_KEY, request.getServletPath());
         mav.addObject("facetStateUrl", new FacetStateUrlMethod());
         mav.addObject("facetParentList", new FacetParentListMethod());
+        mav.addObject("facetStateInput", new FacetStateInputMethod());
         return mav;
     }
 

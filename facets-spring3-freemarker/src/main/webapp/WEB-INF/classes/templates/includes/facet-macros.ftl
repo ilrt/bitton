@@ -7,7 +7,8 @@
             <div class="facet">
                 <h2 class="facet-title">${facet.name}</h2>
                     <#if facet.state.refinements?size &gt; 0>
-                        <form action="${facetStateUrl(Request)}" method="get">
+                        <form action="" method="get">
+                            ${facetStateInput(Request, facet.param, facet.paramValue)}
                             <select name="${facet.param}" id="${facet.param}" class="autocomplete">
                                 <option value="">Type the name of a dept</option>
                                 <@listRefinementsAsSelect refinements=facet.state.refinements paramKey=facet.param/>

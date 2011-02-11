@@ -2,7 +2,8 @@
     <#list facetView.facets as facet>
     <#if facet?? && facet.state??>
         <#if facet.type = "TextSearch">
-                    <form id="textsearchfacet" action="${facetStateUrl(Request)}" method="get">
+                    <form id="textsearchfacet" action="" method="get">
+                        ${facetStateInput(Request, facet.param, facet.paramValue)}
                         <input type="text" name="${facet.param}" id="${facet.param}" value="<#if facet.state.paramValue??>${facet.state.paramValue}</#if>" placeholder="Search within these results" />
                         <input type="submit" value="Go"/>
 			<!--
