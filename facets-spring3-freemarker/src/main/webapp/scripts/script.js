@@ -113,13 +113,12 @@ function enableSlider(div)
 	$("ul:last-child", div).after(selectHtml);
 
 	$("#"+name+"_applybtn", div.parent()).click(function(){
-            console.log($(this).parent());
+            
                 var url = $(this).parent().find(".facet-list li:last a").attr("href");
                 var max = parseInt($(this).parent().find(".facet-list li:last a", div).text());
 		var value = parseInt($(this).parent().find("select option:selected").val());
                 url = url.replace(max, value);
                 url = url.replace((max+1), (value+1));
-//                alert('Value is ' + url +  value);
 		window.location = url;
 	});
 
