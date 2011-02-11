@@ -13,15 +13,10 @@
 <#-- display a default label for a resource -->
 <#macro label resource>
     <#if resource[rdfs + 'label']??>
-        ${resource[rdfs + 'label']?first}
-    <#elseif resource[foaf + 'name']??>
-        ${resource[foaf + 'name']?first}
-    <#elseif resource[dc + 'title']??>
-        ${resource[dc + 'title']?first}
-    <#else>
-        Untitled resource
-    </#if>
-</#macro>
+    ${resource[rdfs + 'label']?first}<#elseif resource[foaf + 'name']??>
+    ${resource[foaf + 'name']?first}<#elseif resource[dc + 'title']??>
+    ${resource[dc + 'title']?first}<#else>
+    Untitled resource</#if></#macro>
 
 <#macro drillForResult result>${contextPath}${servletPath}/item?res=${result?url('UTF-8')}<#list RequestParameters?keys as key>&amp;${key}=${RequestParameters[key]}</#list></#macro>
 
