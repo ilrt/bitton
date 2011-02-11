@@ -44,7 +44,7 @@
                     </#if>
                     <#-- Display the current facet -->
                     <ul class="facet-list">
-                        <@listItem/>${facet.state.name} [<a href="${facetStateUrl(Request, facet.param, facet.state.parent.paramValue)}">clear</a>]
+                        <@listItem/>${facet.state.name} (<a href="${facetStateUrl(Request, facet.param, facet.state.parent.paramValue)}">clear</a>)
                         <#if facet.state.refinements?size &gt; 0>
                             <@refinementList refinements=facet.state.refinements paramKey=facet.param />
                         </#if>
