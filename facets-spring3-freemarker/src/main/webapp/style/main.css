@@ -510,4 +510,24 @@ ul.results .otherdetails {
 	color: #888;
 }
 
+a.impactcount {
+	display: inline-block;
+	font-size: 0.928571em;
+	background: #D19486;
+	background: #8CACBD;
+	padding: 0 7px;
+	font-style: normal;
+	letter-spacing: 0.02em;
+	color: #fff;
+	text-decoration: none;
+	line-height: 1.384615em;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	border-radius: 10px;
+}
+
+a.impactcount strong {
+	color: #fff;
+}
 
