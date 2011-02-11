@@ -31,7 +31,9 @@
     </#if>
 
     <p>
-        <#if facetView.totalPages < fullList>
+        <#if facetView.totalPages < 2>
+            <!-- don't show anything -->
+        <#elseif facetView.totalPages < fullList>
             <#list 1..facetView.totalPages as i>
                 <@displayPageLink page=i currentPage=facetView.currentPage number=numberofResults/>&nbsp;
             </#list>
