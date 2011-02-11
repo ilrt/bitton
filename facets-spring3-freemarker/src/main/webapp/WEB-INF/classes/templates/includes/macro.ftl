@@ -27,39 +27,40 @@
 
 <#macro moreResults facetView>
     <#assign neighbour=3/>
+    <#assign fullList=10/>
 
     <#if RequestParameters.number?exists>
-        <#assign number=RequestParameters.number?number/>
+        <#assign numberofResults=RequestParameters.number?number/>
     <#else>
-         <#assign number=10/>
+         <#assign numberofResults=facetView.pageSize/>
     </#if>
 
     <p>
-        <#if facetView.totalPages < 10>
+        <#if facetView.totalPages < fullList>
             <#list 1..facetView.totalPages as i>
-                <@displayPageLink page=i currentPage=facetView.currentPage number=number/>&nbsp;
+                <@displayPageLink page=i currentPage=facetView.currentPage number=numberofResults/>&nbsp;
             </#list>
         <#else>
-            <#if facetView.currentPage < 10>
+            <#if facetView.currentPage < fullList>
                 <!-- fewer then 10 pages -->
-                <#list 1..10 as i>
-                    <@displayPageLink page=i currentPage=facetView.currentPage number=number/>
+                <#list 1..fullList as i>
+                    <@displayPageLink page=i currentPage=facetView.currentPage number=numberofResults/>
                 </#list>
-                <#if 10 < facetView.totalPages>
+                <#if fullList < facetView.totalPages>
                 ... ${facetView.totalPages}
                 </#if>
             <#else>
                 <#if facetView.totalPages <= facetView.currentPage+neighbour>
-                    <!-- more then 10 pages but close to end of list -->
-                    <@displayPageLink page=1 currentPage=facetView.currentPage number=number/> ...
+                    <!-- more then [fullList] pages but close to end of list -->
+                    <@displayPageLink page=1 currentPage=facetView.currentPage number=numberofResults/> ...
                     <#list facetView.currentPage-neighbour..facetView.totalPages as i>
-                        <@displayPageLink page=i currentPage=facetView.currentPage number=number/>
+                        <@displayPageLink page=i currentPage=facetView.currentPage number=numberofResults/>
                     </#list>
                 <#else>
                     <!-- lost in the middle of the list -->
-                    <@displayPageLink page=1 currentPage=facetView.currentPage number=number/> ...
+                    <@displayPageLink page=1 currentPage=facetView.currentPage number=numberofResults/> ...
                     <#list facetView.currentPage-neighbour..facetView.currentPage+neighbour as i>
-                        <@displayPageLink page=i currentPage=facetView.currentPage number=number/>
+                        <@displayPageLink page=i currentPage=facetView.currentPage number=numberofResults/>
                     </#list>
                     ... ${facetView.totalPages}
                 </#if>
@@ -73,7 +74,12 @@
     <#if page == currentPage>
         ${page}
     <#else>
-        <a href="${facetStateUrl(Request)}&offset=${(page-1)*number}&number=${number}">${page}</a>
+        <#assign url=facetStateUrl(Request)/>
+        <#if url?index_of("?") != -1>
+            <a href="${url}&offset=${(page-1)*number}&number=${number}">${page}</a>
+        <#else>
+            <a href="${url}?offset=${(page-1)*number}&number=${number}">${page}</a>
+        </#if>
     </#if>&nbsp;
 </#macro>
 

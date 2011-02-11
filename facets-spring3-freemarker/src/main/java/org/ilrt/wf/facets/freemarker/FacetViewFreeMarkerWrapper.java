@@ -50,6 +50,10 @@ public class FacetViewFreeMarkerWrapper {
         return new SimpleNumber(view.getTotalPages());
     }
     
+    public SimpleNumber getPageSize() {
+        return new SimpleNumber(view.getPageSize());
+    }
+    
     public SimpleNumber getCurrentPage() {
         return new SimpleNumber(view.getCurrentPage());
     }
