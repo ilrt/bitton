@@ -34,6 +34,11 @@ public class FacetViewImpl implements FacetView {
     }
     
     @Override
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    @Override
     public List<Facet> getFacets() {
         return facets;
     }
@@ -63,6 +68,7 @@ public class FacetViewImpl implements FacetView {
     
     public void calculateCurrentPage(int offset, int number)
     {
+        pageSize = number;
         if (offset == 0 || number == 0) currentPage = 1;
         else
         {
@@ -74,6 +80,7 @@ public class FacetViewImpl implements FacetView {
     private int currentPage = 1;
     private int total;
     private int totalPages = 0;
+    private int pageSize;
     private List<Facet> facets = new ArrayList<Facet>();
     private List<Resource> results = new ArrayList<Resource>();
 }

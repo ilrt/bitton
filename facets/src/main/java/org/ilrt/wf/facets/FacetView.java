@@ -13,6 +13,8 @@ public interface FacetView {
     int getTotal();
 
     int getTotalPages();
+    
+    int getPageSize();
 
     List<Facet> getFacets();
 

@@ -187,7 +187,7 @@ public class FacetViewServiceImpl implements FacetViewService {
     final Map<String, String> prefixes;
 
     final int DEFAULT_OFFSET = 0;
-    final int DEFAULT_NUMBER = 10;
+    final int DEFAULT_NUMBER = 20;
 
     final static public String NUMBER_PARAM = "number";
     final static public String OFFSET_PARAM = "offset";
