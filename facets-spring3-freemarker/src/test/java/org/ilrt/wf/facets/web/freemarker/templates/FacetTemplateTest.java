@@ -14,6 +14,7 @@ import org.ilrt.wf.facets.impl.FacetImpl;
 import org.ilrt.wf.facets.impl.FacetStateImpl;
 import org.ilrt.wf.facets.impl.FacetViewImpl;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.springframework.web.servlet.ModelAndView;
 import org.xml.sax.InputSource;
 
@@ -39,6 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class FacetTemplateTest extends AbstractTemplateTest {
 
     @Test
+    @Ignore
     public void test() throws IOException, TemplateException, XPathExpressionException {
 
         // wrapper used by FreeMarker

@@ -1,5 +1,6 @@
 package org.ilrt.wf.facets.web.freemarker.templates;
 
+import org.junit.Ignore;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -30,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 public class ResultsListTemplateTest extends AbstractTemplateTest {
 
     @Test
+    @Ignore
     public void test() throws IOException, TemplateException, XPathExpressionException {
 
         // ---------- Set up FreeMarker
