@@ -4,9 +4,11 @@
 <!-- main content -->
     <div id="content">
 
+        <#if view??><p><em><a href="javascript:history.go(-1)">Return to results</a></em></p></#if>
+
         <h1>${resource[dc + 'title']?first}</h1>
 
-        <p>Contributors:
+        <p>Contributors:</p>
             <!-- order alphabetically -->
             <#if resource[dc + 'contributor']??>
                 <ul>
@@ -17,18 +19,16 @@
                     </#list>
                 </ul>
             </#if>
-        </p>
 
         <#if resource[dc + 'contributor']?size == 1>
             <p>Department: <@displayOrg org=resource[resrev + 'department']?first/></p>
         <#else>
-            <p>Departments of above contributors:
+            <p>Departments of above contributors:</p>
                 <ul>
                     <#list resource[resrev + 'department'] as department>
                         <li><@displayOrg org=department/></li>
                     </#list>
                 </ul>
-            </p>
         </#if>
 
         <table>
@@ -127,8 +127,6 @@
             </#list>
         </table>
 -->
-
-        <#if view??><p><em><a href="javascript:history.go(-1)">Return to results</a></em></p></#if>
 
      </div>
 

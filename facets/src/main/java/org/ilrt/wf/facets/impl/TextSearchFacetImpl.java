@@ -47,7 +47,8 @@ public class TextSearchFacetImpl extends AbstractFacetFactoryImpl {
 
         FacetStateImpl baseState = new FacetStateImpl();
         
-        if (currentVals ==null || currentVals.length == 0) state = baseState;
+        if (currentVals == null || currentVals.length == 0) state = baseState;
+        else if (currentVals[0].trim().isEmpty()) state = baseState; // effectively base
         else {
             Constraint c = new TextMatchConstraint(currentVals[0]);
             state = new FacetStateImpl(currentVals[0], baseState, currentVals[0], Arrays.asList(typeConstraint, c));
