@@ -10,6 +10,7 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.vocabulary.RDFS;
 import freemarker.template.SimpleCollection;
 import freemarker.template.SimpleDate;
 import freemarker.template.SimpleNumber;
@@ -112,7 +113,12 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
 
     @Override
     public TemplateModel get(String s) throws TemplateModelException {
-
+        if ("label".equals(s)) {
+            if (resource.hasProperty(RDFS.label)) 
+                return new SimpleScalar(resource.getProperty(RDFS.label).getLiteral().getLexicalForm());
+            else
+                return new SimpleScalar(getAsString());
+        }
         // Invert search 
         boolean invert = s.startsWith("<-");
         

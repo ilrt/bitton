@@ -20,7 +20,7 @@
     Vol. ${result[bibo + 'volume']?first}
 </#if>
 <#if result[dc + 'isPartOf']??>
-    Part of ${result[dc + 'isPartOf']?first}
+    Part of ${result[dc + 'isPartOf']?first['label']}
 </#if>
 <#if result[bibo + 'pageStart']?? && result[bibo + 'pageEnd']??>
    Pages
