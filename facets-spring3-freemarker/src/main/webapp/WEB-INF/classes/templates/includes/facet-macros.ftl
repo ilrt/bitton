@@ -55,7 +55,7 @@
             </div>
 
         <#else>
-            <div class="facet">
+            <div class="facet" id="${facet.param}-facet">
                 <h2 class="facet-title">${facet.name}</h2>
                 <#if facet.state.root>
                     <@refinementList refinements=facet.state.refinements paramKey=facet.param/>

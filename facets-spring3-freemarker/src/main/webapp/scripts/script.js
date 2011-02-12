@@ -3,17 +3,45 @@
  * and open the template in the editor.
  */
 
+function shrink(list,n) {
+	/* Takes a list and hides elements after the nth.
+	 * Inserts 'show more' link with count
+	 * Sets up toggle to show/hide
+	 */
+
+	/* Get the bit at the end we want to hide: */
+	var surplus = list.find('li:gt(' + (n-1) + ')');
+	/* Hide it: */
+	surplus.hide();
+
+	/* If we've hidden anything, add a link to show/hide it */
+	if(surplus.length>0) {
+		list.append('<li><a class="more" href="#">Show ' + surplus.length + ' more</a></li>');
+		$('a.more',list).click(function() {
+
+			var link = $(this);
+
+			surplus.toggle();
+
+			if(link.hasClass('more')) {
+				link.text('Show ' + surplus.length + ' less');
+				link.removeClass('more').addClass('less');
+			}
+			else {
+				link.text('Show ' + surplus.length + ' more');
+				link.removeClass('less').addClass('more');
+			}
+
+			link.blur();
+			return false;
+		});
+	}
+
+}
+
 $(document).ready(function(){ 
-	$('ul.facet-list').each(function(){ 
-		var $this = $(this), list = $this.find('li:gt(4)').hide(); 
-		if(list.length>0){ 
-			$this.append('<li><a class="more" href="#">See more</a></li>');
-			$('a.more', $this).click(function(){ 
-				list.toggle(); 
-				$(this).text($(this).text() === 'See more' ? 'See less' : 'See more'); 
-			}); 
-		} 
-	}); 
+	shrink($('#pubtype-facet ul'),5);
+	shrink($('#pubyear-facet ul'),5);
 }); 
 
 var slider_uID = 1;
