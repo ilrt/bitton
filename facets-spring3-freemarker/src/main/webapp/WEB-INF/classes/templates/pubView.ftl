@@ -7,6 +7,8 @@
         <#if view??><p><em><a href="javascript:history.go(-1)">Return to results</a></em></p></#if>
 
         <h1>${resource[dc + 'title']?first}</h1>
+        
+        <p><#if resource[dc + 'abstract']??>${resource[dc + 'abstract']?first}</#if></p>
 
         <p>Contributors:</p>
             <!-- order alphabetically -->
