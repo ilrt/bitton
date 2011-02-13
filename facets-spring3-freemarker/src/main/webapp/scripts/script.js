@@ -42,6 +42,20 @@ function shrink(list,n) {
 $(document).ready(function(){ 
 	shrink($('#pubtype-facet ul'),5);
 	shrink($('#pubyear-facet ul'),5);
+        shrink($('#home-outputs ul'),5);
+        
+        $('#people-complete').
+            autocomplete('http://localhost:8080/Completor/resources/complete/a/person').
+            result(function(event, data, formatted) {
+                    if (data) $('#people-complete-target').val(data[1]);
+                    else $('#people-complete-target').find('input.target').val('');
+            });
+        $('#dept-complete').
+            autocomplete('http://localhost:8080/Completor/resources/complete/a/org').
+            result(function(event, data, formatted) {
+                    if (data) $('#dept-complete-target').val(data[1]);
+                    else $('#dept-complete-target').find('input.target').val('');
+            });
 }); 
 
 var slider_uID = 1;

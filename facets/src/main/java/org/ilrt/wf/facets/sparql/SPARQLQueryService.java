@@ -12,6 +12,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.Syntax;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -559,7 +560,7 @@ public class SPARQLQueryService implements FacetQueryService {
 
     @Override
     public List<Map<String, RDFNode>> performSelect(String selectQuery, boolean describeNodes) {
-        Query q = QueryFactory.create(selectQuery);
+        Query q = QueryFactory.create(selectQuery, Syntax.syntaxSPARQL_11);
         if (!q.isSelectType()) throw new IllegalArgumentException("SELECT query required");
         List<Map<String, RDFNode>> results = new LinkedList<Map<String, RDFNode>>();
         

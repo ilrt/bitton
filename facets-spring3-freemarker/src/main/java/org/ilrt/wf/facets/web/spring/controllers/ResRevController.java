@@ -89,6 +89,17 @@ public class ResRevController extends AbstractController {
         ModelAndView mav = createModelAndView(HOME_VIEW_NAME, request);
         mav.addObject(FACET_VIEW_KEY,this.facetViewService.listViews());
         mav.addObject("viewcontext", "home");
+        
+        int deptCount = facetQueryService.performSelect(getQuery("/queries/homeDepartmentCount.rq"), false).get(0).get("count").asLiteral().getInt();
+        int peopleCount = facetQueryService.performSelect(getQuery("/queries/homePeopleCount.rq"), false).get(0).get("count").asLiteral().getInt();
+        List<Map<String, RDFNode>> outputSummary = this.facetQueryService.performSelect(getQuery("/queries/homeOutputSummaries.rq"), false);
+        List<Map<String, RDFNode>> grantSummary = this.facetQueryService.performSelect(getQuery("/queries/homeGrantsSummaries.rq"), false);
+        
+        mav.addObject("deptCount", deptCount);
+        mav.addObject("peopleCount", peopleCount);
+        mav.addObject("grantSummary", new SimpleCollection(grantSummary, OBJECT_WRAPPER));
+        mav.addObject("outputSummary", new SimpleCollection(outputSummary, OBJECT_WRAPPER));
+        
         return mav;
     }
 
@@ -271,14 +282,17 @@ public class ResRevController extends AbstractController {
         return DEFAULT_VIEW;
     }
     
-    
-    private Object getListFromQuery(String queryFile, Resource resource) {
+    private String getQuery(String queryFile) {
         String query = queryFileCache.get(queryFile);
-        
         if (query == null) {
             query = FileManager.get().readWholeFileAsUTF8(queryFile);
             queryFileCache.put(queryFile, query);
         }
+        return query;
+    }
+    
+    private Object getListFromQuery(String queryFile, Resource resource) {
+        String query = getQuery(queryFile);
         
         String completeQuery = String.format(query, resource.getURI());
         List<Map<String, RDFNode>> result = 

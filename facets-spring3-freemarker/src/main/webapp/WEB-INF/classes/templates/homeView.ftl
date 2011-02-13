@@ -15,6 +15,44 @@
                 <li><a href="./${prop}">${facetView[prop]}</a></li>
             </#list>
         </ul>
+
+        
+        <div id="home-outputs">
+            <h2>Research Outputs</h2>
+            <ul>
+                <#list outputSummary as output>
+                    <li><a href="pubs?pubtype=U${output['type']?url('utf-8')}%23${output['label']}">${output['label']}</a> (${output['scount']})</li>
+                </#list>
+            </ul>
+        </div>
+
+        <div>
+            <h2>People (${peopleCount})</h2>
+            <form action="item" method="get">
+                <input id="people-complete" type="text" >
+                <input id="people-complete-target" type="hidden" name="res">
+                <input type="submit" value="go">
+            </form>
+        </div>
+        
+        <div>
+            <h2>Grants &amp; funding bodies</h2>
+            <ul>
+                <#list grantSummary as grant>
+                    <li><a href="pubs?funder=U${grant['s']?url('utf-8')}%23${grant['label']}">${grant['label']}</a> (${grant['gcount']})</li>
+                </#list>
+            </ul>
+        </div>
+
+        <div>
+            <h2>Departments &amp; groups (${deptCount})</h2>
+            <form action="item" method="get">
+                <input id="dept-complete" type="text" >
+                <input id="dept-complete-target" type="hidden" name="res">
+                <input type="submit" value="go">
+            </form>
+        </div>
+
 	</div><!-- /panelcontent -->
 </div><!-- /panel -->
 </div><!-- /col-->
