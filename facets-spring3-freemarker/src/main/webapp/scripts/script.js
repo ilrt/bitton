@@ -45,13 +45,13 @@ $(document).ready(function(){
         shrink($('#home-outputs ul'),5);
         
         $('#people-complete').
-            autocomplete('http://localhost:8080/Completor/resources/complete/a/person').
+            autocomplete('http://resrev.ilrt.bris.ac.uk/Completor/resources/complete/a/person').
             result(function(event, data, formatted) {
                     if (data) $('#people-complete-target').val(data[1]);
                     else $('#people-complete-target').find('input.target').val('');
             });
         $('#dept-complete').
-            autocomplete('http://localhost:8080/Completor/resources/complete/a/org').
+            autocomplete('http://resrev.ilrt.bris.ac.uk/Completor/resources/complete/a/org').
             result(function(event, data, formatted) {
                     if (data) $('#dept-complete-target').val(data[1]);
                     else $('#dept-complete-target').find('input.target').val('');
