@@ -1,8 +1,15 @@
 <#if result[proj + 'value']??>
     <b>£${result[proj + 'value']?first}</b>
 </#if>
+
+<@linkToPageFor item=result/>
+
 <#if result[proj + 'hasPrincipalInvestigator']??>
-    <@linkToPageFor item=result[proj + 'hasPrincipalInvestigator']?first/>,
+    <#list result[proj + 'hasPrincipalInvestigator'] as pi>
+        <#if pi[rdfs + 'label']??>
+            <@linkToPageFor item=pi/>,
+        </#if>
+    </#list>
 </#if>
 <#if result[proj + 'hostedBy']??>
     <@linkToPageFor item=result[proj + 'hostedBy']?first/>,

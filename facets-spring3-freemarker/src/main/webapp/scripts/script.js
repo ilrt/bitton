@@ -16,7 +16,7 @@ function shrink(list,n) {
 
 	/* If we've hidden anything, add a link to show/hide it */
 	if(surplus.length>0) {
-		list.append('<li><a class="more" href="#">Show ' + surplus.length + ' more</a></li>');
+		list.append('<li><a class="more" href="#">' + surplus.length + ' more</a></li>');
 		$('a.more',list).click(function() {
 
 			var link = $(this);
@@ -24,11 +24,11 @@ function shrink(list,n) {
 			surplus.toggle();
 
 			if(link.hasClass('more')) {
-				link.text('Show ' + surplus.length + ' less');
+				link.text(surplus.length + ' less');
 				link.removeClass('more').addClass('less');
 			}
 			else {
-				link.text('Show ' + surplus.length + ' more');
+				link.text(surplus.length + ' more');
 				link.removeClass('less').addClass('more');
 			}
 
@@ -42,7 +42,7 @@ function shrink(list,n) {
 $(document).ready(function(){ 
 	shrink($('#pubtype-facet ul'),5);
 	shrink($('#pubyear-facet ul'),5);
-        shrink($('#home-outputs ul'),5);
+        shrink($('#home-publist'),5);
         
         $('#people-complete').
             autocomplete('http://resrev.ilrt.bris.ac.uk/Completor/resources/complete/a/person').
