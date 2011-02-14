@@ -15,7 +15,7 @@ import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.expr.E_Aggregator;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
-import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVar;
+import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVarDistinct;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +86,7 @@ public class SPARQLQueryServiceGroupOpt extends SPARQLQueryService {
         
         op = new OpProject(op, Collections.singletonList(val));
         Query q = OpAsQuery.asQuery(op);
-        E_Aggregator counter = q.allocAggregate(new AggCountVar(new ExprVar(val)));
+        E_Aggregator counter = q.allocAggregate(new AggCountVarDistinct(new ExprVar(SUBJECT)));
         q.addResultVar(count, counter);
         q.addGroupBy(val);
                 

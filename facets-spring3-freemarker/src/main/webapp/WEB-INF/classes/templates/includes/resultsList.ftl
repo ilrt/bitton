@@ -1,8 +1,5 @@
 <#include "macro.ftl">
-<div id="results" class="panel">
 
-
-    <h1>${facetView.total} results</h1>
 
     <!--
     #DEVNOTE:
@@ -14,10 +11,20 @@
 <script type="text/ecmascript">
     $('#loading').hide();
     window.onbeforeunload = function()  {
-        setTimeout(function() { $('#loading').show(); } , 400);
+        setTimeout(function() { 
+            $('#loading').show(200);
+            $('#results').hide(2000);
+        } , 400);
     };
 </script>
-	<!-- -->
+
+<div id="results" class="panel">
+
+
+    <h1>${facetView.total} results</h1>
+
+
+
 
     <ul class="results">
 	    <!--
