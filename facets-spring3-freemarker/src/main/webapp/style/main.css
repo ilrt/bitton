@@ -437,8 +437,18 @@ a.less {
 #mastercategories form {
 	background: transparent;
 	padding: 0;
-	margin: 4px 0 21px;
+	margin: 7px 0 21px;
 }
+
+div.category {
+	border-bottom: 1px solid #ddd;
+	background: #fff url(../images/icon-large-document.png) left top no-repeat;
+	padding-left: 70px;
+}
+
+#homepeople { background-image: url(../images/icon-large-person.png); }
+#homegrants { background-image: url(../images/icon-large-grant.png); }
+#homedepts { background-image: url(../images/icon-large-group.png); }
 
 
 /* =facets
