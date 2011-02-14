@@ -8,8 +8,16 @@
     #DEVNOTE:
     Can we show this message while the page loads?
     I.e. the user clicks a facet, or searches on a keyword, and it may take a few seconds, so show this during that time:
+    -->
+
 <div id="loading">Searching database</div>
-	-->
+<script type="text/ecmascript">
+    $('#loading').hide();
+    window.onbeforeunload = function()  {
+        setTimeout(function() { $('#loading').show(); } , 400);
+    };
+</script>
+	<!-- -->
 
     <ul class="results">
 	    <!--
