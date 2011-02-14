@@ -503,6 +503,14 @@ strong.facetname {
 /* =results
  *  * =========================================== */
 
+div#loading {
+	background: #fff url(../images/loading.gif) top center no-repeat;
+	padding-top: 36px;
+	margin: 28px 0;
+	color: #D1461F;
+	font-weight: bold;
+	text-align: center;
+}
 
 ul.results {
 	margin-left: 4px;
