@@ -10,41 +10,33 @@
 
 	<div class="panelcontent">
         
-        <div id="home-outputs">
-            <h2><a href="pubs">Research Outputs</a></h2>
-            <ul>
+	<h2><a href="pubs">Research Outputs</a> <span class="count">Total</span></h2>
+        <ul id="home-publist">
                 <#list outputSummary as output>
-                    <li><a href="pubs?pubtype=U${output['type']?url('utf-8')}%23${output['label']}">${output['label']}</a> (${output['scount']})</li>
+		<li><a href="pubs?pubtype=U${output['type']?url('utf-8')}%23${output['label']}">${output['label']}</a> <span class="count">${output['scount']}</span></li>
                 </#list>
             </ul>
-        </div>
 
-        <div>
-            <h2><a href="people">People (${peopleCount})</a></h2>
+	    <h2><a href="people">People</a> <span class="count">${peopleCount}</span></h2>
             <form action="item" method="get">
-                <input id="people-complete" type="text" >
+                <input id="people-complete" type="text" placeholder="Start typing a name" >
                 <input id="people-complete-target" type="hidden" name="res">
                 <input type="submit" value="go">
             </form>
-        </div>
         
-        <div>
-            <h2><a href="grants">Grants &amp; funding bodies</a></h2>
+	    <h2><a href="grants">Grants &amp; funding bodies</a> <span class="count">Total</span></h2>
             <ul>
                 <#list grantSummary as grant>
-                    <li><a href="pubs?funder=U${grant['s']?url('utf-8')}%23${grant['label']}">${grant['label']}</a> (${grant['gcount']})</li>
+		<li><a href="pubs?funder=U${grant['s']?url('utf-8')}%23${grant['label']}">${grant['label']}</a> <span class="count">${grant['gcount']}</span></li>
                 </#list>
             </ul>
-        </div>
 
-        <div>
-            <h2><a href="organisations">Departments &amp; groups (${deptCount})</a></h2>
+	    <h2><a href="organisations">Departments &amp; groups</a> <span class="count">${deptCount}</span></h2>
             <form action="item" method="get">
-                <input id="dept-complete" type="text" >
+                <input id="dept-complete" type="text" placeholder="Start typing a dept" >
                 <input id="dept-complete-target" type="hidden" name="res">
                 <input type="submit" value="go">
             </form>
-        </div>
 
 	</div><!-- /panelcontent -->
 </div><!-- /panel -->
