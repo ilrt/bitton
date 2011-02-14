@@ -6,12 +6,11 @@
 
         <#if resource[rdfs+'label']??>
             <h1>Profile for ${resource[rdfs+'label']?first}</h1>
-        </#if>
-        <#if resource[foaf+'name']??>
+        <#elseif resource[foaf+'name']??>
             <h1>Profile for ${resource[foaf+'name']?first}</h1>
         </#if>
 
-        <h3>Details</h3>
+        <h2>Details</h2>
         <p><strong>Name: </strong> ${resource[foaf+'name']?first}</p>
         <#if profileview??>
             <p><strong>UoB username: </strong> ${resource[foaf+'nick']?first}</p>
@@ -25,7 +24,7 @@
             <p>See also: <a href="${resource[foaf+'homepage']?first}">merb user page</a></p>
         </#if>
 
-        <h3>Additional Info</h3>
+        <h2>Additional Info</h2>
         <ul>
             <#if resource['<-' + proj + 'hasPrincipalInvestigator']??>
                 <li>Is named as PI on <b>${resource['<-' + proj + 'hasPrincipalInvestigator']?size}</b> grant<#if resource['<-' + proj + 'hasPrincipalInvestigator']?size != 1>s</#if></li>
@@ -36,15 +35,25 @@
             <#if resource[proj + 'contributesTo']??>
                 <li>Contributes to <b>${resource[proj + 'contributesTo']?size}</b> grant<#if resource[proj + 'contributesTo']?size != 1>s</#if></li>
             </#if>
+            <#if resource['<-' + dc + 'contributor']??>
+                <li>Has contributed to <b>${resource['<-' + dc + 'contributor']?size}</b> publication<#if resource['<-' + dc + 'contributor']?size != 1>s</#if></li>
+            </#if>
         </ul>
 
+        <#if resource['<-' + foaf + 'member']??>
+           <div class="departments">
+               <h2>My Departments</h2>
+               <ul>
+                   <#list resource['<-' + foaf + 'member'] as member>
+                        <li><@displayOrg org=member/></li>
+                   </#list>
+                </ul>
+           <div>
+        </#if>
+
         <#if profileview??>
-            <h3>My Research</h3>
+            <h2>My Research</h2>
 
-
-            <h3>My Departments</h3>
-
-            <p>...</p>
         </#if>
 
 <#--
