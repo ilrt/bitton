@@ -411,7 +411,7 @@ a.more, a.less {
 	text-decoration: none;
 	text-decoration: underline;
 	white-space: nowrap;
-	color: #576A75;
+	color: #48780D;
 	font-size: 0.928571em;
 	background: transparent url(../images/icon-blue-plus.png) left center no-repeat;
 	padding-left: 14px;
@@ -421,16 +421,23 @@ a.less {
 	background-image: url(../images/icon-blue-minus.png);
 }
 
-a.expand {
-	font-weight: bold;
-	text-decoration: none;
-	font-size: 11px;
-	white-space: nowrap;
+#mastercategories ul {
+	margin: 0 0 21px;
+	list-style-type: none;
 }
 
-a.expand span {
-	text-decoration: underline;
-	font-size: 13px;
+#mastercategories h2 {
+	background: none;
+	border: none;
+	padding: 0;
+	margin-top: 14px;
+	line-height: 21px;
+}
+
+#mastercategories form {
+	background: transparent;
+	padding: 0;
+	margin: 4px 0 21px;
 }
 
 
@@ -452,10 +459,13 @@ ul.facet-list {
 	margin-left: 0;
 }
 
-#facetcontainer span.count {
+span.count {
 	font-size: 0.928571em;
-	color: #888;
+	font-weight: normal;
+	color: #999;
 }
+
+#facetcontainer span.count { color: #888; }
 
 #textsearchfacet {
 	margin-bottom: 14px;
