@@ -45,7 +45,9 @@
                <h2>My Departments</h2>
                <ul>
                    <#list resource['<-' + foaf + 'member'] as member>
-                        <li><@displayOrg org=member/></li>
+                        <#if member[rdfs + 'label']?? && member[rdfs + 'label']?first != invalidUrl>
+                            <li><@displayOrg org=member/></li>
+                        </#if>
                    </#list>
                 </ul>
            <div>
