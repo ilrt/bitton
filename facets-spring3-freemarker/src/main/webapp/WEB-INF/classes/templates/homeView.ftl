@@ -11,7 +11,7 @@
 			<div class="panelcontent">
 
 				<div class="category" id="homepubs">
-					<h2><a href="pubs">Research Outputs</a> <span class="count">Total</span></h2>
+					<h2><a href="pubs">Research Outputs</a> <span class="count">${outputTotal}</span></h2>
 					<ul id="home-publist">
 						<#list outputSummary as output>
 						<li><a href="pubs?pubtype=U${output['type']?url('utf-8')}%23${output['label']}">${output['label']}</a> <span class="count">${output['scount']}</span></li>
@@ -29,7 +29,7 @@
 				</div><!-- /category -->
 
 				<div class="category" id="homegrants">
-				<h2><a href="grants">Grants &amp; funding bodies</a> <span class="count">Total</span></h2>
+				<h2><a href="grants">Grants &amp; funding bodies</a> <span class="count">${grantTotal}</span></h2>
 				<ul>
 					<#list grantSummary as grant>
 					<li><a href="pubs?funder=U${grant['s']?url('utf-8')}%23${grant['label']}">${grant['label']}</a> <span class="count">${grant['gcount']}</span></li>
