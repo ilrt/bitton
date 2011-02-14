@@ -175,14 +175,14 @@ function handleLoadError(obj)
 
 function hideDepartments()
 {
-    if ($("h2.facet-title:contains(Department)+p:contains(clear)").length > 0)
+    if ($(".alldept .selected").length > 0)
     {
-        $("h3.facet-title:contains(popular)").parent().hide();
+        $(".popdept").hide();
     }
-    else if ($("h3.facet-title:contains(popular)+*:contains(clear)").length > 0)
+    else if ($(".popdept .selected").length > 0)
    {
        var text = $("h3.facet-title:contains(popular)").parent().html();
-        $("h2.facet-title:contains(Department)+form").hide().append(text);
-        $("h3.facet-title:contains(popular)").hide();
+        $(".alldept form").hide().append(text);
+        $(".popdept  h3").hide();
    }
 }
