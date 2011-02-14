@@ -70,7 +70,10 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
     @Override
     public int size() throws TemplateModelException {
         StmtIterator iterator = resource.listProperties();
-        return iterator.toList().size();
+        int size = iterator.toList().size();
+        iterator = resource.getModel().listStatements(null, null, resource);
+        size += iterator.toList().size();
+        return size;
     }
 
     @Override
@@ -84,6 +87,12 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
             list.add(iterator.next().getPredicate().getURI());
         }
 
+        // add parent keys
+        iterator = resource.getModel().listStatements(null, null, resource);
+        while (iterator.hasNext()) {
+            String s = iterator.next().getPredicate().getURI();
+            list.add("<-"+s);
+        }
         return new SimpleCollection(list);
     }
 
@@ -105,7 +114,20 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
             }
 
         }
+        
+        // add parent values
+        iterator = resource.getModel().listStatements(null, null, resource);
+        while (iterator.hasNext()) {
 
+            RDFNode node = iterator.next().getObject();
+
+            if (node.isLiteral()) {
+                list.add(((Literal) node).getLexicalForm());
+            } else if (node.isResource()) {
+                list.add(((Resource) node).getURI());
+            }
+
+        }
         return new SimpleCollection(list);
     }
 
