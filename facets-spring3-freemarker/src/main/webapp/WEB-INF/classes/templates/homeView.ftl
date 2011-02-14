@@ -12,9 +12,9 @@
         
         <div id="home-outputs">
             <h2><a href="pubs">Research Outputs</a></h2>
-            <ul class="facet-list">
+            <ul>
                 <#list outputSummary as output>
-                    <li class="facet-list-item"><a href="pubs?pubtype=U${output['type']?url('utf-8')}%23${output['label']}">${output['label']}</a> (${output['scount']})</li>
+                    <li><a href="pubs?pubtype=U${output['type']?url('utf-8')}%23${output['label']}">${output['label']}</a> (${output['scount']})</li>
                 </#list>
             </ul>
         </div>
