@@ -413,12 +413,12 @@ a.more, a.less {
 	white-space: nowrap;
 	color: #48780D;
 	font-size: 0.928571em;
-	background: transparent url(../images/icon-blue-plus.png) left center no-repeat;
+	background: transparent url(../images/icon-plus.png) left center no-repeat;
 	padding-left: 14px;
 }
 
 a.less {
-	background-image: url(../images/icon-blue-minus.png);
+	background-image: url(../images/icon-minus.png);
 }
 
 #mastercategories ul {
