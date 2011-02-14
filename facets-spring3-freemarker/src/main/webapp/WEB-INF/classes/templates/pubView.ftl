@@ -22,9 +22,7 @@
                 </ul>
             </#if>
 
-        <#if resource[dc + 'contributor']?size == 1>
-            <p>Department: <@displayOrg org=resource[resrev + 'department']?first/></p>
-        <#else>
+        <#if resource[resrev + 'department']??>
             <p>Departments of above contributors:</p>
                 <ul>
                     <#list resource[resrev + 'department'] as department>
