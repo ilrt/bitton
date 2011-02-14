@@ -20,10 +20,10 @@
 		    <!--
 		    #DEVNOTE: 
 		    Use markup like this when facet is selected. Use classname as hook for any JS:
-		    	<ul class="facet-list">
-			    <li class="selected"><span>Journal article</span> <a href="#">Show all types</a></li>
-			</ul>
 		-->
+		    	<ul class="facet-list">
+				<li class="selected"><span>Journal article</span> (<a href="#"><em>show all types</em></a>)</li>
+			</ul>
                         <p>
                             ${facet.state.name} (<a href="${facetStateUrl(Request, facet.param, facet.paramValue)}">clear</a>)
                         </p>
