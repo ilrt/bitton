@@ -516,6 +516,7 @@ li.selected span {
 	font-weight: bold;
 	letter-spacing: 0.02em;
 	font-size: 0.928571em;
+	line-height: 1.461538em;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	-khtml-border-radius: 10px;
