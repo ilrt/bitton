@@ -1,12 +1,11 @@
 <#include "includes/macro.ftl"/>
 <#include "includes/header.ftl"/>
 
-<!-- main content -->
-<div id="main-content">
-
     <div id="content">
 
-        <h2>${resource[dc + 'title']?first}</h2>
+        <#if view??><p><a href="javascript:history.go(-1)">&laquo; Return to results</a></p></#if>
+
+        <h1>${resource[dc + 'title']?first}</h1>
 
         <p><strong>Grant Number:</strong> ${resource[proj + 'grantNumber']?first}</p>
         
@@ -18,7 +17,7 @@
           <p><strong>End Date: </strong> ${resource[proj + 'endDate']?first}</p>
         </#if>
         
-        <p><strong>Value: </strong> ${resource[proj + 'value']?first}</p>
+        <p><strong>Value: </strong>&pound;${resource[proj + 'value']?first}</p>
 
         <p><strong>Abstract:</strong></p>
         
@@ -63,13 +62,10 @@
             </ul>
         </#if>
 
-        <#if view??><p><em><a href="javascript:history.go(-1)">Return to results</a></em></p></#if>
 
 
      </div>
 
 <#include "includes/address-footer.ftl"/>
-
-</div>
 
 <#include "includes/footer.ftl"/>

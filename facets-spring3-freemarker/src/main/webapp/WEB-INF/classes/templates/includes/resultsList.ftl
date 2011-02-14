@@ -1,7 +1,15 @@
 <#include "macro.ftl">
 <div id="results" class="panel">
 
+
     <h1>${facetView.total} results</h1>
+
+    <!--
+    #DEVNOTE:
+    Can we show this message while the page loads?
+    I.e. the user clicks a facet, or searches on a keyword, and it may take a few seconds, so show this during that time:
+<div id="loading">Searching database</div>
+	-->
 
     <ul class="results">
 	    <!--

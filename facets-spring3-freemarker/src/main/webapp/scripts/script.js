@@ -21,7 +21,7 @@ function shrink(list,n) {
 
 			var link = $(this);
 
-			surplus.toggle();
+			surplus.slideToggle();
 
 			if(link.hasClass('more')) {
 				link.text(surplus.length + ' less');

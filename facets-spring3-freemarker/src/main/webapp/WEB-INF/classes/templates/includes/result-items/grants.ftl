@@ -1,5 +1,5 @@
 <#if result[proj + 'value']??>
-    <b>£${result[proj + 'value']?first}</b>
+    <strong>&pound;${result[proj + 'value']?first}</strong>
 </#if>
 
 <@linkToPageFor item=result/>

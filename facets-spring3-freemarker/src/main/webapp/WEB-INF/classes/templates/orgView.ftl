@@ -1,12 +1,9 @@
 <#include "includes/macro.ftl"/>
 <#include "includes/header.ftl"/>
 
-<!-- main content -->
-<div id="main-content">
-
     <div id="content">
 
-        <h2>${resource[foaf + 'name']?first}</h2>
+        <h1>${resource[foaf + 'name']?first}</h1>
 
         <#if resource[foaf + 'homepage']??>
             <p><strong>Homepage:</strong> <a href="${resource[foaf + 'homepage']?first}">${resource[foaf + 'homepage']?first}</a></p>
@@ -64,7 +61,5 @@
      </div>
 
 <#include "includes/address-footer.ftl"/>
-
-</div>
 
 <#include "includes/footer.ftl"/>

@@ -97,8 +97,21 @@ public class ResRevController extends AbstractController {
         
         mav.addObject("deptCount", deptCount);
         mav.addObject("peopleCount", peopleCount);
+        
+        int outputTotal = 0;
+        for (Map<String, RDFNode> outputRow: outputSummary) {
+            outputTotal += outputRow.get("scount").asLiteral().getInt();
+        }
+        
+        int grantTotal = 0;
+        for (Map<String, RDFNode> outputRow: grantSummary) {
+            grantTotal += outputRow.get("gcount").asLiteral().getInt();
+        }
+        
         mav.addObject("grantSummary", new SimpleCollection(grantSummary, OBJECT_WRAPPER));
         mav.addObject("outputSummary", new SimpleCollection(outputSummary, OBJECT_WRAPPER));
+        mav.addObject("outputTotal", outputTotal);
+        mav.addObject("grantTotal", grantTotal);
         
         return mav;
     }
