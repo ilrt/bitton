@@ -9,25 +9,18 @@
 	<h1>Explore</h1>
 
 	<div class="panelcontent">
-
-        <ul>
-            <#list facetView?keys as prop>
-                <li><a href="./${prop}">${facetView[prop]}</a></li>
-            </#list>
-        </ul>
-
         
         <div id="home-outputs">
-            <h2>Research Outputs</h2>
-            <ul>
+            <h2><a href="pubs">Research Outputs</a></h2>
+            <ul class="facet-list">
                 <#list outputSummary as output>
-                    <li><a href="pubs?pubtype=U${output['type']?url('utf-8')}%23${output['label']}">${output['label']}</a> (${output['scount']})</li>
+                    <li class="facet-list-item"><a href="pubs?pubtype=U${output['type']?url('utf-8')}%23${output['label']}">${output['label']}</a> (${output['scount']})</li>
                 </#list>
             </ul>
         </div>
 
         <div>
-            <h2>People (${peopleCount})</h2>
+            <h2><a href="people">People (${peopleCount})</a></h2>
             <form action="item" method="get">
                 <input id="people-complete" type="text" >
                 <input id="people-complete-target" type="hidden" name="res">
@@ -36,7 +29,7 @@
         </div>
         
         <div>
-            <h2>Grants &amp; funding bodies</h2>
+            <h2><a href="grants">Grants &amp; funding bodies</a></h2>
             <ul>
                 <#list grantSummary as grant>
                     <li><a href="pubs?funder=U${grant['s']?url('utf-8')}%23${grant['label']}">${grant['label']}</a> (${grant['gcount']})</li>
@@ -45,7 +38,7 @@
         </div>
 
         <div>
-            <h2>Departments &amp; groups (${deptCount})</h2>
+            <h2><a href="organisations">Departments &amp; groups (${deptCount})</a></h2>
             <form action="item" method="get">
                 <input id="dept-complete" type="text" >
                 <input id="dept-complete-target" type="hidden" name="res">
