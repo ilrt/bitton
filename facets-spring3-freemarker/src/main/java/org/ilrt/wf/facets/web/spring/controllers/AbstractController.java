@@ -6,6 +6,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import org.ilrt.wf.facets.freemarker.FacetStateInputMethod;
+import org.ilrt.wf.facets.freemarker.ResourceHashModel;
 
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
@@ -19,6 +20,7 @@ public abstract class AbstractController {
         mav.addObject("facetStateUrl", new FacetStateUrlMethod());
         mav.addObject("facetParentList", new FacetParentListMethod());
         mav.addObject("facetStateInput", new FacetStateInputMethod());
+        mav.addObject("invalidUrl", ResourceHashModel.INVALID_URL);
         return mav;
     }
 

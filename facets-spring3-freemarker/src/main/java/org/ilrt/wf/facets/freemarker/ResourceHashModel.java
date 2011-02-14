@@ -222,5 +222,5 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
 
     private Resource resource;
     private PrefixMapping prefixMapping;
-    private final String INVALID_URL = "http://invalid.org";
+    public static final String INVALID_URL = "http://invalid.org";
 }
