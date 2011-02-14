@@ -248,7 +248,7 @@ public class SPARQLQueryService implements FacetQueryService {
         
         Query desc = QueryFactory.make();
         for (Resource node: toDescribe) {
-            desc.addDescribeNode(node.asNode());
+            if (node.isURIResource()) desc.addDescribeNode(node.asNode());
         }
         desc.setQueryDescribeType();
         
@@ -333,10 +333,10 @@ public class SPARQLQueryService implements FacetQueryService {
         }
         
         for (Op textop: textConstraints) {
-            op = (op == null) ? op : OpJoin.create(textop, op);
+            op = (op == null) ? textop : OpJoin.create(textop, op);
         }
         
-        // Completelty unconstrained is not permitted
+        // Completely unconstrained is not permitted
         if (op == null) throw new RuntimeException("Operation is completely unconstrained");
         op = Transformer.transform(new QueryCleaner(), op);
         return op;
@@ -345,6 +345,11 @@ public class SPARQLQueryService implements FacetQueryService {
     protected Op constraintToOp(Constraint constraint, VarGen vgen) {
         if (constraint instanceof UnConstraint) return OpNull.create();
         else if (constraint instanceof ValueConstraint) {
+            ValueConstraint vc = (ValueConstraint) constraint;
+            if (RDF.type.equals(vc.getProperty()) &&
+                RDFS.Resource.equals(vc.getValue())) {
+                return OpNull.create();
+            }
             return tripleToBGP(SUBJECT,
                     constraint.getProperty().asNode(),
                     ((ValueConstraint) constraint).getValue().asNode(),
@@ -470,7 +475,7 @@ public class SPARQLQueryService implements FacetQueryService {
         Var label = Var.alloc("label");
 
         BasicPattern bgp = new BasicPattern();
-        bgp.add(Triple.create(thing, RDF.type.asNode(), type.asNode()));
+        bgp.add(Triple.create(thing, RDF.Nodes.type, type.asNode()));
 
         BasicPattern bgp2 = new BasicPattern();
         if (invert) // reverse
@@ -487,8 +492,13 @@ public class SPARQLQueryService implements FacetQueryService {
         op = new OpGraph(Var.alloc("g"), op);
         Op op2 = new OpBGP(bgp2);
         op2 = new OpGraph(Var.alloc("g1"), op2);
-        op = OpJoin.create(op, op2);
-
+        
+        // special case -- don't bother with rdfs:Resource
+        if (!RDFS.Resource.equals(type)) 
+            op = OpJoin.create(op, op2);
+        else
+            op = op2;
+        
         if (requireLabel)
             op = OpJoin.create(op, opGetLabel);
         else
