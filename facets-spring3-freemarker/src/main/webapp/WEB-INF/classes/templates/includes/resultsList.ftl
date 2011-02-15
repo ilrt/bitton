@@ -11,10 +11,11 @@
 <script type="text/ecmascript">
     $('#loading').hide();
     window.onbeforeunload = function()  {
-        setTimeout(function() { 
+        var to = setTimeout(function() { 
             $('#loading').show(200);
             $('#results').hide(2000);
         } , 400);
+        window.onunload = function() { clearTimeout(to); $('#loading').hide(); $('#results').show(); }
     };
 </script>
 
