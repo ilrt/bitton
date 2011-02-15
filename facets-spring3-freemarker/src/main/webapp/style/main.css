@@ -565,6 +565,10 @@ ul.results li.pub {
 	background: transparent url(../images/icon-paper.png) left top no-repeat;
 }
 
+ul.results li.grant {
+	background: transparent url(../images/icon-pound.png) left top no-repeat;
+}
+
 ul.results .contributor {
 }
 
