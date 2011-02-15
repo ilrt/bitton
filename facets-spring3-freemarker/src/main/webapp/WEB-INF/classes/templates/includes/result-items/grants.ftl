@@ -1,7 +1,17 @@
+<!--
+#DEVNOTE:
+Please use the following markup:
+
+<li class="grant"><a class="title" href="#">Visualising China</a> <span class="amount">&pound;56,000</span> <span class="otherdetails">Dr Jasper Tregold (2010) Institute for Learning and Research Technology | Funded by <span class="fundingbody">JISC</span></span></li>
+
+-->
 <li class="grant">
     <#if result[proj + 'value']??>
         <strong>&pound;${result[proj + 'value']?first}</strong>
     </#if>
+<#if result[proj + 'value']??>
+    <strong>&pound;${result[proj + 'value']?first}</strong>
+</#if>
 
     <@linkToPageFor item=result/>
 
