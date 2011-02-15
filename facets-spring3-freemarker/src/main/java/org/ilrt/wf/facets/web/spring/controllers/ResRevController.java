@@ -57,7 +57,7 @@ public class ResRevController extends AbstractController {
 
         ModelAndView mav = displayResource(session, request, resource);
         
-        mav.addObject("viewcontext", "resource");
+        //mav.addObject("viewcontext", "resource");
         
         return mav;
     }
@@ -211,7 +211,10 @@ public class ResRevController extends AbstractController {
         if (resource == null) {
             throw new NotFoundException("Unable to find the requested resource");
         } else {
-            ModelAndView mav = createModelAndView(resolveViewForResource(resource), request);
+            String[] viewAndContext = resolveViewAndKindForResource(resource);
+            
+            ModelAndView mav = createModelAndView(viewAndContext[0], request);
+            mav.addObject("viewcontext", viewAndContext[1]);
             mav.addObject("resource", new ResourceHashModel(resource));
             return mav;
         }
@@ -224,7 +227,10 @@ public class ResRevController extends AbstractController {
         if (resource == null) {
             throw new NotFoundException("Unable to find the requested resource");
         } else {
-            ModelAndView mav = createModelAndView(resolveViewForResource(resource), request);
+            String[] viewAndContext = resolveViewAndKindForResource(resource);
+            
+            ModelAndView mav = createModelAndView(viewAndContext[0], request);
+            mav.addObject("viewcontext", viewAndContext[1]);
             mav.addObject("resource", new ResourceHashModel(resource));
             return mav;
         }
@@ -249,8 +255,11 @@ public class ResRevController extends AbstractController {
             if (resource != null) {
 
                 log.debug("Found resource");
-
-                ModelAndView mav = createModelAndView(resolveViewForResource(resource), request);
+                
+                String[] viewAndContext = resolveViewAndKindForResource(resource);
+                
+                ModelAndView mav = createModelAndView(viewAndContext[0], request);
+                mav.addObject("viewcontext", viewAndContext[1]);
                 mav.addObject("resource", new ResourceHashModel(resource));
                 mav.addObject(VIEW_KEY, wrapper.getView());
                 return mav;
@@ -267,7 +276,7 @@ public class ResRevController extends AbstractController {
         }
     }
 
-    private String resolveViewForResource(Resource resource) {
+    private String[] resolveViewAndKindForResource(Resource resource) {
 
         if (resource.hasProperty(RDF.type)) {
 
@@ -277,22 +286,22 @@ public class ResRevController extends AbstractController {
                 String type = iter.nextStatement().getResource().getURI();
 
                 if (type.equals("http://vocab.ouls.ox.ac.uk/projectfunding#Grant")) {
-                    return GRANT_VIEW_NAME;
+                    return new String[] { GRANT_VIEW_NAME, "grants" };
                 }
                 else if (type.equals("http://purl.org/vocab/aiiso/schema#Institution")) {
-                    return ORGANISATION_VIEW_NAME;
+                    return new String[] { ORGANISATION_VIEW_NAME, "organisations" };
                 }
                 else if (type.equals("http://xmlns.com/foaf/0.1/Person")) {
-                    return PROFILE_VIEW_NAME;
+                    return new String[] { PROFILE_VIEW_NAME, "people" };
                 }
                 else if(type.equals("http://purl.org/dc/terms/Publication")) {
-                    return PUBLICATION_VIEW_NAME;
+                    return new String[] { PUBLICATION_VIEW_NAME, "pubs" };
                 }
             }
 
         }
 
-        return DEFAULT_VIEW;
+        return new String[] { DEFAULT_VIEW, "resource" };
     }
     
     private String getQuery(String queryFile) {
