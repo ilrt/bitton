@@ -54,7 +54,7 @@
 		<div class="panel">
 			<h2>About Research Revealed</h2>
 			<div class="panelcontent">
-				<p>Research Revealed is a <a href="http://www.jisc.ac.uk">JISC</a>-funded project to demonstrate a fine-grained, access controlled, view layer application for research, built over a content integration repository layer. Nobody knows what this really means, but it enabled us to buy a lot of laptops.</p>
+				<p>Research Revealed is a <a href="http://www.jisc.ac.uk">JISC</a>-funded project to demonstrate a fine-grained, access controlled, view layer application for research, built over a content integration repository layer. Etc, etc. </p>
 
 			</div><!-- /panelcontent -->
 		</div><!-- /panel -->
