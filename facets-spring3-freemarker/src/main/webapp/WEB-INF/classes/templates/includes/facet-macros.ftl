@@ -17,7 +17,7 @@
                         </form>
                     <#else>
                         <ul class="facet-list">
-                            <@listItemSelected/>${facet.state.name} (<a href="${facetStateUrl(Request, facet.param, facet.paramValue)}"><@clearText/></a>)
+                            <@listItemSelected label=facet.state.name url=facetStateUrl(Request, facet.param, facet.paramValue)/>
                         </li></ul>
                     </#if>
             </div>
@@ -35,7 +35,7 @@
                             <#if parent.root>
                                 <@facetList/>
                             <#else>
-                                <@listItemSelected/>${parent.name} (<a href="${facetStateUrl(Request, facet.param, parent.paramValue)}"><@clearText/></a>)
+                                <@listItemSelected label=parent.name url=facetStateUrl(Request, facet.param, parent.paramValue)/>
                                 <#if parent_has_next>
                                     <ul>
                                 </#if>
@@ -44,7 +44,7 @@
                     </#if>
                     <#-- Display the current facet -->
                     <ul class="facet-list">
-                        <@listItemSelected/>${facet.state.name} (<a href="${facetStateUrl(Request, facet.param, facet.state.parent.paramValue)}"><@clearText/></a>)
+                        <@listItemSelected label=facet.state.name url=facetStateUrl(Request, facet.param, facet.state.parent.paramValue)/>
                         <#if facet.state.refinements?size &gt; 0>
                             <@refinementList refinements=facet.state.refinements paramKey=facet.param />
                         </#if>
@@ -67,7 +67,7 @@
                             <#if parent.root>
                                 <@facetList/>
                             <#else>
-                                <@listItemSelected/>${parent.name} (<a href="${facetStateUrl(Request, facet.param, parent.paramValue)}"><@clearText/></a>)
+                                <@listItemSelected label=parent.name url=facetStateUrl(Request, facet.param, parent.paramValue)/>
                                 <#if parent_has_next>
                                     <ul>
                                 </#if>
@@ -76,7 +76,7 @@
                     </#if>
                     <#-- Display the current facet -->
                     <ul class="facet-list">
-                        <@listItemSelected/>${facet.state.name} (<a href="${facetStateUrl(Request, facet.param, facet.state.parent.paramValue)}"><@clearText/></a>)
+                        <@listItemSelected label=facet.state.name url=facetStateUrl(Request, facet.param, facet.state.parent.paramValue)/>
                         <#if facet.state.refinements?size &gt; 0>
                             <@refinementList refinements=facet.state.refinements paramKey=facet.param />
                         </#if>
@@ -94,7 +94,7 @@
 </#macro>
 
 <#macro listItem><li class="facet-list-item"></#macro>
-<#macro listItemSelected><li class="facet-list-item selected"></#macro>
+<#macro listItemSelected label url><li class="facet-list-item selected"><span>${label}</span> (<a href="${url}"><em><@clearText/></em></a>)</#macro>
 <#macro clearText>show all</#macro>
 
 <#-- macro for displaying a list of refinements -->
