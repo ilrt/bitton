@@ -1,4 +1,4 @@
-<li class="people">
+<li class="person">
     <a class="title" href="<@drillForResult result=result/>"><@label resource=result/></a>
     <#if result['<-' + foaf + 'member']??>
         <span class="otherdetails"><#list result['<-' + foaf + 'member'] as value>
