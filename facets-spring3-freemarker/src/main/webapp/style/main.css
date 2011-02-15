@@ -535,8 +535,21 @@ li.selected a em {
 	text-decoration: underline;
 	font-weight: normal;
 	font-style: normal;
+	white-space: nowrap;
 }
 
+a.help:link, a.help:visited {
+	display: inline-block;
+	background: transparent url(../images/icon-qmark.png) left center no-repeat;
+	color: #6D8D9B;
+	font-size: 0.928571em;
+	margin-left: 10px;
+	padding: 3px 0 3px 18px;
+}
+
+a.help:hover {
+	color: #D1461F;
+}
 
 
 
