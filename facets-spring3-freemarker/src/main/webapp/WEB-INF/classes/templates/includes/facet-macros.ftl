@@ -95,7 +95,8 @@
 
 <#macro listItem><li class="facet-list-item"></#macro>
 <#macro listItemSelected><li class="facet-list-item selected"></#macro>
-<#macro clearText>clear</#macro>
+<#macro clearText>show all</#macro>
+
 <#-- macro for displaying a list of refinements -->
 <#macro refinementList refinements paramKey>
     <@facetList/>
