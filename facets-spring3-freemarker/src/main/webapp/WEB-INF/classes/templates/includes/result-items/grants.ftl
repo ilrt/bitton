@@ -12,9 +12,6 @@ Please use the following markup:
     <#if result[proj + 'value']??>
         <span class="amount">&pound;${result[proj + 'value']?first}</span>
     </#if>
-    <#if result[proj + 'value']??>
-        <span class="amount">&pound;${result[proj + 'value']?first}</span>
-    </#if>
 
     <span class="otherdetails">
 
