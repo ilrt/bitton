@@ -4,11 +4,16 @@
 <!-- main content -->
     <div id="content">
 
-        <#if view??><p><em><a href="javascript:history.go(-1)">Return to results</a></em></p></#if>
+        <#if view??><p><a href="javascript:history.go(-1)">&lt; Return to results</a></p></#if>
 
         <h1>${resource[dc + 'title']?first}</h1>
         
-        <p><#if resource[dc + 'abstract']??>${resource[dc + 'abstract']?first}</#if></p>
+	<#if resource[dc + 'abstract']??><p>${resource[dc + 'abstract']?first}</p></#if>
+
+        <#if resource[rdfs + 'seeAlso']??>
+	    <button href="${resource[rdfs + 'seeAlso']?first}">Get full text &gt;</button>
+        </#if>
+
 
         <p>Contributors:</p>
             <!-- order alphabetically -->
@@ -23,12 +28,16 @@
             </#if>
 
         <#if resource[resrev + 'department']??>
+	<!--
+	Don't display depts unless we can associate them with a specific contributor:
+
             <p>Departments of above contributors:</p>
                 <ul>
                     <#list resource[resrev + 'department'] as department>
                         <li><@displayOrg org=department/></li>
                     </#list>
                 </ul>
+	-->
         </#if>
 
         <table>
@@ -111,12 +120,6 @@
                 </tr>
             </#if>
         </table>
-
-        <#if resource[rdfs + 'seeAlso']??>
-            <p>
-                See also: <a href="${resource[rdfs + 'seeAlso']?first}">${resource[rdfs + 'seeAlso']?first}</a>
-            </p>
-        </#if>
 
 <!--
         <table class="debug">

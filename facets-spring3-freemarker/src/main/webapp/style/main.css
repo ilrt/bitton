@@ -17,16 +17,16 @@ body, input, textarea, select {
 	font-size: 100%;
 }
 
-a:link {
+a:link, a:link strong {
 	color: #48780D;
 	text-decoration: underline;
 }
 
-a:visited {
+a:visited, a:visited strong {
 	color: #48780D;
 }
 
-a:hover, a:active { color: #D1461F; }
+a:hover, a:active, a:hover strong, a:active strong { color: #D1461F; }
 
 a:focus {
 	outline: 1px dotted #000;
@@ -344,6 +344,7 @@ form#topsearch label {
 
 input.button, input[type=submit], button, input[type=button] {
 	background: #3B9ACC url(../images/btn-background.png) left bottom repeat-x;
+	font-size: 1em;
 	color: #fff;
 	border-width: 0;
 	display: inline-block;
@@ -511,12 +512,13 @@ li.selected {
 li.selected span {
 	display: inline-block;
 	background: #4d4d4d;
+	background: #596368;
 	color: #fff;
-	padding: 0 9px 2px;
+	padding: 0 10px 0px;
 	font-weight: bold;
 	letter-spacing: 0.02em;
-	font-size: 0.928571em;
-	line-height: 1.461538em;
+	/*font-size: 0.928571em;
+	line-height: 1.461538em;*/
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	-khtml-border-radius: 10px;
@@ -524,7 +526,7 @@ li.selected span {
 }
 
 li.selected a {
-	margin-top: 3px;
+	margin-top: 0px;
 	text-decoration: none;
 	font-weight: bold;
 }
@@ -588,6 +590,11 @@ ul.results .title {
 ul.results .otherdetails {
 	font-style: italic;
 	color: #888;
+}
+
+ul.results .amount {
+	font-weight: bold;
+	color: #444;
 }
 
 a.impactcount {
