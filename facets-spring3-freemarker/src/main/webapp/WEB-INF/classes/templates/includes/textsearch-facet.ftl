@@ -12,7 +12,7 @@
                                                     Help: E.g. nature, nature AND eden, nature OR eden, nature +eden
                                                     See: http://lucene.apache.org/java/2_4_0/queryparsersyntax.html#AND
 			-->
-			<#if facet.state.paramValue??><ul class="bubbles"><li>${facet.state.paramValue} (<a href="${facetStateUrl(Request, facet.param, '')}">clear</a>)</li></ul></#if>
+			<#if facet.state.paramValue??><ul><li class="selected"><span>${facet.state.paramValue}</span> (<a href="${facetStateUrl(Request, facet.param, '')}"><em>clear search</em></a>)</li></ul></#if>
                     </form>
         </#if>
     </#if>

@@ -241,14 +241,44 @@
         <entry key="viewId" value="pubs"/>
         <entry key="viewType" value="http://purl.org/dc/terms/Publication"/>
     </util:map>
-
+	
+    <util:map id="textSearchType" map-class="java.util.HashMap">
+        <entry key="facetType" value="EnumFlat"/>
+        <entry key="facetTitle" value="Type"/>
+        <entry key="linkProperty" value="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+        <entry key="enumList" value="http://purl.org/dc/terms/Publication|Research outputs,http://vocab.ouls.ox.ac.uk/projectfunding#Grant|Grants &amp; funding,http://xmlns.com/foaf/0.1/Person|People"/>
+        <entry key="constraintType"
+               value="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <entry key="paramName" value="textType"/>
+    </util:map>
+    <util:map id="textSearchText" map-class="java.util.HashMap">
+        <entry key="facetType" value="TextSearch"/>
+        <entry key="facetTitle" value="Type"/>
+        <entry key="constraintType"
+               value="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <entry key="paramName" value="search"/>
+    </util:map>
+    <util:list id="textFacets" list-class="java.util.ArrayList">
+        <ref bean="textSearchType"/>
+        <ref bean="textSearchText"/>
+    </util:list>
+    <util:map id="textProps" map-class="java.util.HashMap">
+        <entry key="viewName" value="Text Search"/>
+        <entry key="facetList" value-ref="textFacets"/>
+        <entry key="viewId" value="search"/>
+        <entry key="viewType" value="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+    </util:map>
+	
     <util:map id="viewList" map-class="java.util.HashMap">
         <entry key="grant" value-ref="grantProps"/>
         <entry key="org" value-ref="orgProps"/>
         <entry key="people" value-ref="personProps"/>
         <entry key="pubs" value-ref="pubProps"/>
+        <entry key="search" value-ref="textProps"/>
     </util:map>
-
+	
+	
+	
     <!-- scan for controllers -->
 
     <context:component-scan base-package="org.ilrt.wf.facets.web.spring.controllers"/>
