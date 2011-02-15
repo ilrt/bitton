@@ -16,21 +16,13 @@
                             <input type="submit" value="Go"/>
                         </form>
                     <#else>
-
-		    <!--
-		    #DEVNOTE: 
-		    Use markup like this when facet is selected. Use classname as hook for any JS:
-		    	<ul class="facet-list">
-				<li class="selected"><span>Journal article</span> (<a href="#"><em>show all types</em></a>)</li>
-			</ul>
-		-->
-                        <p>
-                            ${facet.state.name} (<a class="selected" href="${facetStateUrl(Request, facet.param, facet.paramValue)}">clear</a>)
-                        </p>
+                        <ul class="facet-list">
+                            <@listItemSelected/>${facet.state.name} (<a href="${facetStateUrl(Request, facet.param, facet.paramValue)}"><@clearText/></a>)
+                        </li></ul>
                     </#if>
             </div>
 
-	    <#elseif facet.name= "Most Popular Departments">
+        <#elseif facet.name= "Most Popular Departments">
             <div class="facet popdept">
                 <h3 class="facet-title">Most popular:</h3>
                 <#if facet.state.root>
@@ -43,7 +35,7 @@
                             <#if parent.root>
                                 <@facetList/>
                             <#else>
-                                <@listItem/>${parent.name} (<a class="selected" href="${facetStateUrl(Request, facet.param, parent.paramValue)}">clear</a>)
+                                <@listItemSelected/>${parent.name} (<a href="${facetStateUrl(Request, facet.param, parent.paramValue)}"><@clearText/></a>)
                                 <#if parent_has_next>
                                     <ul>
                                 </#if>
@@ -52,7 +44,7 @@
                     </#if>
                     <#-- Display the current facet -->
                     <ul class="facet-list">
-                        <@listItem/>${facet.state.name} (<a class="selected" href="${facetStateUrl(Request, facet.param, facet.state.parent.paramValue)}">clear</a>)
+                        <@listItemSelected/>${facet.state.name} (<a href="${facetStateUrl(Request, facet.param, facet.state.parent.paramValue)}"><@clearText/></a>)
                         <#if facet.state.refinements?size &gt; 0>
                             <@refinementList refinements=facet.state.refinements paramKey=facet.param />
                         </#if>
@@ -75,7 +67,7 @@
                             <#if parent.root>
                                 <@facetList/>
                             <#else>
-                                <@listItem/>${parent.name} (<a class="selected" href="${facetStateUrl(Request, facet.param, parent.paramValue)}">clear</a>)
+                                <@listItemSelected/>${parent.name} (<a href="${facetStateUrl(Request, facet.param, parent.paramValue)}"><@clearText/></a>)
                                 <#if parent_has_next>
                                     <ul>
                                 </#if>
@@ -84,7 +76,7 @@
                     </#if>
                     <#-- Display the current facet -->
                     <ul class="facet-list">
-                        <@listItem/>${facet.state.name} (<a class="selected" href="${facetStateUrl(Request, facet.param, facet.state.parent.paramValue)}">clear</a>)
+                        <@listItemSelected/>${facet.state.name} (<a href="${facetStateUrl(Request, facet.param, facet.state.parent.paramValue)}"><@clearText/></a>)
                         <#if facet.state.refinements?size &gt; 0>
                             <@refinementList refinements=facet.state.refinements paramKey=facet.param />
                         </#if>
@@ -102,7 +94,8 @@
 </#macro>
 
 <#macro listItem><li class="facet-list-item"></#macro>
-
+<#macro listItemSelected><li class="facet-list-item selected"></#macro>
+<#macro clearText>clear</#macro>
 <#-- macro for displaying a list of refinements -->
 <#macro refinementList refinements paramKey>
     <@facetList/>
