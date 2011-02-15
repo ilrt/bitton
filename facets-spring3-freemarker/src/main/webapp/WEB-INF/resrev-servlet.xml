@@ -49,7 +49,14 @@
                value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
         <entry key="paramName" value="grant"/>
     </util:map>-->
-
+    
+    <util:map id="grantSearch" map-class="java.util.HashMap">
+        <entry key="facetType" value="TextSearch"/>
+        <entry key="facetTitle" value="Search Grants"/>
+        <entry key="constraintType" value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="paramName" value="gsearch"/>
+    </util:map>
+    
     <util:map id="grantFunder" map-class="java.util.HashMap">
         <entry key="facetType" value="Flat"/>
         <entry key="facetTitle" value="Funder"/>
@@ -107,7 +114,7 @@
     </util:map>
 
     <util:list id="grantFacets" list-class="java.util.ArrayList">
-        <!--<ref bean="grantName"/>-->
+        <ref bean="grantSearch"/>
         <ref bean="grantFunder"/>
         <ref bean="deptNames"/>
         <ref bean="grantValues"/>
