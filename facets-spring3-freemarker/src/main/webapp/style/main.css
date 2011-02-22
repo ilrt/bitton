@@ -631,3 +631,33 @@ a.impactcount strong {
 	color: #fff;
 }
 
+
+
+/* =department listing
+ *  * =========================================== */
+
+.bold
+{
+    font-weight:bold;
+}
+
+.departmentListing h1
+{
+    margin-bottom:1em;
+}
+
+.departmentListing h2
+{
+    line-height:1em;
+    border-bottom:1px solid #ddd;
+}
+
+.departmentListing h2 span
+{
+    position:relative;
+    top:0.5em;
+    left:1em;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    background-color:#fff;
+}

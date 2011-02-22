@@ -202,6 +202,22 @@ public class ResRevController extends AbstractController {
         return mav;
     }
 
+    @RequestMapping(value = DEPT_LIST_PATH, method = RequestMethod.GET)
+    public ModelAndView departmentAndGroupsView(HttpServletRequest request) throws FacetViewServiceException {
+
+        // get the session object
+        HttpSession session = request.getSession(true);
+
+        // do a fresh query the service
+        ModelAndView mav = createModelAndView(DEPT_LIST_VIEW_NAME, request);
+        
+        List<Map<String, RDFNode>> departmentSummary =  facetQueryService.performSelect(getQuery("/queries/getAllDepartments.rq"), false);
+        mav.addObject("departmentList", new SimpleCollection(departmentSummary, OBJECT_WRAPPER));
+        mav.addObject("viewcontext", "department");
+        
+        return mav;
+    }
+        
     // ---------- private methods
     private ModelAndView displayResourceOrFail(FacetViewSessionWrapper wrapper, String uri,
                                                HttpServletRequest request) {
@@ -342,6 +358,7 @@ public class ResRevController extends AbstractController {
     public static String PUBLICATION_VIEW_NAME = "pubView";
     public static String DEFAULT_VIEW = "defaultView";
     public static String RESEARCH_VIEW = "researchView";
+    public static String DEPT_LIST_VIEW_NAME = "deptListView";
 
     private final String FACETVIEW_SESSION = "facetView";
     private final String VIEW_KEY = "view";
@@ -355,6 +372,7 @@ public class ResRevController extends AbstractController {
     private final String PROFILE_PATH = "/profile";
     private final String RESEARCH_PATH = "/research";
     private final String DEPARTMENT_PATH = "/mydepartment";
+    private final String DEPT_LIST_PATH = "/organisations";
 
     private Logger log = Logger.getLogger(ResRevController.class);
 }
