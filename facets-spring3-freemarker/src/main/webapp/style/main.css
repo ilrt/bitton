@@ -661,3 +661,14 @@ a.impactcount strong {
     padding-right:0.5em;
     background-color:#fff;
 }
+
+.quicklinks
+{
+    margin:1em;  
+    font-weight:bold; 
+}
+
+.quicklinks a
+{
+    margin-left:1em;
+}

@@ -10,9 +10,30 @@
 
     <h1>Departments & groups</h1>
 
+    <!-- description -->
+    <p>Explanation of what this contains - formal organisational units, plus specific research groupings (e.g. for REF) Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam interdum pulvinar nibh. Maecenas eget nunc in justo rhoncus aliquam. Phasellus nisl mi, convallis ut, lacinia vel, sodales tempus.</p>
+
+    <!-- show the number of results -->
+    <#assign count=0/>
+    <#list departmentList as dept><#assign count=count+1/></#list>
+    <p><span class="bold">${count}</span> results</p>
+
+    <!-- show the search box -->
+    <form action="item" method="get">
+        <select class="autocomplete" name="res" id="res">
+            <option value="">Start typing a name to filter these results</option>
+            <#list departmentList as dept><option value="${dept['dept']}">${dept['label']}</option></#list>
+        </select>
+        <input type="submit" value="Go"/>
+    </form>
+
+    <!-- show the jump to links -->
     <@printQuickLinks/>
 
+    <!-- print the first ABC section header -->
     <@printAlphabetHeader start=i size=grouping-1/>
+    
+
     <ul>
         <#list 0..25 as let>
             <#list departmentList as dept>
@@ -37,7 +58,7 @@
 <#include "includes/footer.ftl"/>
 
 <#macro printQuickLinks>
-    <div class="quicklinks">
+    <div class="quicklinks">Jump to:
         <#assign j = 0/>
         <#list 0..25 as let>
             <#if j % grouping == 0 >

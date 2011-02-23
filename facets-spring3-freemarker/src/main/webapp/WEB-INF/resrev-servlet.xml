@@ -130,6 +130,7 @@
     </util:map>
 
     <!-- Organisation facets -->
+    <!--
     <util:map id="orgName" map-class="java.util.HashMap">
         <entry key="facetType" value="AlphaNumeric"/>
         <entry key="facetTitle" value="Organisation Names"/>
@@ -157,6 +158,7 @@
         <entry key="viewId" value="organisations"/>
         <entry key="viewType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
     </util:map>
+    -->
 
     <!-- People facets -->
     <!--<util:map id="peopleName" map-class="java.util.HashMap">
@@ -278,7 +280,7 @@
 	
     <util:map id="viewList" map-class="java.util.HashMap">
         <entry key="grant" value-ref="grantProps"/>
-        <entry key="org" value-ref="orgProps"/>
+<!--        <entry key="org" value-ref="orgProps"/>-->
         <entry key="people" value-ref="personProps"/>
         <entry key="pubs" value-ref="pubProps"/>
         <entry key="search" value-ref="textProps"/>
