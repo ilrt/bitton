@@ -44,7 +44,7 @@ import com.hp.hpl.jena.sparql.expr.E_Str;
 import com.hp.hpl.jena.sparql.expr.Expr;
 import com.hp.hpl.jena.sparql.expr.ExprList;
 import com.hp.hpl.jena.sparql.expr.ExprVar;
-import com.hp.hpl.jena.sparql.expr.aggregate.AggCountDistinct;
+import com.hp.hpl.jena.sparql.expr.aggregate.AggCountVarDistinct;
 import com.hp.hpl.jena.sparql.expr.nodevalue.NodeValueNode;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -301,7 +301,7 @@ public class SPARQLQueryService implements FacetQueryService {
         Query q = OpAsQuery.asQuery(op);
         q.setQuerySelectType();
         q.setQueryResultStar(false);
-        Expr agg = q.allocAggregate(new AggCountDistinct());
+        Expr agg = q.allocAggregate(new AggCountVarDistinct(new ExprVar(SUBJECT)));
         q.addResultVar("count", agg);
         QueryExecution qe = qef.get(q);
 
