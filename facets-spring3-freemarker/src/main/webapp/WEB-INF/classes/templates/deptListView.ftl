@@ -9,6 +9,9 @@
 <#assign i = 0/>
 
     <h1>Departments & groups</h1>
+
+    <@printQuickLinks/>
+
     <@printAlphabetHeader start=i size=grouping-1/>
     <ul>
         <#list 0..25 as let>
@@ -33,10 +36,28 @@
 <#include "includes/address-footer.ftl"/>
 <#include "includes/footer.ftl"/>
 
+<#macro printQuickLinks>
+    <div class="quicklinks">
+        <#assign j = 0/>
+        <#list 0..25 as let>
+            <#if j % grouping == 0 >
+                <#assign to=let+(grouping-1) />
+                <#if 25 < to>
+                    <#assign to=25 />
+                </#if>
+                <a href="#${let}"><#list let..to as k>${alphabet[k]}</#list></a>
+            </#if>
+            <#assign j = j + 1/>
+        </#list>
+    </div>
+</#macro>
+
 <#macro printAlphabetHeader start size>
     <#assign to=start+size />
-    <#if 25 < to> <#assign to=25 /> </#if>
+    <#if 25 < to>
+        <#assign to=25 />
+    </#if>
     <h2>
-    <span><#list start..to as i>${alphabet[i]}</#list></span>
+    <span><a name="${start}"><#list start..to as i>${alphabet[i]}</#list></a></span>
     </h2>
 </#macro>
