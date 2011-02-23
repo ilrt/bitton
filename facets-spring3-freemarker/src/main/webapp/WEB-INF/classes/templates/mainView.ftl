@@ -2,7 +2,7 @@
 <#include "includes/header.ftl"/>
 
 <!-- main content -->
-<div id="content">
+<div id="content" class="${viewcontext}">
 
     <div class="col1of3">
         <#include "includes/facet.ftl"/>
