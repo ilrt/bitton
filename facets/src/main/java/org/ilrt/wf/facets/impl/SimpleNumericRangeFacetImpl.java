@@ -70,6 +70,7 @@ public class SimpleNumericRangeFacetImpl extends AbstractFacetFactoryImpl implem
             root.getConstraints().addAll(Arrays.asList(typeConstraint));
             root.setRefinements(refinements(environment.getConfig().get(Facet.NUMERIC_RANGE),
                     typeConstraint, p, root, typeUri, df));
+            root.setSortRefinements(getOrder(environment));
             facetState = root;
         }
 

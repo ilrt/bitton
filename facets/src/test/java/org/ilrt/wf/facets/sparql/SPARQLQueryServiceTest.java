@@ -5,6 +5,7 @@
 
 package org.ilrt.wf.facets.sparql;
 
+import java.util.Set;
 import org.ilrt.wf.facets.sparql.SPARQLQueryService.VarGen;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -418,6 +419,11 @@ public class SPARQLQueryServiceTest {
         public FacetState addRefinement(FacetState state) {
             refinements.add(state);
             return state;
+        }
+
+        @Override
+        public void setSortRefinements(Set<Order> orders) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 

@@ -210,6 +210,7 @@
         <entry key="constraintType"
                value="http://purl.org/dc/terms/Publication"/>
         <entry key="paramName" value="pubtype"/>
+        <entry key="order" value="Descending, ByCount"/>
     </util:map>
     <util:map id="pubDept" map-class="java.util.HashMap">
         <entry key="facetType" value="EnumFlat"/>
