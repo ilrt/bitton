@@ -205,7 +205,7 @@
     </util:map>
     <util:map id="pubType" map-class="java.util.HashMap">
         <entry key="facetType" value="Flat"/>
-        <entry key="facetTitle" value="Type"/>
+        <entry key="facetTitle" value="Type of Output"/>
         <entry key="linkProperty" value="http://purl.org/dc/terms/type"/>
         <entry key="constraintType"
                value="http://purl.org/dc/terms/Publication"/>
@@ -237,6 +237,7 @@
         <entry key="constraintType"
                value="http://purl.org/dc/terms/Publication"/>
         <entry key="paramName" value="pubyear"/>
+        <entry key="order" value="Descending"/>
     </util:map>
     <util:list id="pubFacets" list-class="java.util.ArrayList">
         <ref bean="pubSearch"/>
