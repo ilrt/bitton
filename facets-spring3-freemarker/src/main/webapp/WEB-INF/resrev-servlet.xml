@@ -233,8 +233,7 @@
         <entry key="facetType" value="Flat"/>
         <entry key="facetTitle" value="Year"/>
         <entry key="linkProperty" value="http://purl.org/dc/terms/date"/>
-        <entry key="constraintType"
-               value="http://purl.org/dc/terms/Publication"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
         <entry key="paramName" value="pubyear"/>
     </util:map>
     <util:list id="pubFacets" list-class="java.util.ArrayList">
@@ -251,20 +250,20 @@
         <entry key="viewType" value="http://purl.org/dc/terms/Publication"/>
     </util:map>
 	
+    <!-- Search -->
     <util:map id="textSearchType" map-class="java.util.HashMap">
         <entry key="facetType" value="EnumFlat"/>
         <entry key="facetTitle" value="Type"/>
         <entry key="linkProperty" value="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
         <entry key="enumList" value="http://purl.org/dc/terms/Publication|Research outputs,http://vocab.ouls.ox.ac.uk/projectfunding#Grant|Grants &amp; funding,http://xmlns.com/foaf/0.1/Person|People"/>
-        <entry key="constraintType"
-               value="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <entry key="constraintType"  value="http://purl.org/dc/terms/Publication,http://xmlns.com/foaf/0.1/Person,http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="requireCounts" value="false"/>
         <entry key="paramName" value="textType"/>
     </util:map>
     <util:map id="textSearchText" map-class="java.util.HashMap">
         <entry key="facetType" value="TextSearch"/>
         <entry key="facetTitle" value="Type"/>
-        <entry key="constraintType"
-               value="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication,http://xmlns.com/foaf/0.1/Person,http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
         <entry key="paramName" value="search"/>
     </util:map>
     <util:list id="textFacets" list-class="java.util.ArrayList">
@@ -275,7 +274,7 @@
         <entry key="viewName" value="Text Search"/>
         <entry key="facetList" value-ref="textFacets"/>
         <entry key="viewId" value="search"/>
-        <entry key="viewType" value="http://www.w3.org/2000/01/rdf-schema#Resource"/>
+        <entry key="viewType" value="http://purl.org/dc/terms/Publication"/>
     </util:map>
 	
     <util:map id="viewList" map-class="java.util.HashMap">
@@ -286,7 +285,7 @@
         <entry key="search" value-ref="textProps"/>
     </util:map>
 	
-	
+ 
 	
     <!-- scan for controllers -->
 
