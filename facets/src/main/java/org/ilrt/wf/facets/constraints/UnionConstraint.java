@@ -7,6 +7,7 @@ package org.ilrt.wf.facets.constraints;
 
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ public class UnionConstraint extends AbstractConstraint {
 
     public UnionConstraint(Property property, List <RDFNode> values, boolean inverted) {
         super(property, inverted);
+        if (values == null) values = new ArrayList();
         this.values = values;
     }
 
@@ -36,7 +38,7 @@ public class UnionConstraint extends AbstractConstraint {
     public String toString() 
     { 
         StringBuilder sb = new StringBuilder();
-        if (values != null) for (RDFNode node : values) sb.append(node).append(",");
+        for (RDFNode node : values) sb.append(node).append(",");
         return "UnionConstraint: " + super.toString() + " values: [" + sb.toString() + "]";
     }
     

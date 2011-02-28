@@ -203,12 +203,10 @@ public class HierarchicalFacetImplTest extends AbstractFacetTest {
         // For each refinement, one of the constraints must use the supplied
         // refined values (resources).
         List<RDFNode> touchedRes = new ArrayList<RDFNode>(resources);
-        for (RDFNode n : touchedRes) System.out.println(n);
         for (FacetState refine: refinements) {
             Collection<Constraint> constraints = refine.getConstraints();
             boolean gotValue = false;
             for (Constraint c: constraints) {
-                System.out.println(c);
                 if (c instanceof ValueConstraint)
                 {
                     ValueConstraint vc = (ValueConstraint) c;
@@ -217,18 +215,18 @@ public class HierarchicalFacetImplTest extends AbstractFacetTest {
                 }
                 else if (c instanceof UnionConstraint)
                 {
-                    /*
+                    // in our example, no types are supplied to the facet but adding here for consistancy
                     UnionConstraint uc = (UnionConstraint) c;
                     for (RDFNode n : uc.getValues()) 
                     {
                         if (touchedRes.contains(n)) gotValue = true;
                         touchedRes.remove(n);
-                    }*/
+                    }
                 }
             }
             assertTrue("Refined resource appeared in refined constraints", gotValue);
         }
-        assertFalse("All refinements found", touchedRes.isEmpty());
+        assertTrue("All refinements found", touchedRes.isEmpty());
     }
 
 
