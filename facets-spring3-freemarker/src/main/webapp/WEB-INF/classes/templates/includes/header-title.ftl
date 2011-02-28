@@ -6,8 +6,8 @@
 -->
 	<a id="logo-resrev" href="${contextPath}"><img src="${contextPath}/images/logo-resrev.png" alt="Research Revealed (Alpha)" height="48" width="328"></a>
 
-					<form id="topsearch" action="#" method="post">
-						<input type="text" id="searchterm" value="" placeholder="Explore papers, people, grants"> <input value="Search" type="submit">
+					<form id="topsearch" action="search" method="get">
+						<input type="text" id="search" name="search" value="" placeholder="Explore papers, people, grants"> <input value="Search" type="submit">
 					</form>
 					<!--<div class="autoselect" title="Search for people, publications, organisations or grants" submit="${contextPath}${servletPath}/item" resource="all">Loading...<img src="${contextPath}/images/indicator.gif"/></div>-->
   </div><!-- /logos -->
