@@ -22,6 +22,7 @@ import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.QNameUtility;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import org.ilrt.wf.facets.constraints.UnionConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
 
 /**
@@ -46,7 +47,7 @@ public class EnumFlatFacetImpl extends FlatFacetImpl {
         Property prop = ResourceFactory.createProperty(property);
         String param = environment.getConfig().get(Facet.PARAM_NAME);
         String enumList = environment.getConfig().get(Facet.ENUM_LIST);
-        ValueConstraint typeConstraint = createTypeConstraint(type);
+        UnionConstraint typeConstraint = createTypeConstraint(type);
 
         String[] enumArray = enumList.split(",");
         String[] currentVals = environment.getParameters().get(param);

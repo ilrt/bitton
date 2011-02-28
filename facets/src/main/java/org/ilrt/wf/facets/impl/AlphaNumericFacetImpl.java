@@ -8,11 +8,11 @@ import org.ilrt.wf.facets.FacetFactory;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.RegexpConstraint;
-import org.ilrt.wf.facets.constraints.ValueConstraint;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.ilrt.wf.facets.constraints.UnionConstraint;
 
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
@@ -28,7 +28,7 @@ public class AlphaNumericFacetImpl extends AbstractFacetFactoryImpl implements F
         FacetState facetState;
 
         // each state is constrained to a type, e.g. foaf:Person
-        ValueConstraint typeConstraint = createTypeConstraint(environment.getConfig()
+        UnionConstraint typeConstraint = createTypeConstraint(environment.getConfig()
                 .get(Facet.CONSTRAINT_TYPE));
 
         // property used in each state

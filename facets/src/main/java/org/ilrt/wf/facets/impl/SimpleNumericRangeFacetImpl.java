@@ -11,12 +11,12 @@ import org.ilrt.wf.facets.FacetFactory;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.RangeConstraint;
-import org.ilrt.wf.facets.constraints.ValueConstraint;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.ilrt.wf.facets.constraints.UnionConstraint;
 
 public class SimpleNumericRangeFacetImpl extends AbstractFacetFactoryImpl implements FacetFactory {
 
@@ -37,7 +37,7 @@ public class SimpleNumericRangeFacetImpl extends AbstractFacetFactoryImpl implem
         FacetState facetState;
 
         // each state is constrained to a type, e.g. foaf:Person
-        ValueConstraint typeConstraint = createTypeConstraint(environment.getConfig()
+        UnionConstraint typeConstraint = createTypeConstraint(environment.getConfig()
                 .get(Facet.CONSTRAINT_TYPE));
 
         // property used in each state

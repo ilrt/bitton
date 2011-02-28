@@ -26,6 +26,7 @@ import org.ilrt.wf.facets.FacetException;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.FacetState;
 import org.ilrt.wf.facets.QNameUtility;
+import org.ilrt.wf.facets.constraints.UnionConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
 
 /**
@@ -52,7 +53,7 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
         boolean requireLabel = (label != null && label.equalsIgnoreCase("true"));
         Property prop = ResourceFactory.createProperty(property);
         String param = environment.getConfig().get(Facet.PARAM_NAME);
-        ValueConstraint typeConstraint = createTypeConstraint(type);
+        UnionConstraint typeConstraint = createTypeConstraint(type);
 
         String[] currentVals = environment.getParameters().get(environment.getConfig().get(Facet.PARAM_NAME));
 

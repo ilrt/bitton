@@ -15,7 +15,7 @@ import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.QNameUtility;
 import org.ilrt.wf.facets.constraints.Constraint;
 import org.ilrt.wf.facets.constraints.TextMatchConstraint;
-import org.ilrt.wf.facets.constraints.ValueConstraint;
+import org.ilrt.wf.facets.constraints.UnionConstraint;
 
 /**
  *
@@ -41,7 +41,7 @@ public class TextSearchFacetImpl extends AbstractFacetFactoryImpl {
         boolean requireLabel = true;
         //Property prop = ResourceFactory.createProperty(property);
         String param = environment.getConfig().get(Facet.PARAM_NAME);
-        ValueConstraint typeConstraint = createTypeConstraint(type);
+        UnionConstraint typeConstraint = createTypeConstraint(type);
 
         String[] currentVals = environment.getParameters().get(environment.getConfig().get(Facet.PARAM_NAME));
 

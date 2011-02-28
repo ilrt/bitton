@@ -34,6 +34,7 @@ import com.hp.hpl.jena.sparql.algebra.op.OpLeftJoin;
 import com.hp.hpl.jena.sparql.algebra.op.OpNull;
 import com.hp.hpl.jena.sparql.algebra.op.OpProject;
 import com.hp.hpl.jena.sparql.algebra.op.OpSlice;
+import com.hp.hpl.jena.sparql.algebra.op.OpUnion;
 import com.hp.hpl.jena.sparql.core.BasicPattern;
 import com.hp.hpl.jena.sparql.core.Var;
 import com.hp.hpl.jena.sparql.expr.E_LessThan;
@@ -68,6 +69,7 @@ import org.ilrt.wf.facets.constraints.RangeConstraint;
 import org.ilrt.wf.facets.constraints.RegexpConstraint;
 import org.ilrt.wf.facets.constraints.TextMatchConstraint;
 import org.ilrt.wf.facets.constraints.UnConstraint;
+import org.ilrt.wf.facets.constraints.UnionConstraint;
 import org.ilrt.wf.facets.constraints.ValueConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -352,9 +354,23 @@ public class SPARQLQueryService implements FacetQueryService {
             }
             return tripleToBGP(SUBJECT,
                     constraint.getProperty().asNode(),
-                    ((ValueConstraint) constraint).getValue().asNode(),
+                    vc.getValue().asNode(),
                     constraint.isPropertyInverted()
                     );
+        } else if (constraint instanceof UnionConstraint) {
+            UnionConstraint vc = (UnionConstraint) constraint;
+            if (vc.getValues().size() == 1 && RDF.type.equals(vc.getProperty()) &&
+                RDFS.Resource.equals(vc.getValues().get(0))) {
+                return OpNull.create();
+            }
+            Op unionOp = null;
+            for (RDFNode node : vc.getValues())
+            {
+                Op op = tripleToBGP(SUBJECT, vc.getProperty().asNode(), node.asNode(), vc.isPropertyInverted() );
+                if (unionOp == null) unionOp = op;
+                else unionOp = OpUnion.create(unionOp, op);
+            }
+            return unionOp;
         } else if (constraint instanceof RangeConstraint) {
             RangeConstraint rc = (RangeConstraint) constraint;
             Var val = vgen.genVar();

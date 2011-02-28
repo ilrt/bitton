@@ -1,5 +1,6 @@
 package org.ilrt.wf.facets.impl;
 
+import org.ilrt.wf.facets.constraints.UnionConstraint;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -203,7 +204,7 @@ public class AlphaNumericFacetImplTest extends AbstractFacetTest {
 
         // check we have the expected constraint types
         for (Constraint constraint : specificState.getConstraints()) {
-            if (!(constraint instanceof ValueConstraint) && !(constraint instanceof RegexpConstraint)) {
+            if (!(constraint instanceof ValueConstraint) && !(constraint instanceof RegexpConstraint) && !(constraint instanceof UnionConstraint)) {
                 fail("Unexpected constraint type: " + constraint.getClass().getName());
             }
         }

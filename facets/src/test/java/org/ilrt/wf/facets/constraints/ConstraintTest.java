@@ -5,6 +5,9 @@
 
 package org.ilrt.wf.facets.constraints;
 
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import java.util.ArrayList;
+import java.util.List;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import org.junit.Test;
@@ -61,5 +64,23 @@ public class ConstraintTest {
         c = new RegexpConstraint(null, "Z");
         assertTrue(c.matches(ResourceFactory.createPlainLiteral("Bez")));
         assertFalse(c.matches(ResourceFactory.createPlainLiteral("flsdkjffs")));
+    }
+
+    @Test
+    public void UnionConstraint() {
+        List <RDFNode> restrictions = new ArrayList();
+        restrictions.add(ResourceFactory.createTypedLiteral(1));
+        Constraint c = new UnionConstraint(null, restrictions);
+        
+        assertTrue(c.matches(ResourceFactory.createTypedLiteral(1)));
+        assertFalse(c.matches(ResourceFactory.createTypedLiteral(2)));
+        assertFalse(c.matches(ResourceFactory.createTypedLiteral(3)));
+        
+        restrictions.add(ResourceFactory.createTypedLiteral(3));
+        c = new UnionConstraint(null, restrictions);
+        
+        assertTrue(c.matches(ResourceFactory.createTypedLiteral(1)));
+        assertFalse(c.matches(ResourceFactory.createTypedLiteral(2)));
+        assertTrue(c.matches(ResourceFactory.createTypedLiteral(3)));
     }
 }

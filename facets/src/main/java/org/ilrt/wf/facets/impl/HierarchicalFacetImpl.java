@@ -17,12 +17,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
+import org.ilrt.wf.facets.constraints.UnionConstraint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
  */
 public class HierarchicalFacetImpl extends AbstractFacetFactoryImpl implements FacetFactory {
-
+    private final static Logger log = LoggerFactory.getLogger(HierarchicalFacetImpl.class);
+     
     public HierarchicalFacetImpl(FacetQueryService facetQueryService, QNameUtility qNameUtility) {
         this.facetQueryService = facetQueryService;
         this.qNameUtility = qNameUtility;
@@ -69,9 +73,7 @@ public class HierarchicalFacetImpl extends AbstractFacetFactoryImpl implements F
         List<Resource> resources = facetQueryService.getRefinements(resource,
                 property, isBroader);
 
-        Resource type = ResourceFactory.createResource(
-                environment.getConfig().get(Facet.CONSTRAINT_TYPE)
-        );
+        String type = environment.getConfig().get(Facet.CONSTRAINT_TYPE);
 
         Property link = ResourceFactory.createProperty(
                 environment.getConfig().get(Facet.LINK_PROPERTY)
@@ -88,7 +90,7 @@ public class HierarchicalFacetImpl extends AbstractFacetFactoryImpl implements F
     protected List<FacetState> hierarchicalRefinements(List<Resource> resources,
                                                        FacetState parentState,
                                                        Property link,
-                                                       Resource type,
+                                                       String type,
                                                        boolean invert) {
         List<FacetState> refinementList = new ArrayList<FacetState>();
 
@@ -227,7 +229,7 @@ public class HierarchicalFacetImpl extends AbstractFacetFactoryImpl implements F
         String invertVal = environment.getConfig().get(Facet.LINK_INVERT);
         boolean invert = (invertVal != null && invertVal.equalsIgnoreCase("true"));
         return createHierarchicalConstraintList(
-                ResourceFactory.createResource(environment.getConfig().get(Facet.CONSTRAINT_TYPE)),
+                environment.getConfig().get(Facet.CONSTRAINT_TYPE),
                 ResourceFactory.createProperty(environment.getConfig().get(Facet.LINK_PROPERTY)),
                 ResourceFactory.createResource(currVal),
                 invert
@@ -235,9 +237,9 @@ public class HierarchicalFacetImpl extends AbstractFacetFactoryImpl implements F
     }
 
     protected List<? extends Constraint> createHierarchicalConstraintList(
-            Resource type, Property link, Resource value, boolean invert) {
+            String type, Property link, Resource value, boolean invert) {
 
-        ValueConstraint typeConstraint = new ValueConstraint(RDF.type, type, false);
+        UnionConstraint typeConstraint = createTypeConstraint(type);
 
         ValueConstraint linkConstraint = new ValueConstraint(link, value, invert);
 
