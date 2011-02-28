@@ -4,6 +4,7 @@ import org.ilrt.wf.facets.constraints.Constraint;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Mike Jones (mike.a.jones@bristol.ac.uk)
@@ -24,9 +25,13 @@ public interface FacetState {
     String getParamValue();
 
     boolean isCountable();
+    
+    void setSortRefinements(Set<Order> orders);
 
     /**
      * @return How this state constrains values
      */
     Collection<Constraint> getConstraints();
+    
+    enum Order { Ascending, Descending, ByCount, ByName }
 }

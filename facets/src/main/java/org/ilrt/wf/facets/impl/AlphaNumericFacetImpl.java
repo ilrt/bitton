@@ -38,6 +38,7 @@ public class AlphaNumericFacetImpl extends AbstractFacetFactoryImpl implements F
         // create a pseudo parent
         FacetStateImpl root = new FacetStateImpl();
         root.setRoot(true);
+        root.setSortRefinements(getOrder(environment));
 
         // this alpha-numeric facet has been selected via the request object
         if (environment.getParameters().containsKey(environment.getConfig()

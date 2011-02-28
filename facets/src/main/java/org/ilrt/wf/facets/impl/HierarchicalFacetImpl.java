@@ -53,7 +53,9 @@ public class HierarchicalFacetImpl extends AbstractFacetFactoryImpl implements F
 
         findParents(currentFacetState, ResourceFactory.createResource(environment.getConfig()
                 .get(Facet.FACET_BASE)), baseResource, broaderProperty, true);
-
+        
+        currentFacetState.setSortRefinements(getOrder(environment));
+        
         // create the facet
 
         return new FacetImpl(getFacetTitle(environment), currentFacetState,

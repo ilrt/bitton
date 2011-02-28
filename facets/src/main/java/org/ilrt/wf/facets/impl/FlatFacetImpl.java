@@ -68,6 +68,7 @@ public class FlatFacetImpl extends AbstractFacetFactoryImpl {
             ((FacetStateCollector) state).setProperty(prop);
             ((FacetStateCollector) state).setInvert(invert);
             state.setRoot(true);
+            state.setSortRefinements(getOrder(environment));
             List<FacetState> refinements = new ArrayList(vals.size());
             for (RDFNode val: vals) {
                 ValueConstraint valConstraint = new ValueConstraint(prop, val, invert);

@@ -54,7 +54,8 @@ public class EnumFlatFacetImpl extends FlatFacetImpl {
 
         if ( currentVals == null || currentVals.length == 0 ) { // The root state
             state = new FacetStateCollector("Base", null, null, Collections.singletonList(typeConstraint));
-        
+            state.setSortRefinements(getOrder(environment));
+            
             ((FacetStateCollector) state).setProperty(prop);
             ((FacetStateCollector) state).setInvert(invert);
             state.setRoot(true);

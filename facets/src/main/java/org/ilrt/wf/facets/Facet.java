@@ -17,6 +17,7 @@ public interface Facet {
     // possible parameter values in the facet configuration
     String FACET_TYPE = "facetType";
     String FACET_TITLE = "facetTitle";
+    String FACET_ORDER = "order";
     String LINK_PROPERTY = "linkProperty";
     String LINK_INVERT = "linkInvert";
     String BROADER_PROPERTY = "widerProperty";
