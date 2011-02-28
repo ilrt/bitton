@@ -253,7 +253,7 @@
     <!-- Search -->
     <util:map id="textSearchType" map-class="java.util.HashMap">
         <entry key="facetType" value="EnumFlat"/>
-        <entry key="facetTitle" value="Type"/>
+        <entry key="facetTitle" value="Types"/>
         <entry key="linkProperty" value="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
         <entry key="enumList" value="http://purl.org/dc/terms/Publication|Research outputs,http://vocab.ouls.ox.ac.uk/projectfunding#Grant|Grants &amp; funding,http://xmlns.com/foaf/0.1/Person|People"/>
         <entry key="constraintType"  value="http://purl.org/dc/terms/Publication,http://xmlns.com/foaf/0.1/Person,http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
