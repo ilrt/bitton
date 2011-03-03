@@ -19,17 +19,17 @@ class PublicationGenerator
     pub_id = "http://example.com/publications/#{num}#pub"
     greater_id = "http://example.com/journals/#{num}#pub"
     out.write(pub_id, "rdf:type", "dc:Publication")
-    title = Babel.random_short + ' ' + Babel.random_short
+    title = 1.sentences #Babel.random_short + ' ' + Babel.random_short
     out.write(pub_id, 'rdfs:label', title)
     out.write(pub_id, 'dc:title', title)
-    out.write(pub_id, 'dc:abstract', Babel.random_long)
+    out.write(pub_id, 'dc:abstract', (rand(7) * 2 + 4).sentences) #Babel.random_long)
     out.write(pub_id, 'dc:date', (1995 + rand(16)).to_s , 'xsd:gYear')
     type_name = TYPES[rand(TYPES.size)]
     type_id = 'http://example.com/types/' + type_name.gsub(/\s+/,'_')
     out.write(type_id, 'rdfs:label', type_name)
     out.write(pub_id, 'dc:type', type_id)
     out.write(pub_id, 'dc:partOf', greater_id)
-    out.write(greater_id, 'rdfs:label', Babel.random_short)
+    out.write(greater_id, 'rdfs:label', 1.sentences)
   end
   
   def get_random_publication

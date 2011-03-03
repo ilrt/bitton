@@ -18,10 +18,10 @@ class GrantGenerator
     out.start_record
     grant_id = "http://example.com/grants/#{num}#grant"
     out.write(grant_id, "rdf:type", "proj:Grant")
-    title = Babel.random_short + ' ' + Babel.random_short
+    title = 1.sentences #Babel.random_short + ' ' + Babel.random_short
     out.write(grant_id, 'rdfs:label', title)
     out.write(grant_id, 'dc:title', title)
-    out.write(grant_id, 'dc:abstract', Babel.random_long)
+    out.write(grant_id, 'dc:abstract', (rand(7) * 2 + 4).sentences) #Babel.random_long)
     start = 1995 + rand(16)
     endd = start + rand(9)
     out.write(grant_id, 'proj:startDate', random_date(start) , 'xsd:date')
