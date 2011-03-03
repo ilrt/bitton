@@ -2,7 +2,7 @@ require 'lib/imports'
 
 class PublicationGenerator
   
-  TYPES = [ 'bibo:JournalArticle' ]
+  TYPES = [ 'Journal Article', 'Conference Contribution', 'Book', 'Chapter in Book' ]
   
   def initialize(number)
     @number = number
@@ -24,7 +24,10 @@ class PublicationGenerator
     out.write(pub_id, 'dc:title', title)
     out.write(pub_id, 'dc:abstract', Babel.random_long)
     out.write(pub_id, 'dc:date', (1995 + rand(16)).to_s , 'xsd:gYear')
-    out.write(pub_id, 'dc:type', TYPES[rand(TYPES.size)])
+    type_name = TYPES[rand(TYPES.size)]
+    type_id = 'http://example.com/types/' + type_name.gsub(/\s+/,'_')
+    out.write(type_id, 'rdfs:label', type_name)
+    out.write(pub_id, 'dc:type', type_id)
     out.write(pub_id, 'dc:partOf', greater_id)
     out.write(greater_id, 'rdfs:label', Babel.random_short)
   end
