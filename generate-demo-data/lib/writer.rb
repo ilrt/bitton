@@ -17,7 +17,7 @@ class Writer
     pn = term(p)
     on = term(o, dt)
     
-    @out.puts "#{sn} #{pn} #{on} <#{@graph}>"
+    @out.puts "#{sn} #{pn} #{on} <#{@graph}> ."
   end
   
   def term(s, dt = nil)

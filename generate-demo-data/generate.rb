@@ -6,6 +6,7 @@ require 'lib/grant_generator'
 require 'lib/dept_generator'
 
 PREFIXES = {
+'rdf:' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#' ,
 'aiiso:' => 'http://purl.org/vocab/aiiso/schema#' ,
 'foaf:' => 'http://xmlns.com/foaf/0.1/' ,
 'proj:' => 'http://vocab.ouls.ox.ac.uk/projectfunding#' ,
@@ -14,7 +15,8 @@ PREFIXES = {
 'owl:' => 'http://www.w3.org/2002/07/owl#' ,
 'closed:' => 'http://vocab.bris.ac.uk/rr/closed#' ,
 'rr:' => 'http://vocab.bris.ac.uk/resrev#' ,
-'rel:' => 'http://purl.org/vocab/relationship/'
+'rel:' => 'http://purl.org/vocab/relationship/' ,
+'xsd:' => 'http://www.w3.org/2001/XMLSchema#'
 }
 
 out = Writer.new(STDOUT, PREFIXES)

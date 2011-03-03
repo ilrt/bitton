@@ -24,8 +24,8 @@ class GrantGenerator
     out.write(grant_id, 'dc:abstract', Babel.random_long)
     start = 1995 + rand(16)
     endd = start + rand(9)
-    out.write(grant_id, 'proj:startDate', start.to_s , 'xsd:gYear')
-    out.write(grant_id, 'proj:endDate', endd.to_s , 'xsd:gYear')
+    out.write(grant_id, 'proj:startDate', random_date(start) , 'xsd:date')
+    out.write(grant_id, 'proj:endDate', random_date(endd) , 'xsd:date')
     out.write(grant_id, 'proj:value', rand(2000000).to_s , 'xsd:int')
     funder = FUNDERS[rand(FUNDERS.size)]
     funder_id = 'http://example.com/funder/' + funder
@@ -41,6 +41,10 @@ class GrantGenerator
     @number.times do |num|
       yield "http://example.com/grants/#{num}#grant"
     end
+  end
+  
+  def random_date(year)
+    "%04d-%02d-%02d" % [year, rand(12) + 1, rand(28) + 1]
   end
   
 end
