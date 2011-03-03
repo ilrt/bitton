@@ -1,0 +1,19 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    babel (0.1.4)
+      hoe (>= 1.1.4)
+    hoe (2.9.1)
+      rake (>= 0.8.7)
+    ipsum (1.2.1)
+    ipsum-latin (1.0.0)
+      ipsum (>= 1.2.0)
+    rake (0.8.7)
+
+PLATFORMS
+  java
+
+DEPENDENCIES
+  babel
+  ipsum
+  ipsum-latin
