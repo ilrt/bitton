@@ -1,0 +1,12 @@
+PREFIX dc: <http://purl.org/dc/terms/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?s
+{
+    GRAPH ?g
+    {
+        ?s dc:contributor <%s>;
+        dc:date ?date;
+    }
+}
+order by desc(?date)

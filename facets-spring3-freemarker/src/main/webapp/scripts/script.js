@@ -40,8 +40,11 @@ function shrink(list,n) {
 }
 
 $(document).ready(function(){ 
-	shrink($('#pubtype-facet ul'),5);
-	shrink($('#pubyear-facet ul'),5);
+
+        $( "#tabs" ).tabs();
+
+        shrink($('#pubtype-facet ul'),5);
+        shrink($('#pubyear-facet ul'),5);
         shrink($('#home-publist'),5);
         
         $('#people-complete').

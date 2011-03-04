@@ -8,7 +8,7 @@
 
 <span class="otherdetails">
 <#if result[dc + 'date']??>
-    (${result[dc + 'date']?first})
+    (${result[dc + 'date']?first?date?string("yyyy")})
 </#if>
 <#if result[elements + 'publisher']??>
     ${result[elements + 'publisher']?first}

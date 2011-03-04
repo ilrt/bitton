@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.ilrt.wf.facets.FacetQueryService;
 import org.ilrt.wf.facets.freemarker.JenaObjectWrapper;
@@ -152,20 +153,25 @@ public class ResRevController extends AbstractController {
     }
 
     @RequestMapping(value = PROFILE_PATH, method = RequestMethod.GET)
-    public ModelAndView profileView(HttpServletRequest request) throws FacetViewServiceException {
+    public ModelAndView profileView(HttpServletRequest request, HttpServletResponse response) throws FacetViewServiceException {
         String username = request.getRemoteUser();
-        log.debug("Displaying results for " + request.getRemoteUser());
-
-        // get the session object
-        HttpSession session = request.getSession(true);
-
+        log.debug("Displaying results for " +  username);
+        
         // do a fresh query the service
         ModelAndView mav = createModelAndView(PROFILE_VIEW_NAME, request);
-
+        
+        if (username == null || username.isEmpty())
+        {
+            return new ModelAndView("redirect:/");
+        }
+        
         Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
 
         mav.addObject("resource",  new ResourceHashModel(resource));
 
+        // get users publication information
+        mav.addObject("publist", getListFromQuery("/queries/getPersonsPublications.rq", resource));
+        
         // add flag to allow proview view to differentiate between displaying regular users and current user's profile view
         mav.addObject("profileview",  "true");
         
@@ -320,7 +326,7 @@ public class ResRevController extends AbstractController {
         return query;
     }
     
-    private Object getListFromQuery(String queryFile, Resource resource) {
+    private SimpleCollection getListFromQuery(String queryFile, Resource resource) {
         String query = getQuery(queryFile);
         
         String completeQuery = String.format(query, resource.getURI());
@@ -332,7 +338,7 @@ public class ResRevController extends AbstractController {
         for (Map<String, RDFNode> soln: result) {
             hits.add((Resource) soln.get("s"));
         }
-        
+        System.out.println("Hits:"+hits.size());
         // Return as a viewable thingy 
         return new SimpleCollection(hits, OBJECT_WRAPPER);
     }

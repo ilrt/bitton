@@ -13,12 +13,8 @@
 <#assign alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'] />
 
 <#-- display a default label for a resource -->
-<#macro label resource>
-    <#if resource[rdfs + 'label']??>
-    ${resource[rdfs + 'label']?first}<#elseif resource[foaf + 'name']??>
-    ${resource[foaf + 'name']?first}<#elseif resource[dc + 'title']??>
-    ${resource[dc + 'title']?first}<#else>
-    Untitled resource</#if></#macro>
+<#-- The following needs to be on a single line as it gets passed to a javascript function -->
+<#macro label resource><#if resource[rdfs + 'label']??>${resource[rdfs + 'label']?first?html}<#elseif resource[foaf + 'name']??>${resource[foaf + 'name']?first?html}<#elseif resource[dc + 'title']??>${resource[dc + 'title']?first?html}<#else>Untitled resource</#if></#macro>
 
 <#macro drillForResult result>${contextPath}${servletPath}/item?res=${result?url('UTF-8')}<#list RequestParameters?keys as key>&amp;${key}=${RequestParameters[key]}</#list></#macro>
 
@@ -110,4 +106,48 @@
 
 <#macro linkToPageFor item>
     <a href="<@drillForResult result=item/>"><@label resource=item/></a>
+</#macro>
+
+<#macro displayPublication pub>
+    <#if pub[dc + 'contributor']??>
+      <span class='contributor'><#list pub[dc + 'contributor'] as contributor><@label resource=contributor/><#if contributor_has_next>, </#if></#list>.</span>
+    </#if>
+
+    <a class='title' href='<@drillForResult result=pub/>'><@label resource=pub/></a>.
+
+    <span class='otherdetails'>
+    <#if pub[dc + 'date']??>
+        (${pub[dc + 'date']?first})
+    </#if>
+    <#if pub[elements + 'publisher']??>
+        ${pub[elements + 'publisher']?first}
+    </#if>
+    <#if pub[bibo + 'isbn']??>
+        ${pub[bibo + 'isbn']?first}
+    </#if>
+    <#if pub[bibo + 'volume']??>
+        Vol. ${pub[bibo + 'volume']?first}
+    </#if>
+    <#if pub[dc + 'isPartOf']??>
+        Part of ${pub[dc + 'isPartOf']?first['label']}
+    </#if>
+    <#if pub[bibo + 'pageStart']?? && pub[bibo + 'pageEnd']??>
+       Pages
+        ${pub[bibo + 'pageStart']?first} - ${pub[bibo + 'pageEnd']?first}
+    <#elseif pub[bibo + 'pageStart']??>
+        Page ${pub[bibo + 'pageStart']?first}
+    <#elseif pub[bibo + 'pageEnd']??>
+        Page ${pub[bibo + 'pageEnd']?first}
+    </#if>
+    </span>
+</#macro>
+
+<#macro debug resource>
+    <table class="debug">
+        <#list resource?keys as key>
+            <#list resource[key] as value>
+                <tr><td>${key}</td><td>${value}</td></tr>
+            </#list>
+        </#list>
+    </table>
 </#macro>
