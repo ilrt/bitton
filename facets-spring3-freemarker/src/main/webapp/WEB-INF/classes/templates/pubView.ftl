@@ -2,136 +2,124 @@
 <#include "includes/header.ftl"/>
 
 <!-- main content -->
-    <div id="content">
+<div id="content" class="pub">
+	<div class="col1-2of3">
 
-        <#if view??><p><a href="javascript:history.go(-1)">&lt; Return to results</a></p></#if>
+		<#if view??><a class="back" href="javascript:history.go(-1)">Back to search results</a></#if>
 
-        <h1>${resource[dc + 'title']?first}</h1>
-        
-	<#if resource[dc + 'abstract']??><p>${resource[dc + 'abstract']?first}</p></#if>
+		<h1>${resource[dc + 'title']?first}</h1>
 
-        <#if resource[rdfs + 'seeAlso']??>
-	    <button href="${resource[rdfs + 'seeAlso']?first}">Get full text &gt;</button>
-        </#if>
+		<div id="pubdetails">
+			<dl>
+				<dt>Output type:</dt>
+				<dd>
+				<#list resource[rdf + 'type'] as type>
+				<#if type?contains(bibo?string)>${type?substring(bibo?length)}</#if>
+				</#list>
+				</dd>
+			</dl>
+
+			<dl>
+				<dt>Contributors:</dt>
+				<#list resource[dc + 'contributor'] as contributor>
+				<dd><@displayPerson person=contributor/></dd>, 
+				</#list>
+			</dl>
+
+			<dl>
+
+				<#if resource[dc + 'date']??>
+				<dt>Year of publication:</dt>
+				<dd>
+				${resource[dc + 'date']?first}
+				</dd>
+				</#if>
+			</dl>
+
+			<!-- if it's a journal article or simiar: -->
+			<dl>
+				<dt>Published in:</dt>
+				<dd>{name of parent publication}<#if resource[bibo + 'volume']??>, vol ${resource[bibo + 'volume']?first}</#if><#if resource[bibo + 'pageStart']?? && resource[bibo + 'pageEnd']??>, pp. ${resource[bibo + 'pageStart']?first} - ${resource[bibo + 'pageEnd']?first}</#if>
+
+				</dd>
+			</dl>
+
+				<!-- else if it's a book:
+			<dl>
+				<dt>Published by:</dt>
+				<dd>{name of publisher}</dd>
+				<#if resource[bibo + 'isbn']??>
+				<dt>ISBN:</dt>
+				<dd>${resource[bibo + 'isbn']?first}</dd>
+				</#if>
+			</dl>
+
+				etc, etc.
+				-->
 
 
-        <p>Contributors:</p>
-            <!-- order alphabetically -->
-            <#if resource[dc + 'contributor']??>
-                <ul>
-                    <#list resource[dc + 'contributor'] as contributor>
-                        <li>
-                             <@displayPerson person=contributor/>
-                        </li>
-                    </#list>
-                </ul>
-            </#if>
+		</div><!-- /pubdetails -->
 
-        <#if resource[resrev + 'department']??>
-	<!--
-	Don't display depts unless we can associate them with a specific contributor:
+		<#if resource[dc + 'abstract']??><p>${resource[dc + 'abstract']?first}</p></#if>
 
-            <p>Departments of above contributors:</p>
-                <ul>
-                    <#list resource[resrev + 'department'] as department>
-                        <li><@displayOrg org=department/></li>
-                    </#list>
-                </ul>
-	-->
-        </#if>
+		<#if resource[rdfs + 'seeAlso']??>
+		<button href="${resource[rdfs + 'seeAlso']?first}">Get full text &gt;</button>
+		</#if>
 
-        <table>
-            <#if resource[dc + 'date']??>
-                <tr>
-                    <th>Date of Publication:</th>
-                    <td>
-                        ${resource[dc + 'date']?first}
-                    </td>
-                </tr>
-            </#if>
-            <tr>
-                <th>Type of Publication:</th>
-                <td>
-                    <#list resource[rdf + 'type'] as type>
-                        <#if type?contains(bibo?string)>${type?substring(bibo?length)}</#if>
-                    </#list>
-                </td>
-            </tr>
-            <#if resource[elements + 'publisher']??>
-                <tr>
-                    <th>Publisher:</th>
-                    <td>
-                        ${resource[elements + 'publisher']?first}
-                    </td>
-                </tr>
-            </#if>
-            <#if resource[bibo + 'isbn']??>
-                <tr>
-                    <th>ISBN:</th>
-                    <td>
-                        ${resource[bibo + 'isbn']?first}
-                    </td>
-                </tr>
-            </#if>
-            <#if resource[bibo + 'volume']??>
-                <tr>
-                    <th>Volume:</th>
-                    <td>
-                        ${resource[bibo + 'volume']?first}
-                    </td>
-                </tr>
-            </#if>
-            <#if resource[dc + 'isPartOf']??>
-                <tr>
-                    <th>Part Of:</th>
-                    <td>
-                        ${resource[dc + 'isPartOf']?first}
-                    </td>
-                </tr>
-            </#if>
-            <#if resource[bibo + 'pageStart']?? && resource[bibo + 'pageEnd']??>
-                <tr>
-                    <th>Pages:</th>
-                    <td>
-                        ${resource[bibo + 'pageStart']?first} - ${resource[bibo + 'pageEnd']?first}
-                    </td>
-                </tr>
-            <#elseif resource[bibo + 'pageStart']??>
-                <tr>
-                    <th>Page Start:</th>
-                    <td>
-                        ${resource[bibo + 'pageStart']?first}
-                    </td>
-                </tr>
-            <#elseif resource[bibo + 'pageEnd']??>
-                <tr>
-                    <th>Page End:</th>
-                    <td>
-                        ${resource[bibo + 'pageEnd']?first}
-                    </td>
-                </tr>
-            </#if>
-            <#if resource[dc + 'bibliographicCitation']??>
-                <tr>
-                    <th>Citation:</th>
-                    <td>
-                        <cite>${resource[dc + 'bibliographicCitation']?first}</cite>
-                    </td>
-                </tr>
-            </#if>
-        </table>
+		<#if resource[dc + 'bibliographicCitation']??>
+		<div id="citation">
+			<h2 class="veryweak">Full citation</h2>
+			<cite class="veryweak">${resource[dc + 'bibliographicCitation']?first}</cite>
+		</div><!-- /citation -->
+		</#if>
 
-<!--
-        <table class="debug">
-            <#list resource?keys as key>
-                <#list resource[key] as value>
-                    <tr><td>${key}</td><td>${value}</td></tr>
-                </#list>
-            </#list>
-        </table>
--->
+		<p><a href="#">Where does this data come from?</a></p>
 
-     </div>
+		<!--
+		<table class="debug">
+			<#list resource?keys as key>
+			<#list resource[key] as value>
+			<tr><td>${key}</td><td>${value}</td></tr>
+			</#list>
+			</#list>
+		</table>
+		-->
+
+	</div><!-- /col1-2of3 -->
+	<div class="col3of3">
+
+		<div class="section">
+			<h2>1 impact</h2>
+			<ul class="objects">
+				<li class="impact"><a href="#">Cited in article in New Scientist</a></li>
+			</ul>
+			<p class="button"><a class="add" href="#">New impact</a></p>
+		</div><!-- /section -->
+
+		<#if resource[dc + 'contributor']??>
+		<div class="section">
+			<h2>N contributors</h2>
+			<ul class="objects">
+				<#list resource[dc + 'contributor'] as contributor>
+				<li class="person">
+				<@displayPerson person=contributor/>
+				</li>
+				</#list>
+			</ul>
+		</div><!-- /section -->
+		</#if>
+
+		<div class="section">
+			<h2>funded by 1 grant</h2>
+			<ul class="objects">
+				<li class="grant"><a href="#">Title of grant goes here</a></li>
+			</ul>
+		</div><!-- /section -->
+
+
+	</div><!-- /col3of3 -->
+
+</div><!-- /content -->
 
 <#include "includes/address-footer.ftl"/>
 

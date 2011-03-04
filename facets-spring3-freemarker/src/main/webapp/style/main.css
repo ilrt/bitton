@@ -117,6 +117,16 @@ dt {
 	margin-top: 7px;
 }
 
+.veryweak {
+	color: #808080;
+}
+
+.veryweak a:link, .veryweak a:visited {
+	color: #808080;
+}
+
+.veryweak a:hover { color: #D1461F; }
+
 
 /* =structure
  * ----------------------------------------------- */
@@ -168,7 +178,7 @@ form#topsearch {
 	width: 100%;
 }
 
-.panelcontent {
+.panelcontent, .section {
 	padding: 0 10px;
 }
 
@@ -196,6 +206,16 @@ form#topsearch {
 
 .col2-3of3 {
 	float: right;
+	width: 636px;
+}
+
+.col3of3 {
+	float: right;
+	width: 308px;
+}
+
+.col1-2of3 {
+	float: left;
 	width: 636px;
 }
 
@@ -576,20 +596,24 @@ ul.results li {
 	padding: 0 0 0 25px;
 }
 
-ul.results li.pub {
+li.pub {
 	background: transparent url(../images/icon-paper.png) left top no-repeat;
 }
 
-ul.results li.grant {
+li.grant {
 	background: transparent url(../images/icon-pound.png) left top no-repeat;
 }
 
-ul.results li.person {
+li.person {
 	background: transparent url(../images/icon-person.png) left top no-repeat;
 }
 
-ul.results li.group {
+li.group {
 	background: transparent url(../images/icon-group.png) left top no-repeat;
+}
+
+li.impact {
+	background: transparent url(../images/icon-impact.png) left top no-repeat;
 }
 
 ul.results .contributor {
@@ -684,3 +708,73 @@ a.impactcount strong {
     float: left;
     width: 100%;
 }
+
+
+
+/* =publication view
+ *  * =========================================== */
+ul.objects {
+	margin-left: 0;
+	margin-top: 7px;
+	padding: 0;
+	list-style-type: none;
+}
+
+ul.objects li {
+	margin-bottom: 7px;
+	padding: 0 0 0 25px;
+}
+
+.pub .col3of3 {
+	margin-top: 28px;
+	background: #f2f2f2;
+	border-bottom: 1px solid #ddd;
+	padding: 7px 0;
+}
+
+.pub .col3of3 .section {
+	padding-top: 7px;
+}
+
+#pubdetails {
+	margin: 14px 0;
+}
+
+#pubdetails dl {
+	margin: 4px 0;
+}
+
+#pubdetails dt {
+	display: inline;
+	clear: left;
+	font-weight: normal;
+	color: #808080;
+}
+
+#pubdetails dd {
+	display: inline;
+}
+
+#citation {
+	margin: 14px 0;
+	font-size: 0.928571em;
+}
+
+a.back {
+	display: block;
+	background: #E0E8CA url(../images/btn-back.png) left center no-repeat;
+	width: 10.8em;
+	padding-left: 1.2em;
+	color: #305209;
+	text-decoration: none;
+	margin: 7px 0 14px 0;
+}
+
+a.back:hover, a.back:focus, a.back:active {
+	background-color: #D6DEC1;
+}
+
+
+
+
+
