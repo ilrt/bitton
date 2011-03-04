@@ -238,7 +238,7 @@
         <entry key="facetTitle" value="Years"/>
         <entry key="linkProperty" value="http://purl.org/dc/terms/date"/>
         <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
-        <entry key="numericRange" value="#{currentYear - 5}:#{currentYear - 1}#Last 5 years,#{currentYear - 1}:#{currentYear}#Last year,#{currentYear}:#{currentYear+1}"/>
+        <entry key="numericRange" value="#{currentYear}:#{currentYear+1}#This year,#{currentYear - 1}:#{currentYear}#Last year,#{currentYear - 5}:#{currentYear - 1}#Last 5 years"/>
         <entry key="numericRangeType" value="http://www.w3.org/2001/XMLSchema#gYear"/>
         <entry key="paramName" value="pubyeargrp"/>
     </util:map>    
