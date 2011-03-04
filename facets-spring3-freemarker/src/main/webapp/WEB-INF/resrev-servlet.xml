@@ -38,6 +38,10 @@
 
     </util:map>
 
+    <bean name="currentYear" class="java.lang.Integer">
+        <constructor-arg value="#{ T(java.util.Calendar).getInstance().get(T(java.util.Calendar).YEAR)}" />
+    </bean>
+
     <!-- Facet configurations -->
 
     <!--
@@ -89,8 +93,7 @@
         <entry key="numericRangeFormat" value="£###,###"/>
         <entry key="paramName" value="grantValues"/>
     </util:map>
-
-
+   
     <util:map id="grantStartYear" map-class="java.util.HashMap">
         <entry key="facetType" value="SimpleNumberRange"/>
         <entry key="facetTitle" value="Start Year"/>
@@ -230,6 +233,15 @@
         <entry key="requireCounts" value="true"/>
         <entry key="paramName" value="pfdept"/>
     </util:map>
+    <util:map id="pubYearGroups" map-class="java.util.HashMap">
+        <entry key="facetType" value="SimpleNumberRange"/>
+        <entry key="facetTitle" value="Years"/>
+        <entry key="linkProperty" value="http://purl.org/dc/terms/date"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
+        <entry key="numericRange" value="#{currentYear - 5}:#{currentYear - 1}#Last 5 years,#{currentYear - 1}:#{currentYear}#Last year,#{currentYear}:#{currentYear+1}"/>
+        <entry key="numericRangeType" value="http://www.w3.org/2001/XMLSchema#gYear"/>
+        <entry key="paramName" value="pubyeargrp"/>
+    </util:map>    
     <util:map id="pubYear" map-class="java.util.HashMap">
         <entry key="facetType" value="Flat"/>
         <entry key="facetTitle" value="Year"/>
@@ -243,6 +255,7 @@
         <ref bean="pubType"/>
         <ref bean="pubDept"/>
         <ref bean="pubFixedDept"/>
+        <ref bean="pubYearGroups"/>
         <ref bean="pubYear"/>
     </util:list>
     <util:map id="pubProps" map-class="java.util.HashMap">
