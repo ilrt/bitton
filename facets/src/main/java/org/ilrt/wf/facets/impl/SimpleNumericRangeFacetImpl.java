@@ -59,10 +59,18 @@ public class SimpleNumericRangeFacetImpl extends AbstractFacetFactoryImpl implem
                     .get(environment.getConfig().get(Facet.PARAM_NAME));
             String value = values[0];
 
+            String label = null;
+            if (value.contains("#"))
+            {
+                label = value.substring(value.lastIndexOf("#")+1);
+                value = value.substring(0, value.lastIndexOf("#"));
+            }
+                        
             String[] parts = value.split(":");
+            if (label == null) label = label(parts, df, typeUri);
 
             // create a state to represent the currently selected state
-            facetState = new FacetStateImpl(label(parts, df, typeUri), root, value,
+            facetState = new FacetStateImpl(label, root, value,
                     Arrays.asList(typeConstraint, rangeConstraint(p, parts, typeUri)));
 
         } else { // we want them all
@@ -90,9 +98,17 @@ public class SimpleNumericRangeFacetImpl extends AbstractFacetFactoryImpl implem
 
         for (String range : ranges) {
 
+            String label = null;
+            if (range.contains("#"))
+            {
+                label = range.substring(range.lastIndexOf("#")+1);
+                range = range.substring(0, range.lastIndexOf("#"));
+            }
+                        
             String[] parts = range.split(":");
+            if (label == null) label = label(parts, df, typeUri);
 
-            refinementsList.add(new FacetStateImpl(label(parts, df, typeUri), rootState, range,
+            refinementsList.add(new FacetStateImpl(label, rootState, range,
                     Arrays.asList(typeConstraint, rangeConstraint(linkProperty, parts, typeUri))));
         }
 
