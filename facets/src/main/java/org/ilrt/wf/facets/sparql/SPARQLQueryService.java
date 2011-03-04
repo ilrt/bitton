@@ -248,11 +248,14 @@ public class SPARQLQueryService implements FacetQueryService {
 
         // We now have a list of matches. Let's get their descriptions
         
+        boolean somethingToFetch = false;
         Query desc = QueryFactory.make();
         for (Resource node: toDescribe) {
-            if (node.isURIResource()) desc.addDescribeNode(node.asNode());
+            if (node.isURIResource()) { desc.addDescribeNode(node.asNode()); somethingToFetch = true; }
         }
         desc.setQueryDescribeType();
+        
+        if (!somethingToFetch) return Collections.EMPTY_LIST;
         
         QueryExecution getDescs = qef.get(desc);
         Model m = getDescs.execDescribe();
