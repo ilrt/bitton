@@ -4,7 +4,7 @@
     <title>Research Revealed</title>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/themes/base/jquery-ui.css" type="text/css" media="all" />
     <link rel="stylesheet" href="${contextPath}/style/main.css"/>
-    <link rel="stylesheet" href="${contextPath}/style/jquery-ui-1.8.5.custom.css"/>
+    <link rel="stylesheet" href="${contextPath}/style/jquery-ui-1.8.10.custom.css"/>
     <link rel="stylesheet" href="${contextPath}/style/ui.slider.extras.css"/>
     <link rel="stylesheet" href="${contextPath}/style/autocomplete.css"/>
     <link rel="stylesheet" href="${contextPath}/style/graphandlistview.css"/>
