@@ -12,157 +12,133 @@
         <#if resource[aiiso + 'part_of']??>
           <p><strong>Part of: </strong><@displayOrg org=resource[aiiso + 'part_of']?first/></p>
         </#if>
-               
+
+
         <div id="tabs">
-            <ul>
-                <li><a href="#tabs-pub">Research Outputs</a></li>
-                <li><a href="#tabs-grants">Grants</a></li>
-                <li><a href="#tabs-members">Members</a></li>
+            <ul class="tabs">
+                <li class="first"><a href="#tabs-pub">Research Outputs <span class="count"><#if recentoutputs??>${recentoutputs.size}<#else>0</#if></span></a></li>
+                <li><a href="#tabs-grants">Grants <span class="count"><#if recentgrants??>${recentgrants.size}<#else>0</#if></span></a></li>
+                <li><a href="#tabs-members">Members <span class="count"><#if resource[foaf + 'member']??>${resource[foaf + 'member']?size}<#else>0</#if></span></a></li>
             </ul>
 
-            <div id="tabs-pub">
-                <#if recentoutputs??>
-                    <script type="text/javascript">
-                        // global vars
-                        var maxPageSize = 5;
-                        var currentPage = 0;
+            <div class="tabbedcontent">
+                <div class="inner" id="tabs-pub">
+                    <#if recentoutputs??>
+                        <script type="text/javascript">
+                            <#-- create global object for each collection -->
+                            <#if graphCount??><#assign graphCount=graphCount+1/><#else><#assign graphCount=0/></#if>
+                            if (typeof graphData == "undefined") graphData = new Object();
 
-                        var results = new Array();
+                            <#-- vars -->
+                            graphData[${graphCount}] = new Object();
+                            graphData[${graphCount}].maxPageSize = 5;
+                            graphData[${graphCount}].currentPage = 0;
 
-                        <#list recentoutputs as item>
-                            <#if item[dc + 'date']??>
-                                var o = new Object();
-                                o.year = ${item[dc + 'date']?first?date?string("yyyy")};
-                                o.label = "${item[rdfs + 'label']?first?html}";
-                                if (o.label == "") o.label = "[Title missing]";
-                                o.citation = "<#if item[dc + 'contributor']??><span class='contributor'><#list item[dc + 'contributor'] as contributor><@label resource=contributor/><#if contributor_has_next>, </#if></#list>.</span> </#if><a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>. <span class='otherdetails'><#if item[dc + 'date']??>(${item[dc + 'date']?first?date?string("yyyy")}) </#if><#if item[elements + 'publisher']??>${item[elements + 'publisher']?first}</#if><#if item[bibo + 'isbn']??> ${item[bibo + 'isbn']?first}</#if><#if item[bibo + 'volume']??> Vol. ${item[bibo + 'volume']?first}</#if><#if item[dc + 'isPartOf']??> Part of ${item[dc + 'isPartOf']?first['label']}</#if><#if item[bibo + 'pageStart']?? && item[bibo + 'pageEnd']??> Pages ${item[bibo + 'pageStart']?first} - ${item[bibo + 'pageEnd']?first}<#elseif item[bibo + 'pageStart']??> Page ${item[bibo + 'pageStart']?first}<#elseif item[bibo + 'pageEnd']??> Page ${item[bibo + 'pageEnd']?first}</#if></span>";
-                                results[results.length] = o;
-                            </#if>
-                        </#list>
-                    </script>
-                    <div class="combiGraphAndList">
-                        <div class="fig">
-                            <script type="text/javascript+protovis">
-                                /* Sizing and scales. */
-                                var w = $('.combiGraphAndList .fig').width(),
-                                h = $('.combiGraphAndList .fig').height(),
-                                x = pv.Scale.ordinal(labels).splitBanded(0, w),
-                                y = pv.Scale.linear(data).range(0, h);
+                            graphData[${graphCount}].results = new Array();
 
-                                /* The root panel. */
-                                var vis = new pv.Panel()
-                                    .width(w)
-                                    .height(h)
-                                    .bottom(5)
-                                    .left(0)
-                                    .right(0)
-                                    .top(5);
+                            var sortOptions = new Array();
+                            var obj = new Object();
+                            obj.title = "Title (asc)";
+                            obj.fun = sortResultsOnLabelAsc;
+                            sortOptions['sortResultsOnLabelAsc'] = obj;
+                            obj = new Object();
+                            obj.title = "Title (desc)";
+                            obj.fun = sortResultsOnLabelDesc;
+                            sortOptions['sortResultsOnLabelDesc'] = obj;
+                            obj = new Object();
+                            obj.title = "Date (asc)";
+                            obj.fun = sortResultsOnDateThenLabelAsc;
+                            sortOptions['sortResultsOnDateThenLabelAsc'] = obj;
+                            obj = new Object();
+                            obj.title = "Date (desc)";
+                            obj.fun = sortResultsOnDateThenLabelDesc;
+                            sortOptions['sortResultsOnDateThenLabelDesc'] = obj;
+                            graphData[${graphCount}].sortOptions = sortOptions;
 
-                                /* X-axis ticks. */
-                                vis.add(pv.Rule)
-                                    .data(labels)
-                                    .bottom(-10)
-                                    .height(15)
-                                    .left(function(d) x(d))
-                                    .strokeStyle("#000");
+                            <#list recentoutputs.collection as item>
+                                <#if item[dc + 'date']??>
+                                    var o = new Object();
+                                    o.year = ${item[dc + 'date']?first?date?string("yyyy")};
+                                    o.label = "<@label resource=item/>";
+                                    o.citation = "<#if item[dc + 'contributor']??><span class='contributor'><#list item[dc + 'contributor'] as contributor><@label resource=contributor/><#if contributor_has_next>, </#if></#list>.</span> </#if><a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>. <span class='otherdetails'><#if item[dc + 'date']??>(${item[dc + 'date']?first?date?string("yyyy")}) </#if><#if item[elements + 'publisher']??>${item[elements + 'publisher']?first}</#if><#if item[bibo + 'isbn']??> ${item[bibo + 'isbn']?first}</#if><#if item[bibo + 'volume']??> Vol. ${item[bibo + 'volume']?first}</#if><#if item[dc + 'isPartOf']??> Part of ${item[dc + 'isPartOf']?first['label']}</#if><#if item[bibo + 'pageStart']?? && item[bibo + 'pageEnd']??> Pages ${item[bibo + 'pageStart']?first} - ${item[bibo + 'pageEnd']?first}<#elseif item[bibo + 'pageStart']??> Page ${item[bibo + 'pageStart']?first}<#elseif item[bibo + 'pageEnd']??> Page ${item[bibo + 'pageEnd']?first}</#if></span>";
+                                    graphData[${graphCount}].results[graphData[${graphCount}].results.length] = o;
+                                </#if>
+                            </#list>
+                        </script>
+                        <@generateGraphHTML graphCount=graphCount/>
+                    <#else>
+                        <h2>No research outputs available</h2>
+                    </#if>
+                </div><!-- END id="tabs-pub" -->
 
-                                /* The bars. */
-                                var bar = vis.add(pv.Bar)
-                                    .data(data)
-                                    .height(function(d) y(d))
-                                    .width(function() vis.width()/labels.length)
-                                    .left(function(d) x(this.index))
-                                    .fillStyle("#AAA")
-                                    .bottom(0);
+                <#-- Grants -->
+                <div class="inner" id="tabs-grants">
+                    <#if recentgrants?? && 0 < recentgrants.size>
+                        <script type="text/javascript">
+                            <#-- create global object for each collection -->
+                            <#if graphCount??><#assign graphCount=graphCount+1/><#else><#assign graphCount=0/></#if>
+                            if (typeof graphData == "undefined") graphData = new Object();
 
-                                $('.combiGraphAndList .fig').resize(function() {
-                                  var w = $('.combiGraphAndList .fig').width();
-                                  var h = $('.combiGraphAndList .fig').height();
-                                  vis.width(w).height(h);
-                                  x.domain(labels).splitBanded(0, w);
-                                  y.range(0, h);
-                                  vis.render();
-                                });
+                            <#-- vars -->
+                            graphData[${graphCount}] = new Object();
+                            graphData[${graphCount}].maxPageSize = 5;
+                            graphData[${graphCount}].currentPage = 0;
+                            graphData[${graphCount}].results = new Array();
 
-                                $('.combiGraphAndList .fig').resize();
-                            </script>
+                            var sortOptions = new Array();
+                            var obj = new Object();
+                            obj.title = "Title (asc)";
+                            obj.fun = sortResultsOnLabelAsc;
+                            sortOptions['sortResultsOnLabelAsc'] = obj;
+                            obj = new Object();
+                            obj.title = "Title (desc)";
+                            obj.fun = sortResultsOnLabelDesc;
+                            sortOptions['sortResultsOnLabelDesc'] = obj;
+                            obj = new Object();
+                            obj.title = "Date (asc)";
+                            obj.fun = sortResultsOnDateThenLabelAsc;
+                            sortOptions['sortResultsOnDateThenLabelAsc'] = obj;
+                            obj = new Object();
+                            obj.title = "Date (desc)";
+                            obj.fun = sortResultsOnDateThenLabelDesc;
+                            sortOptions['sortResultsOnDateThenLabelDesc'] = obj;
+                            graphData[${graphCount}].sortOptions = sortOptions;
 
-                        </div><!-- END #fig -->
+                            <#list recentgrants.collection as item>
+                                <#if item[proj + 'startDate']??>
+                                    var o = new Object();
+                                    o.year = ${item[proj + 'startDate']?first?date?string("yyyy")};
+                                    o.label = "<@label resource=item/>";
+                                    o.citation = "<a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>. <#if item[proj + 'value']??><span class='amount'>&pound;${item[proj + 'value']?first}</span></#if> <span class='otherdetails'><#if item[proj + 'hasPrincipalInvestigator']??><#list item[proj + 'hasPrincipalInvestigator'] as pi><#if pi[rdfs + 'label']??>${pi[rdfs + 'label']?first}</#if></#list></#if><#if item[proj + 'startDate']??> (${item[proj + 'startDate']?first?date?string('yyyy')})</#if><#if item[proj + 'hostedBy']??> <@label resource=item[proj + 'hostedBy']?first/></#if></span>";
+                                    graphData[${graphCount}].results[graphData[${graphCount}].results.length] = o;
+                                </#if>
+                            </#list>
+                        </script>
+                        <@generateGraphHTML graphCount=graphCount/>
+                    <#else>
+                        <h2>No grants available</h2>
+                    </#if>
+                </div>
 
-                        <div class="slider-container">
-                            <div class="slider-outer">
-                                <div class="slider-inner">
-                                    <div class="valueLeft">
-                                        <input type="text" class="startYear" />
-                                    </div>
-                                    <div class="slider-range"></div>
-                                </div>
-                            </div>
-                            <div class="valueRight">
-                                <input type="text" class="endYear" />
-                            </div>
-                        </div><!-- END class="slider-container" -->
+                <#-- collaborators -->
+                <div class="inner" id="tabs-members">
+                    <#if  resource[foaf + 'member']??>
+                        <div class="collapsible collapsed">
+                            <h2>Members</h2>
 
-                        <div class="clearing">&nbsp;</div>
-
-                        <div class="results">
-                          <div class="body"
-                               xmlns:dc="http://purl.org/dc/elements/1.1/"
-                               xmlns:dcterms="http://purl.org/dc/terms/"
-                               about="http://www.example.com/books/wikinomics">
-                               <!--  
-                                 <p>
-                                   <span class='title' property='dc:title'>[title]</span>
-                                   <span class='year' property='dc:date'>([year])</span>
-                                   <span class='citation' property='dcterms:bibliographicCitation'>[citation]</span>
-                                 </p>
-                               -->
-                          </div><!-- END class="body" -->
-
-                          <div class="controls">
-                            <span class="prev">Previous</span>
-                            <span class="resultstotal"></span>
-                            <span class="next">Next</span>
-                          </div>
-
-                          <select class="ordering"></select>
-                        </div><!-- END class="results" -->
-
-                    </div><!-- END class="combiGraphAndList" -->
-                </#if>
-            </div><!-- END id="tabs-pub" -->
-
-            <#-- Grants -->
-            <div id="tabs-grants">
-                <#if recentgrants??>
-                    <div class="recent-grants">
-                        <h2>Recent grants</h2>
-                        <#list recentgrants as grant>
-                            <p><@linkToPageFor item=grant/></p>
-                        </#list>
-                    </div>
-                </#if>
-            </div>
-
-            <#-- collaborators -->
-            <div id="tabs-members">
-                <#if  resource[foaf + 'member']??>
-                    <div class="collapsible collapsed">
-                        <h2>Members</h2>
-
-                        <ul class="content collapsed">
-                            <#if resource[foaf + 'member']??>
-                                <#list resource[foaf + 'member'] as member>
-                                    <li>
-                                         <@displayPerson person=member/>
-                                    </li>
-                                </#list>
-                            </#if>
-                        </ul>
-                    </div>
-                </#if>
-            </div><!-- END id="tabs-members" -->
-
+                            <ul class="content collapsed">
+                                <#if resource[foaf + 'member']??>
+                                    <#list resource[foaf + 'member'] as member>
+                                        <li>
+                                             <@displayPerson person=member/>
+                                        </li>
+                                    </#list>
+                                </#if>
+                            </ul>
+                        </div>
+                    </#if>
+                </div><!-- END id="tabs-members" -->
+            </div><!-- /tabbedcontent -->
         </div> <!-- END  id="tabs" -->
 
 
@@ -170,6 +146,6 @@
 
      </div>
 
-<#include "includes/address-footer.ftl"/>
+     <#include "includes/address-footer.ftl"/>
 
-<#include "includes/footer.ftl"/>
+     <#include "includes/footer.ftl"/>

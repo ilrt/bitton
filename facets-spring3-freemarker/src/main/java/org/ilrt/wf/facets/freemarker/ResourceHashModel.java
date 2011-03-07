@@ -7,9 +7,9 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import freemarker.template.SimpleCollection;
 import freemarker.template.SimpleDate;
@@ -141,6 +141,9 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
             else
                 return new SimpleScalar(getAsString());
         }
+        if ("type".equalsIgnoreCase(s) && resource.hasProperty(RDF.type)) 
+                return new SimpleScalar(resource.getProperty(RDF.type).getObject().asResource().getURI());
+        
         // Invert search 
         boolean invert = s.startsWith("<-");
         
@@ -170,7 +173,7 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
     public boolean isEmpty() throws TemplateModelException {
 
         StmtIterator iterator = resource.listProperties();
-        return iterator.toList().size() == 0;
+        return iterator.toList().isEmpty();
     }
 
     // ---------- TemplateScalarModel interface methods
@@ -185,6 +188,8 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
         }
     }
 
+    public Resource getResource() { return resource; }
+    
     private TemplateModel resolveModel(RDFNode node) {
 
         if (node.isLiteral()) {

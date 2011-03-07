@@ -41,7 +41,7 @@ function shrink(list,n) {
 
 $(document).ready(function(){ 
 
-        $( "#tabs" ).tabs();
+        applyTabs();
 
         shrink($('#pubtype-facet ul'),5);
         shrink($('#pubyear-facet ul'),5);
@@ -188,4 +188,19 @@ function hideDepartments()
         $(".alldept form").hide().append(text);
         $(".popdept  h3").hide();
    }
+}
+
+function applyTabs()
+{
+    // hide all content
+    $(".tabbedcontent > div:gt(0)").hide();
+    
+    // enable action on each tab header
+    $("ul.tabs li a").click(function(){
+        var location = $(this).attr("href");
+        $(location).parent(".tabbedcontent").children().hide();
+        $(location).show();
+        $(".combiGraphAndList .fig").trigger("redraw");
+        return false;
+    })
 }

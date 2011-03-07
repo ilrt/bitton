@@ -140,6 +140,98 @@
     </span>
 </#macro>
 
+<#macro generateGraphHTML graphCount>
+    <div class="combiGraphAndList" id="combiGraphAndList_${graphCount}">
+        <div class="fig">
+            <script type="text/javascript+protovis">
+                /* Sizing and scales. */
+                graphData[${graphCount}].w = $('#combiGraphAndList_${graphCount} .fig').width();
+                graphData[${graphCount}].h = $('#combiGraphAndList_${graphCount} .fig').height();
+                graphData[${graphCount}].x = pv.Scale.ordinal(graphData[${graphCount}].labels).splitBanded(0, graphData[${graphCount}].w);
+                graphData[${graphCount}].y = pv.Scale.linear(graphData[${graphCount}].data).range(0, graphData[${graphCount}].h);
+
+                /* The root panel. */
+                graphData[${graphCount}].vis = new pv.Panel()
+                    .width(graphData[${graphCount}].w)
+                    .height(graphData[${graphCount}].h)
+                    .bottom(5)
+                    .left(0)
+                    .right(0)
+                    .top(5);
+
+                /* X-axis ticks. */
+                graphData[${graphCount}].vis.add(pv.Rule)
+                    .data(graphData[${graphCount}].labels)
+                    .bottom(-10)
+                    .height(15)
+                    .left(function(d) graphData[${graphCount}].x(d))
+                    .strokeStyle("#000");
+
+                /* The bars. */
+                graphData[${graphCount}].bar = graphData[${graphCount}].vis.add(pv.Bar)
+                    .data(graphData[${graphCount}].data)
+                    .height(function(d) graphData[${graphCount}].y(d))
+                    .width(function() graphData[${graphCount}].vis.width()/graphData[${graphCount}].labels.length)
+                    .left(function(d) graphData[${graphCount}].x(this.index))
+                    .fillStyle("#AAA")
+                    .bottom(0);
+
+                $('#combiGraphAndList_${graphCount} .fig').bind("redraw",function() {
+                  graphData[${graphCount}].w = $('#combiGraphAndList_${graphCount} .fig').width();
+                  graphData[${graphCount}].h = $('#combiGraphAndList_${graphCount} .fig').height();
+                  graphData[${graphCount}].vis.width(graphData[${graphCount}].w).height(graphData[${graphCount}].h);
+                  graphData[${graphCount}].x.domain(graphData[${graphCount}].labels).splitBanded(0, graphData[${graphCount}].w);
+                  graphData[${graphCount}].y.range(0, graphData[${graphCount}].h);
+                  graphData[${graphCount}].vis.render();
+                });
+
+                graphData[${graphCount}].vis.render();
+            </script>
+
+        </div><!-- END #fig -->
+
+        <div class="slider-container">
+            <div class="slider-outer">
+                <div class="slider-inner">
+                    <div class="valueLeft">
+                        <input type="text" class="startYear" />
+                    </div>
+                    <div class="slider-range"></div>
+                </div>
+            </div>
+            <div class="valueRight">
+                <input type="text" class="endYear" />
+            </div>
+        </div><!-- END class="slider-container" -->
+
+        <div class="clearing">&nbsp;</div>
+
+        <div class="results">
+          <div class="body"
+               xmlns:dc="http://purl.org/dc/elements/1.1/"
+               xmlns:dcterms="http://purl.org/dc/terms/"
+               about="http://www.example.com/books/wikinomics">
+               <!--  
+                 <p>
+                   <span class='title' property='dc:title'>[title]</span>
+                   <span class='year' property='dc:date'>([year])</span>
+                   <span class='citation' property='dcterms:bibliographicCitation'>[citation]</span>
+                 </p>
+               -->
+          </div><!-- END class="body" -->
+
+          <div class="controls">
+            <span class="prev">Previous</span>
+            <span class="resultstotal"></span>
+            <span class="next">Next</span>
+          </div>
+
+          <select class="ordering"></select>
+        </div><!-- END class="results" -->
+
+    </div><!-- END class="combiGraphAndList" -->
+</#macro>
+
 <#macro debug resource>
     <table class="debug">
         <#list resource?keys as key>

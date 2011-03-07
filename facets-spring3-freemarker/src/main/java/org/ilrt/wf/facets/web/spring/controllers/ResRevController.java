@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.ilrt.wf.facets.FacetQueryService;
+import org.ilrt.wf.facets.freemarker.ExtendedSimpleCollection;
 import org.ilrt.wf.facets.freemarker.JenaObjectWrapper;
 
 /**
@@ -60,6 +61,18 @@ public class ResRevController extends AbstractController {
         
         mav.addObject("viewcontext", "resource");
         
+        if (mav.getViewName().equalsIgnoreCase(PROFILE_VIEW_NAME))
+        {
+            Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
+            mav.addObject("publist", getListFromQuery("/queries/getPersonsPublications.rq", resourceObj));
+        }
+
+        if (mav.getViewName().equalsIgnoreCase(ORGANISATION_VIEW_NAME))
+        {
+            Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
+            mav.addObject("recentoutputs", getListFromQuery("/queries/getAllDeptOutputs.rq", resourceObj));
+            mav.addObject("recentgrants", getListFromQuery("/queries/getAllDeptGrants.rq", resourceObj));
+        }
         return mav;
     }
 
@@ -331,7 +344,7 @@ public class ResRevController extends AbstractController {
         return query;
     }
     
-    private SimpleCollection getListFromQuery(String queryFile, Resource resource) {
+    private Object getListFromQuery(String queryFile, Resource resource) {
         String query = getQuery(queryFile);
         
         String completeQuery = String.format(query, resource.getURI());
@@ -343,11 +356,11 @@ public class ResRevController extends AbstractController {
         for (Map<String, RDFNode> soln: result) {
             hits.add((Resource) soln.get("s"));
         }
-        System.out.println("Hits:"+hits.size());
+
         // Return as a viewable thingy 
-        return new SimpleCollection(hits, OBJECT_WRAPPER);
+        return new ExtendedSimpleCollection(hits, OBJECT_WRAPPER);
     }
-    
+
     private static ObjectWrapper OBJECT_WRAPPER = new JenaObjectWrapper();
     private static Map<String, String> queryFileCache = 
             new HashMap<String, String>();
