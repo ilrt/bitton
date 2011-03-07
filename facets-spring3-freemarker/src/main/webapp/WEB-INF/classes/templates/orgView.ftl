@@ -23,7 +23,7 @@
 
             <div class="tabbedcontent">
                 <div class="inner" id="tabs-pub">
-                    <#if recentoutputs??>
+                    <#if recentoutputs??  && 0 < recentoutputs.size>
                         <script type="text/javascript">
                             <#-- create global object for each collection -->
                             <#if graphCount??><#assign graphCount=graphCount+1/><#else><#assign graphCount=0/></#if>
@@ -140,7 +140,6 @@
                 </div><!-- END id="tabs-members" -->
             </div><!-- /tabbedcontent -->
         </div> <!-- END  id="tabs" -->
-
 
         <#if view??><p><em><a href="javascript:history.go(-1)">Return to results</a></em></p></#if>
 
