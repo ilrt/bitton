@@ -864,3 +864,17 @@ ul.tabs {
 	padding: 10px;
 }
 
+span.impacts {
+	display: inline-block;
+	color: #214D63;
+	background: #DDE9F0;
+	font-size: 0.857142857em;
+	font-size: 0.928571em;
+	line-height: 1.384615em;
+	padding: 0 10px 0px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	border-radius: 10px;
+	margin-left: 0.2em;
+}

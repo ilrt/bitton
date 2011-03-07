@@ -24,9 +24,9 @@
 		<div class="tabbedcontent">
 			<div class="inner">
 				<ul class="results">
+					<li class="grant"><a class="title" href="/resrev/item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fthings%2Fgrants%2Fepsrc%2FEP%2FG003599%2F1%23grant">CRack Arrest and Self-Healing in COMPosite Structures (CRASHCOMPS)</a>.  <span class="amount">&pound;594,946</span> <span class="otherdetails"> Ian Bond (2009) The University of Bristol </span> <span class="impacts">2 impacts</span></li>
 				<li class="grant"><a class="title" href="/resrev/item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fthings%2Fgrants%2Fepsrc%2FEP%2FG003599%2F1%23grant">CRack Arrest and Self-Healing in COMPosite Structures (CRASHCOMPS)</a>.  <span class="amount">&pound;594,946</span> <span class="otherdetails"> Ian Bond (2009) The University of Bristol </span> </li>
-				<li class="grant"><a class="title" href="/resrev/item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fthings%2Fgrants%2Fepsrc%2FEP%2FG003599%2F1%23grant">CRack Arrest and Self-Healing in COMPosite Structures (CRASHCOMPS)</a>.  <span class="amount">&pound;594,946</span> <span class="otherdetails"> Ian Bond (2009) The University of Bristol </span> </li>
-				<li class="grant"><a class="title" href="/resrev/item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fthings%2Fgrants%2Fepsrc%2FEP%2FG003599%2F1%23grant">CRack Arrest and Self-Healing in COMPosite Structures (CRASHCOMPS)</a>.  <span class="amount">&pound;594,946</span> <span class="otherdetails"> Ian Bond (2009) The University of Bristol </span> </li>
+				<li class="grant"><a class="title" href="/resrev/item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fthings%2Fgrants%2Fepsrc%2FEP%2FG003599%2F1%23grant">CRack Arrest and Self-Healing in COMPosite Structures (CRASHCOMPS)</a>.  <span class="amount">&pound;594,946</span> <span class="otherdetails"> Ian Bond (2009) The University of Bristol, Bristol </span> <span class="impacts">1 impact</span></li>
 
 
 			</ul>
