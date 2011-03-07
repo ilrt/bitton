@@ -864,7 +864,7 @@ ul.tabs {
 	padding: 10px;
 }
 
-span.impacts {
+a.impacts:link, a.impacts:visited {
 	display: inline-block;
 	color: #214D63;
 	background: #DDE9F0;
@@ -877,4 +877,9 @@ span.impacts {
 	-khtml-border-radius: 10px;
 	border-radius: 10px;
 	margin-left: 0.2em;
+	text-decoration: none;
+}
+
+a.impacts:hover {
+	background: #D1DEE6;
 }
