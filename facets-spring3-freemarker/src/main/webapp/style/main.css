@@ -775,6 +775,84 @@ a.back:hover, a.back:focus, a.back:active {
 }
 
 
+/* =tabbed content 
+ * ====================================== */
 
+div.tabbed {
+	width: 720px;
+}
 
+ul.tabs {
+	background: #fff url(../images/tabbed-content-top.png) center bottom no-repeat;
+	width: 100%;
+	overflow: auto;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.tabs li {
+	display: block;
+	float: left;
+	margin-left: 3px;
+	padding-top:2px;
+}
+
+.tabs li.first {
+	margin-left: 10px;
+}
+
+.tabs a:link, .tabs a:visited {
+	text-decoration: none;
+	display: block;
+	background: #e2eef5 url(../images/tab-bkgd.png) left bottom repeat-x;
+	color: #214D63;
+	font-size: 1.07142857em;
+	border: 1px solid #C6DAE6;
+	border-bottom: 1px solid #9bb4bf;
+	padding: 0px 10px 0;
+	height: 24px;
+	line-height: 24px;
+}
+
+.tabs a:hover {
+	background-image: none;
+	border-bottom: 1px solid #C6DAE6;
+}
+
+.tabs span.count {
+	display: inline;
+	color: #778F9E;
+	font-size: 0.86666em;
+	font-style: italic;
+	padding: 0;
+	margin: 0;
+}
+
+.tabs li.current {
+	background: #fff url(../images/tab-current-bkgd-left.png) left top no-repeat;
+	padding-top:0px;
+}
+
+.tabs li.current a:link, .tabs li.current a:visited {
+	background: transparent url(../images/tab-current-bkgd-right.png) right top no-repeat;
+	border-width: 0;
+	color: #333;
+	line-height: 28px;
+	height: 28px;
+	padding: 0px 10px 0;
+}
+
+.tabs li.current span.count {
+	color: #888;
+}
+
+.tabbedcontent {
+	background: #fff url(../images/tabbed-content-middle.png) center top repeat-y;
+}
+
+.tabbedcontent .inner {
+	background: transparent url(../images/tabbed-content-bottom.png) center bottom no-repeat;
+	padding: 10px;
+}
 
