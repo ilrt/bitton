@@ -796,6 +796,7 @@ ul.tabs {
 	float: left;
 	margin-left: 3px;
 	padding-top:2px;
+	overflow: hidden;
 }
 
 .tabs li.first {
@@ -807,12 +808,17 @@ ul.tabs {
 	display: block;
 	background: #e2eef5 url(../images/tab-bkgd.png) left bottom repeat-x;
 	color: #214D63;
+	color: #2D5B6D;
 	font-size: 1.07142857em;
 	border: 1px solid #C6DAE6;
 	border-bottom: 1px solid #9bb4bf;
 	padding: 0px 10px 0;
-	height: 24px;
-	line-height: 24px;
+	height: 28px;
+	line-height: 28px;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 0.8571428em;
+	letter-spacing: 0.02em;
 }
 
 .tabs a:hover {
@@ -823,10 +829,12 @@ ul.tabs {
 .tabs span.count {
 	display: inline;
 	color: #778F9E;
-	font-size: 0.86666em;
 	font-style: italic;
 	padding: 0;
 	margin: 0;
+	text-transform: none;
+	letter-spacing: 0;
+	font-size: 1em;
 }
 
 .tabs li.current {
@@ -837,10 +845,10 @@ ul.tabs {
 .tabs li.current a:link, .tabs li.current a:visited {
 	background: transparent url(../images/tab-current-bkgd-right.png) right top no-repeat;
 	border-width: 0;
-	color: #333;
-	line-height: 28px;
-	height: 28px;
-	padding: 0px 10px 0;
+	color: #555;
+	line-height: 30px;
+	height: 30px;
+	padding: 2px 10px 0;
 }
 
 .tabs li.current span.count {
