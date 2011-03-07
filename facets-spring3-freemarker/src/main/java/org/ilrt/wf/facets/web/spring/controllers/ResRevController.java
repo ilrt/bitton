@@ -157,14 +157,14 @@ public class ResRevController extends AbstractController {
         String username = request.getRemoteUser();
         log.debug("Displaying results for " +  username);
         
-        // do a fresh query the service
-        ModelAndView mav = createModelAndView(PROFILE_VIEW_NAME, request);
-        
         if (username == null || username.isEmpty())
         {
             return new ModelAndView("redirect:/");
         }
         
+        // do a fresh query the service
+        ModelAndView mav = createModelAndView(PROFILE_VIEW_NAME, request);
+
         Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
 
         mav.addObject("resource",  new ResourceHashModel(resource));
@@ -183,7 +183,12 @@ public class ResRevController extends AbstractController {
     @RequestMapping(value = DEPARTMENT_PATH, method = RequestMethod.GET)
     public ModelAndView departmentView(HttpServletRequest request) throws FacetViewServiceException {
         String username = request.getRemoteUser();
-
+        
+        if (username == null || username.isEmpty())
+        {
+            return new ModelAndView("redirect:/");
+        }
+        
         // get the session object
         HttpSession session = request.getSession(true);
 
@@ -200,8 +205,8 @@ public class ResRevController extends AbstractController {
         
         mav.addObject("user",  new ResourceHashModel(user));
         mav.addObject("resource", new ResourceHashModel(department));
-        mav.addObject("recentoutputs", getListFromQuery("/queries/getRecentDeptOutputs.rq", dept));
-        mav.addObject("recentgrants", getListFromQuery("/queries/getRecentDeptGrants.rq", dept));
+        mav.addObject("recentoutputs", getListFromQuery("/queries/getAllDeptOutputs.rq", dept));
+        mav.addObject("recentgrants", getListFromQuery("/queries/getAllDeptGrants.rq", dept));
         
         mav.addObject("viewcontext", "department");
         

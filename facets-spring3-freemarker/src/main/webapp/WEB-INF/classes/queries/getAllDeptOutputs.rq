@@ -7,4 +7,3 @@ select ?s
     graph ?g2 { ?s dc:date ?date }
 }
 order by desc(?date)
-limit 20

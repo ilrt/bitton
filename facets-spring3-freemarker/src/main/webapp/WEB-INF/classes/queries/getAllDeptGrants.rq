@@ -7,4 +7,3 @@ select ?s
     graph ?g2 { ?s proj:startDate ?date }
 }
 order by desc(?date)
-limit 20
