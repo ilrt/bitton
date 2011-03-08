@@ -622,27 +622,6 @@ ul.results .amount {
 	color: #444;
 }
 
-a.impactcount {
-	display: inline-block;
-	font-size: 0.928571em;
-	background: #D19486;
-	background: #8CACBD;
-	padding: 0 7px;
-	font-style: normal;
-	letter-spacing: 0.02em;
-	color: #fff;
-	text-decoration: none;
-	line-height: 1.384615em;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-khtml-border-radius: 10px;
-	border-radius: 10px;
-}
-
-a.impactcount strong {
-	color: #fff;
-}
-
 
 
 /* =department listing
@@ -874,5 +853,56 @@ a.impacts:link, a.impacts:visited {
 }
 
 a.impacts:hover {
-	background: #D1DEE6;
+	background: #E6EFF4;
 }
+
+ul.results a.show:link, ul.results a.show:visited {
+	background: #DDE9F0 url(../images/icon-plus-blue.png) left center no-repeat;
+	padding-left: 20px;
+}
+
+ul.results a.show:hover {
+	background-color: #E6EFF4;
+}
+
+#content ul.results a.open:link, #content ul.results a.open:visited {
+	background-image: url(../images/icon-minus-blue.png);
+	background-color: #E6EFF4;
+	-moz-border-radius-bottomright: 0px;
+	-moz-border-radius-bottomleft: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	-webkit-border-bottom-left-radius: 0px;
+	-khtml-border-bottom-left-radius: 0px;
+	-khtml-border-bottom-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+	border-bottom: 4px solid #E6EFF4;
+}
+
+#content ul.results a.open:hover {
+	background-color: #DDE9F0;
+}
+
+div.impacts {
+	background: #E6EFF4;
+	border-top: 0px solid #DDE9F0;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	border-radius: 10px;
+	padding: 3px 10px;
+	margin-top: -1px;
+	margin-right: 14px;
+}
+
+div.impacts ul.results {
+	margin: 10px 0 0;
+}
+
+div.impacts ul.results span.otherdetails {
+	color: #777;
+}
+
+
+
+
