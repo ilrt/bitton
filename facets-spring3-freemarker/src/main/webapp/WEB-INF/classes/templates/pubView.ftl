@@ -63,7 +63,7 @@
 		<#if resource[dc + 'abstract']??><p>${resource[dc + 'abstract']?first}</p></#if>
 
 		<#if resource[rdfs + 'seeAlso']??>
-		<button href="${resource[rdfs + 'seeAlso']?first}">Get full text &gt;</button>
+		<button class="bigarrow" href="${resource[rdfs + 'seeAlso']?first}">Get full text</button>
 		</#if>
 
 		<#if resource[dc + 'bibliographicCitation']??>

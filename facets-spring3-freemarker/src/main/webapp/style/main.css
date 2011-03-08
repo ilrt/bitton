@@ -381,6 +381,16 @@ input.button:hover, input[type=submit]:hover, button:hover, input[type=button]:h
 	background-image: none;
 }
 
+button.bigarrow {
+	background: #3B9ACC url(../images/btn-arrow.png) right center no-repeat;
+	padding-right: 36px;
+}
+
+button.bigarrow:hover {
+	color: #ebf3f8;
+	text-shadow: #145070 0px 1px 2px;
+}
+
 form#topsearch input[type=submit] {
 	-moz-box-shadow: 0 0 2px #444;
 	-webkit-box-shadow: 0 0 2px #444;
@@ -694,8 +704,11 @@ ul.objects li {
 
 .pub .col3of3 {
 	margin-top: 28px;
-	background: #f2f2f2;
-	border-bottom: 1px solid #ddd;
+	background: #f7f7f7;
+	border-top: 1px solid #f0f0f0;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #eee;
 	padding: 7px 0;
 }
 
