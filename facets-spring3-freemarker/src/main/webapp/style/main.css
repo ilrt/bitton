@@ -405,6 +405,44 @@ form#topsearch input[type=text] {
 	width: 240px;
 }
 
+p.button {
+}
+
+p.button a:link, p.button a:visited {
+	display: inline-block;
+	border: 1px solid #BFC7B3;
+	background: #f1f5ea url(../images/btn-weak.png) left center repeat-x;
+	text-decoration: none;
+	padding: 0 9px;
+	color: #466621;
+}
+
+p.button a:hover, p.button a:active {
+	background-image: none;
+	color: #466621;
+}
+
+/* Pale blue button:
+p.button a:link, p.button a:visited {
+	display: inline-block;
+	border: 1px solid #C6DAE6;
+	background: #f1f5ea url(../images/button-pale.png) left center repeat-x;
+	text-decoration: none;
+	padding: 0 7px;
+	color: #214D63;
+}
+
+p.button a:hover, p.button a:active {
+	background-image: none;
+	color: #214D63;
+}
+*/
+
+
+
+
+
+
 input.placeholder {
 	color: #aaa;
 	font-style: italic;
