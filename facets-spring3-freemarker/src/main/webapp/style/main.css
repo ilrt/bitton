@@ -525,16 +525,11 @@ strong.facetname {
 	white-space: nowrap;
 }
 
-li.selected {
-	color: #555;
-}
-
-li.selected span {
+li.selected a:link, li.selected a:visited {
 	display: inline-block;
-	background: #4d4d4d;
-	background: #596368;
+	background: #596368 url(../images/icon-clear-facet.png) left center no-repeat;
 	color: #fff;
-	padding: 0 10px 0px;
+	padding: 0 10px 0px 24px;
 	font-weight: bold;
 	letter-spacing: 0.02em;
 	/*font-size: 0.928571em;
@@ -543,19 +538,12 @@ li.selected span {
 	-webkit-border-radius: 10px;
 	-khtml-border-radius: 10px;
 	border-radius: 10px;
-}
-
-li.selected a {
-	margin-top: 0px;
-	text-decoration: none;
-	font-weight: bold;
-}
-
-li.selected a em {
-	text-decoration: underline;
-	font-weight: normal;
-	font-style: normal;
 	white-space: nowrap;
+	text-decoration: none;
+}
+
+li.selected a:hover {
+	background-color: #34454D;
 }
 
 a.help:link, a.help:visited {
