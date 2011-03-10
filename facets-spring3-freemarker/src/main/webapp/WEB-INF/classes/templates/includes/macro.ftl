@@ -144,8 +144,8 @@
     <div class="combiGraphAndList" id="combiGraphAndList_${graphCount}">
         <div class="fig">
             <script type="text/javascript+protovis">
-                // fixing issue when data contains single value
-                if (graphData[${graphCount}].data.length == 1) graphData[${graphCount}].data[1] = 0;
+                // force lower data range to be 0
+                graphData[${graphCount}].data[graphData[${graphCount}].data.length] = 0;
 
                 /* Sizing and scales. */
                 graphData[${graphCount}].w = $('#combiGraphAndList_${graphCount} .fig').width();
@@ -210,18 +210,7 @@
         <div class="clearing">&nbsp;</div>
 
         <div class="results">
-          <div class="body"
-               xmlns:dc="http://purl.org/dc/elements/1.1/"
-               xmlns:dcterms="http://purl.org/dc/terms/"
-               about="http://www.example.com/books/wikinomics">
-               <!--  
-                 <p>
-                   <span class='title' property='dc:title'>[title]</span>
-                   <span class='year' property='dc:date'>([year])</span>
-                   <span class='citation' property='dcterms:bibliographicCitation'>[citation]</span>
-                 </p>
-               -->
-          </div><!-- END class="body" -->
+          <div class="body"></div><!-- END class="body" -->
 
           <div class="controls">
             <span class="prev">Previous</span>
