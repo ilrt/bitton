@@ -65,6 +65,7 @@ public class ResRevController extends AbstractController {
         {
             Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
             mav.addObject("publist", getListFromQuery("/queries/getPersonsPublications.rq", resourceObj));
+            mav.addObject("viewcontext", "people");
         }
 
         if (mav.getViewName().equalsIgnoreCase(ORGANISATION_VIEW_NAME))
@@ -72,7 +73,19 @@ public class ResRevController extends AbstractController {
             Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
             mav.addObject("recentoutputs", getListFromQuery("/queries/getAllDeptOutputs.rq", resourceObj));
             mav.addObject("recentgrants", getListFromQuery("/queries/getAllDeptGrants.rq", resourceObj));
+            mav.addObject("viewcontext", "organisations");
         }
+        
+        if (mav.getViewName().equalsIgnoreCase(GRANT_VIEW_NAME))
+        {
+            mav.addObject("viewcontext", "grants");
+        }
+        
+        if (mav.getViewName().equalsIgnoreCase(PUBLICATION_VIEW_NAME))
+        {
+            mav.addObject("viewcontext", "pubs");
+        }
+        
         return mav;
     }
 
@@ -237,7 +250,7 @@ public class ResRevController extends AbstractController {
         
         List<Map<String, RDFNode>> departmentSummary =  facetQueryService.performSelect(getQuery("/queries/getAllDepartments.rq"), false);
         mav.addObject("departmentList", new SimpleCollection(departmentSummary, OBJECT_WRAPPER));
-        mav.addObject("viewcontext", "department");
+        mav.addObject("viewcontext", "organisations");
         
         return mav;
     }
