@@ -197,6 +197,7 @@ function applyTabs()
     
     // enable action on each tab header
     $("ul.tabs li a").click(function(){
+        $(this).parent().addClass("current").siblings(".current").removeClass("current");
         var location = $(this).attr("href");
         $(location).parent(".tabbedcontent").children().hide();
         $(location).show();
