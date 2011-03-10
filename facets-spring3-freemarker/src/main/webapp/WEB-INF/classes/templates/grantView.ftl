@@ -30,9 +30,9 @@
         <#if resource[proj + 'hasPrincipalInvestigator']??>
             <ul>
                 <#list resource[proj + 'hasPrincipalInvestigator'] as pi>
-                    <li>
-                        <@displayPerson person=pi/>
-                    </li>
+                    <#if pi[rdfs + 'label']??>
+                      <li><@displayPerson person=pi/></li>
+                    </#if>
                 </#list>
             </ul>
         </#if>
@@ -42,9 +42,9 @@
         <#if resource[proj + 'hasCoInvestigator']??>
             <ul>
                 <#list resource[proj + 'hasCoInvestigator'] as pi>
-                    <li>
-                        <@displayPerson person=pi/>
-                    </li>
+                  <#if pi[rdfs + 'label']??>
+                      <li><@displayPerson person=pi/></li>
+                  </#if>
                 </#list>
             </ul>
         </#if>
@@ -53,9 +53,6 @@
 
         <#if resource[proj + 'hostedBy']??>
             <ul>
-                <#list resource[proj + 'hostedBy'] as host>
-                    <@displayHost host=host/>
-                </#list>
                 <#list resource[proj + 'hostedBy'] as host>
                     <@displayHost host=host/>
                 </#list>
