@@ -22,7 +22,7 @@
 			<dl>
 				<dt>Contributors:</dt>
 				<#list resource[dc + 'contributor'] as contributor>
-				<dd><@displayPerson person=contributor/></dd>, 
+				<dd><@displayPerson person=contributor/></dd><#if contributor_has_next>,</#if>
 				</#list>
 			</dl>
 

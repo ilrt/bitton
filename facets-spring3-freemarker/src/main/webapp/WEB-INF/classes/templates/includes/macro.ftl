@@ -92,15 +92,11 @@
 
 <#macro displayPerson person>
     <a href="item?res=${person?html?replace("#","%23")}">
-        <#if person[rdfs + 'label']??>${person[rdfs + 'label']?first}</#if>
-    </a>
-</#macro>
+        <#if person[rdfs + 'label']??>${person[rdfs + 'label']?first}</#if></a></#macro>
 
 <#macro displayOrg org>
     <a href="item?res=${org?html?replace("#","%23")}">
-        <#if org[rdfs + 'label']??>${org[rdfs + 'label']?first}</#if>
-    </a>
-</#macro>
+        <#if org[rdfs + 'label']??>${org[rdfs + 'label']?first}</#if></a></#macro>
 
 <#macro linkToPageFor item>
     <a href="<@drillForResult result=item/>"><@label resource=item/></a>
