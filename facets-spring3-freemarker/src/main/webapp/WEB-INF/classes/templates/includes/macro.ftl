@@ -144,6 +144,9 @@
     <div class="combiGraphAndList" id="combiGraphAndList_${graphCount}">
         <div class="fig">
             <script type="text/javascript+protovis">
+                // fixing issue when data contains single value
+                if (graphData[${graphCount}].data.length == 1) graphData[${graphCount}].data[1] = 0;
+
                 /* Sizing and scales. */
                 graphData[${graphCount}].w = $('#combiGraphAndList_${graphCount} .fig').width();
                 graphData[${graphCount}].h = $('#combiGraphAndList_${graphCount} .fig').height();
@@ -179,9 +182,9 @@
                 $('#combiGraphAndList_${graphCount} .fig').bind("redraw",function() {
                   graphData[${graphCount}].w = $('#combiGraphAndList_${graphCount} .fig').width();
                   graphData[${graphCount}].h = $('#combiGraphAndList_${graphCount} .fig').height();
+                  graphData[${graphCount}].x = pv.Scale.ordinal(graphData[${graphCount}].labels).splitBanded(0, graphData[${graphCount}].w);
+                  graphData[${graphCount}].y = pv.Scale.linear(graphData[${graphCount}].data).range(0, graphData[${graphCount}].h);
                   graphData[${graphCount}].vis.width(graphData[${graphCount}].w).height(graphData[${graphCount}].h);
-                  graphData[${graphCount}].x.domain(graphData[${graphCount}].labels).splitBanded(0, graphData[${graphCount}].w);
-                  graphData[${graphCount}].y.range(0, graphData[${graphCount}].h);
                   graphData[${graphCount}].vis.render();
                 });
 

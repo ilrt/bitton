@@ -60,8 +60,10 @@
                                             <#if item[dc + 'date']??>
                                                 var o = new Object();
                                                 o.year = ${item[dc + 'date']?first?date?string("yyyy")};
-                                                o.label = "<@label resource=item/>";
-                                                o.citation = "<#if item[dc + 'contributor']??><span class='contributor'><#list item[dc + 'contributor'] as contributor><@label resource=contributor/><#if contributor_has_next>, </#if></#list>.</span> </#if><a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>. <span class='otherdetails'><#if item[dc + 'date']??>(${item[dc + 'date']?first?date?string("yyyy")}) </#if><#if item[elements + 'publisher']??>${item[elements + 'publisher']?first}</#if><#if item[bibo + 'isbn']??> ${item[bibo + 'isbn']?first}</#if><#if item[bibo + 'volume']??> Vol. ${item[bibo + 'volume']?first}</#if><#if item[dc + 'isPartOf']??> Part of ${item[dc + 'isPartOf']?first['label']}</#if><#if item[bibo + 'pageStart']?? && item[bibo + 'pageEnd']??> Pages ${item[bibo + 'pageStart']?first} - ${item[bibo + 'pageEnd']?first}<#elseif item[bibo + 'pageStart']??> Page ${item[bibo + 'pageStart']?first}<#elseif item[bibo + 'pageEnd']??> Page ${item[bibo + 'pageEnd']?first}</#if></span>";
+                                                o.label = "<li class='pub'>";
+                                                o.label += "<a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>. ";
+                                                o.label += "<span class='otherdetails'><#if item[dc + 'contributor']??><span class='contributor'><#list item[dc + 'contributor'] as contributor><@label resource=contributor/><#if contributor_has_next>, </#if></#list>.</span> </#if> <#if item[dc + 'date']??>(${item[dc + 'date']?first?date?string("yyyy")}) </#if><#if item[elements + 'publisher']??>${item[elements + 'publisher']?first}</#if><#if item[bibo + 'isbn']??> ${item[bibo + 'isbn']?first}</#if><#if item[bibo + 'volume']??> Vol. ${item[bibo + 'volume']?first}</#if><#if item[dc + 'isPartOf']??> Part of ${item[dc + 'isPartOf']?first['label']}</#if><#if item[bibo + 'pageStart']?? && item[bibo + 'pageEnd']??> Pages ${item[bibo + 'pageStart']?first} - ${item[bibo + 'pageEnd']?first}<#elseif item[bibo + 'pageStart']??> Page ${item[bibo + 'pageStart']?first}<#elseif item[bibo + 'pageEnd']??> Page ${item[bibo + 'pageEnd']?first}</#if></span>";
+                                                o.label += "</li>";
                                                 graphData[${graphCount}].results[graphData[${graphCount}].results.length] = o;
                                             </#if>
 					</#list>
@@ -71,11 +73,15 @@
         				<h2>No research outputs available</h2>
 				</#if>
 
-				<!-- DEVNOTE: Example content to show impact styles:
-				-->
+				<#-- DEVNOTE: Example content to show impact styles:
+				
 				<h2>Example content, to show impact styles:</h2>
 				<ul class="results">
-					<li class="grant"><a class="title" href="/resrev/item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fthings%2Fgrants%2Fepsrc%2FEP%2FG003599%2F1%23grant">CRack Arrest and Self-Healing in COMPosite Structures (CRASHCOMPS)</a>.  <span class="amount">&pound;594,946</span> <span class="otherdetails"> Ian Bond (2009) The University of Bristol</span> <a href="#" class="show impacts" id="show1">show 3 impacts</a>
+					<li class="grant">
+<a class="title" href="/resrev/item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fthings%2Fgrants%2Fepsrc%2FEP%2FG003599%2F1%23grant">CRack Arrest and Self-Healing in COMPosite Structures (CRASHCOMPS)</a>.  
+<span class="amount">&pound;594,946</span> 
+<span class="otherdetails"> Ian Bond (2009) The University of Bristol</span> 
+<a href="#" class="show impacts" id="show1">show 3 impacts</a>
 					<div class="impacts" id="impacts1">
 						<ul class="results">
 							<li class="impact"><a class="title" href="#">The name of an impact - we really need some sample data</a> <span class="otherdetails">I'm assuming that the impact title will link off to a separate page with full impact details</span></li>
@@ -86,29 +92,7 @@
 					<li class="grant"><a class="title" href="/resrev/item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fthings%2Fgrants%2Fepsrc%2FEP%2FG003599%2F1%23grant">CRack Arrest and Self-Healing in COMPosite Structures (CRASHCOMPS)</a>.  <span class="amount">&pound;594,946</span> <span class="otherdetails"> Ian Bond (2009) The University of Bristol </span> </li>
 					<li class="grant"><a class="title" href="/resrev/item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fthings%2Fgrants%2Fepsrc%2FEP%2FG003599%2F1%23grant">CRack Arrest and Self-Healing in COMPosite Structures (CRASHCOMPS)</a>.  <span class="amount">&pound;594,946</span> <span class="otherdetails"> Ian Bond (2009) The University of Bristol </span> </li>
 				</ul>
-				<script>
-					$(document).ready(function() {
-
-						$('#impacts1').hide();
-
-						$('#show1').click(function() {
-							$('#show1').toggleClass('open').blur();
-
-							/* Switch the wording: */
-							$stem = $('#show1').text().substr(5);
-							if($('#show1').hasClass('open')) {
-								$('#show1').text('hide ' + $stem);
-								} else {
-								$('#show1').text('show ' + $stem);
-							}
-
-							$('#impacts1').toggle();
-							return false;
-						});
-					});
-
-				</script>
-				<!-- /Example content -->
+				 /Example content -->
 
 
 			</div><!-- END id="tabs-pub" -->
@@ -150,8 +134,11 @@
                                             <#if item[proj + 'startDate']??>
                                                 var o = new Object();
                                                 o.year = ${item[proj + 'startDate']?first?date?string("yyyy")};
-                                                o.label = "<@label resource=item/>";
-                                                o.citation = "<a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>. <#if item[proj + 'value']??><span class='amount'>&pound;${item[proj + 'value']?first}</span></#if> <span class='otherdetails'><#if item[proj + 'hasPrincipalInvestigator']??><#list item[proj + 'hasPrincipalInvestigator'] as pi><#if pi[rdfs + 'label']??>${pi[rdfs + 'label']?first}</#if></#list></#if><#if item[proj + 'startDate']??> (${item[proj + 'startDate']?first?date?string('yyyy')})</#if><#if item[proj + 'hostedBy']??> <@label resource=item[proj + 'hostedBy']?first/></#if></span>";
+                                                o.label = "<li class='grant'>";
+                                                o.label += "<a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>. ";
+                                                o.label += "<#if item[proj + 'value']??><span class='amount'>&pound;${item[proj + 'value']?first}</span> </#if>";
+                                                o.label += "<span class='otherdetails'><#if item[proj + 'hasPrincipalInvestigator']??><#list item[proj + 'hasPrincipalInvestigator'] as pi><#if pi[rdfs + 'label']??>${pi[rdfs + 'label']?first}</#if></#list></#if><#if item[proj + 'startDate']??> (${item[proj + 'startDate']?first?date?string('yyyy')})</#if><#if item[proj + 'hostedBy']??> <@label resource=item[proj + 'hostedBy']?first/></#if></span>";
+                                                o.label += "</li>";
                                                 graphData[${graphCount}].results[graphData[${graphCount}].results.length] = o;
                                             </#if>
 					</#list>

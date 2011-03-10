@@ -43,6 +43,8 @@ $(document).ready(function(){
 
         applyTabs();
 
+        renderImpacts();
+
         shrink($('#pubtype-facet ul'),5);
         shrink($('#pubyear-facet ul'),5);
         shrink($('#home-publist'),5);
@@ -200,8 +202,27 @@ function applyTabs()
         $(this).parent().addClass("current").siblings(".current").removeClass("current");
         var location = $(this).attr("href");
         $(location).parent(".tabbedcontent").children().hide();
-        $(location).show();
-        $(".combiGraphAndList .fig").trigger("redraw");
+        $(location).show(0, function(){ $(this).find(".fig").trigger("redraw")});
         return false;
     })
 }
+
+function renderImpacts()
+{
+    $('#impacts1').hide();
+
+    $('#show1').click(function() {
+        $('#show1').toggleClass('open').blur();
+
+        /* Switch the wording: */
+        $stem = $('#show1').text().substr(5);
+        if($('#show1').hasClass('open')) {
+            $('#show1').text('hide ' + $stem);
+        } else {
+            $('#show1').text('show ' + $stem);
+        }
+
+        $('#impacts1').toggle();
+        return false;
+    });
+};

@@ -138,16 +138,15 @@ function showResults(id, page)
     var start = page * maxPageSize;
     var end = (start + maxPageSize) > matchingResults.length ? matchingResults.length : (start + maxPageSize);
 
+    var records = "<ul class='results'>";
+    
     // now display the requested page
     for (var i = start; i < end; i++)
     {
-        var record = "<p>";
-        record += "<span class='title' property='dc:title'>"+matchingResults[i].label+"</span>"+ " ";
-        record += "<span class='year' property='dc:date'>("+matchingResults[i].year+")</span>" + " ";
-        record += "<span class='citation' property='dcterms:bibliographicCitation'>"+matchingResults[i].citation+"</span>";
-        record += "</p>";
-        $("#combiGraphAndList_"+id+" .body").append(record);
+        records += matchingResults[i].label;        
     }
+    records += "</ul>";
+    $("#combiGraphAndList_"+id+" .body").append(records);
 
     $("#combiGraphAndList_"+id+" .controls .prev").show();
     $("#combiGraphAndList_"+id+" .controls .next").show();
