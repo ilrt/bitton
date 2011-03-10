@@ -31,7 +31,7 @@
 				<#if resource[dc + 'date']??>
 				<dt>Year of publication:</dt>
 				<dd>
-				${resource[dc + 'date']?first}
+				${resource[dc + 'date']?first?date?string("yyyy")}
 				</dd>
 				</#if>
 			</dl>
@@ -98,7 +98,7 @@
 
 		<#if resource[dc + 'contributor']??>
 		<div class="section">
-			<h2>N contributors</h2>
+			<h2>${resource[dc + 'contributor']?size} contributors</h2>
 			<ul class="objects">
 				<#list resource[dc + 'contributor'] as contributor>
 				<li class="person">
