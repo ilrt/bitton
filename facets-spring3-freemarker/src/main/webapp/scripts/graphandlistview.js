@@ -120,8 +120,6 @@ function initGraph(id)
 
 function initEvents(id)
 {
-		console.log("Id  "+ id);
-
 	$("#combiGraphAndList_"+id+" .prev").click(function(){
 		showResults(id, graphData[id].currentPage-1);
 	});
