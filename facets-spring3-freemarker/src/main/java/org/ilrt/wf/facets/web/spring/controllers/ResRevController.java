@@ -64,15 +64,16 @@ public class ResRevController extends AbstractController {
         if (mav.getViewName().equalsIgnoreCase(PROFILE_VIEW_NAME))
         {
             Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
-            mav.addObject("publist", getListFromQuery("/queries/getPersonsPublications.rq", resourceObj));
+            mav.addObject("outputlist", getListFromQuery("/queries/getPersonsPublications.rq", resourceObj));
+            mav.addObject("grantlist", getListFromQuery("/queries/getAllPersonGrants.rq", resourceObj));
             mav.addObject("viewcontext", "people");
         }
 
         if (mav.getViewName().equalsIgnoreCase(ORGANISATION_VIEW_NAME))
         {
             Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
-            mav.addObject("recentoutputs", getListFromQuery("/queries/getAllDeptOutputs.rq", resourceObj));
-            mav.addObject("recentgrants", getListFromQuery("/queries/getAllDeptGrants.rq", resourceObj));
+            mav.addObject("outputlist", getListFromQuery("/queries/getAllDeptOutputs.rq", resourceObj));
+            mav.addObject("grantlist", getListFromQuery("/queries/getAllDeptGrants.rq", resourceObj));
             mav.addObject("viewcontext", "organisations");
         }
         
@@ -196,7 +197,10 @@ public class ResRevController extends AbstractController {
         mav.addObject("resource",  new ResourceHashModel(resource));
 
         // get users publication information
-        mav.addObject("publist", getListFromQuery("/queries/getPersonsPublications.rq", resource));
+        mav.addObject("outputlist", getListFromQuery("/queries/getPersonsPublications.rq", resource));
+
+        // get related grants for this user
+        mav.addObject("grantlist", getListFromQuery("/queries/getAllPersonGrants.rq", resource));
         
         // add flag to allow proview view to differentiate between displaying regular users and current user's profile view
         mav.addObject("profileview",  "true");
@@ -231,8 +235,8 @@ public class ResRevController extends AbstractController {
         
         mav.addObject("user",  new ResourceHashModel(user));
         mav.addObject("resource", new ResourceHashModel(department));
-        mav.addObject("recentoutputs", getListFromQuery("/queries/getAllDeptOutputs.rq", dept));
-        mav.addObject("recentgrants", getListFromQuery("/queries/getAllDeptGrants.rq", dept));
+        mav.addObject("outputlist", getListFromQuery("/queries/getAllDeptOutputs.rq", dept));
+        mav.addObject("grantlist", getListFromQuery("/queries/getAllDeptGrants.rq", dept));
         
         mav.addObject("viewcontext", "department");
         
@@ -360,7 +364,7 @@ public class ResRevController extends AbstractController {
     private Object getListFromQuery(String queryFile, Resource resource) {
         String query = getQuery(queryFile);
         
-        String completeQuery = String.format(query, resource.getURI());
+        String completeQuery = query.replace("%s", resource.getURI());
         List<Map<String, RDFNode>> result = 
                 facetQueryService.performSelect(completeQuery, true);
                 

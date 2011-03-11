@@ -16,6 +16,7 @@
     <script src="${contextPath}/scripts/selectToUISlider.jQuery.js"></script>
     <script src="${contextPath}/scripts/jquery.autocomplete.js"></script>
     <script src="${contextPath}/scripts/jquery.select-autocomplete.js"></script>
+    <script src="${contextPath}/scripts/jquery.outerhtml.min.js"></script>
     <script src="${contextPath}/scripts/jquery.placeholder.min.js"></script>
     <script src="${contextPath}/scripts/protovis-r3.2.js"></script>
     <script src="${contextPath}/scripts/graphandlistview.js"></script>

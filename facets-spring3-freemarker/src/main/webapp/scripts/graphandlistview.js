@@ -11,8 +11,8 @@ function sortResultsOnLabelDesc(a, b)
 
 function sortResultsOnDateThenLabelAsc(a, b)
 {
-    if (a.year == b.year) return a.label >= b.label;
-    else return a.year >= b.year;
+	if (a.year == b.year) return a.label >= b.label;
+	else return a.year >= b.year;
 }
 
 function sortResultsOnDateThenLabelDesc(a, b)
@@ -20,88 +20,148 @@ function sortResultsOnDateThenLabelDesc(a, b)
   return !sortResultsOnDateThenLabelAsc(a, b);
 }
 
-function initArray(id)
+function initGraphData(id)
 {
-    graphData[id].data = new Array();
-    graphData[id].labels = new Array();
-    graphData[id].currentSortOrder = null;
+	graphData[id].data = new Array();
+	graphData[id].labels = new Array();
+	graphData[id].currentSortOrder = null;
+	graphData[id].results = new Array();
+	
+	var years = new Array();
+	
+	$("#data_"+id).children().each(function() {
+		var year = $(this).attr("date");
+		
+		if (typeof year != "undefined")
+		{
+			year = parseInt(year);
+			var o = new Object();
+			o.year = year;
+			o.label = $(this).outerHTML();
+			graphData[id].results[graphData[id].results.length] = o;
+			years[years.length] = year;
+		}
+	});
 
-    // group by yearcombiGraphAndList
-    var years = new Array();
-    for (obj in graphData[id].results)
-    {
-        years[years.length] = graphData[id].results[obj].year;
-    }
+	// sort list
+	years.sort();
 
-    // sort list
-    years.sort();
+	graphData[id].minYear = years[0];
+	graphData[id].maxYear = years[years.length-1];
 
-    graphData[id].minYear = years[0];
-    graphData[id].maxYear = years[years.length-1];
+	for (i=graphData[id].minYear; i<=graphData[id].maxYear; i++)
+	{
+		var count = 0;
+		for (j in years) { if (years[j] == i) count++; }
+		graphData[id].data[graphData[id].data.length] = count;
+		graphData[id].labels[graphData[id].labels.length] = i;
+	}
+	
+	// force lower data range to be 0
+	graphData[id].data[graphData[id].data.length] = 0;
+	
+	// init the sort list
+	for (var i in graphData[id].sortOptions)
+	{
+		var obj = graphData[id].sortOptions[i];
+		if (graphData[id].currentSortOrder == null) graphData[id].currentSortOrder = obj.fun;
+		$("#combiGraphAndList_"+id+" .ordering").append("<option value='" + i +"'>"+obj.title+"</option>");
+	}
+	$("#combiGraphAndList_"+id+" .ordering").change(function(){
+		graphData[id].currentSortOrder = graphData[id].sortOptions[this.value].fun;
+		showResults(id, graphData[id].currentPage);
+	});
+	
+	years = null; // freeup
+}
 
-    for (i=graphData[id].minYear; i<=graphData[id].maxYear; i++)
-    {
-        var count = 0;
-        for (j in years) { if (years[j] == i) count++; }
-        graphData[id].data[graphData[id].data.length] = count;
-        graphData[id].labels[graphData[id].labels.length] = i;
-    }
+function initGraph(id)
+{
+	/* Sizing and scales. */
+	graphData[id].w = $('#combiGraphAndList_'+id+' .fig').width();
+	graphData[id].h = $('#combiGraphAndList_'+id+' .fig').height();
+	graphData[id].x = pv.Scale.ordinal(graphData[id].labels).splitBanded(0, graphData[id].w);
+	graphData[id].y = pv.Scale.linear(graphData[id].data).range(0, graphData[id].h);
 
-    // init the sort list
-    for (var i in graphData[id].sortOptions)
-    {
-        var obj = graphData[id].sortOptions[i];
-        if (graphData[id].currentSortOrder == null) graphData[id].currentSortOrder = obj.fun;
-        $("#combiGraphAndList_"+id+" .ordering").append("<option value='" + i +"'>"+obj.title+"</option>");
-    }
-    $("#combiGraphAndList_"+id+" .ordering").change(function(){
-        graphData[id].currentSortOrder = graphData[id].sortOptions[this.value].fun;
-        showResults(id, graphData[id].currentPage);
-    });
+	/* The root panel. */
+	graphData[id].vis.width(graphData[id].w)
+		.height(graphData[id].h)
+		.bottom(5)
+		.left(0)
+		.right(0)
+		.top(5);
+
+	/* X-axis ticks. */
+	graphData[id].vis.add(pv.Rule)
+		.data(graphData[id].labels)
+		.bottom(-10)
+		.height(15)
+		.left(function(d) { return graphData[id].x(d) })
+		.strokeStyle("#000");
+
+	/* The bars. */
+	graphData[id].bar = graphData[id].vis.add(pv.Bar)
+		.data(graphData[id].data)
+		.height(function(d) { return graphData[id].y(d) } )
+		.width(function() { return graphData[id].vis.width()/graphData[id].labels.length } )
+		.left(function(d) { return graphData[id].x(this.index) } )
+		.fillStyle("#AAA")
+		.bottom(0);
+
+	$('#combiGraphAndList_'+id+' .fig').bind("redraw",function() {
+	  graphData[id].w = $('#combiGraphAndList_'+id+' .fig').width();
+	  graphData[id].h = $('#combiGraphAndList_'+id+' .fig').height();
+	  graphData[id].x = pv.Scale.ordinal(graphData[id].labels).splitBanded(0, graphData[id].w);
+	  graphData[id].y = pv.Scale.linear(graphData[id].data).range(0, graphData[id].h);
+	  graphData[id].vis.width(graphData[id].w).height(graphData[id].h);
+	  graphData[id].vis.render();
+	});
 }
 
 function initEvents(id)
 {
-    $("#combiGraphAndList_"+id+" .prev").click(function(){
-        showResults(id, graphData[id].currentPage-1);
-    });
-    $("#combiGraphAndList_"+id+" .next").click(function(){
-      showResults(id, graphData[id].currentPage+1);
-    });
+		console.log("Id  "+ id);
 
-    $(window).resize(function() {
-      $("#combiGraphAndList_"+id+" .fig").trigger("redraw");
-    });
+	$("#combiGraphAndList_"+id+" .prev").click(function(){
+		showResults(id, graphData[id].currentPage-1);
+	});
+	$("#combiGraphAndList_"+id+" .next").click(function(){
+	  showResults(id, graphData[id].currentPage+1);
+	});
 
-    $( "#combiGraphAndList_"+id+" .slider-container .startYear" ).val( graphData[id].minYear ).change(function()
-    {
-      var val = this.value;
-      if (isNaN(parseInt(val)) || val < graphData[id].minYear) val = graphData[id].minYear;
-      else if (val > graphData[id].maxYear+1) val = graphData[id].maxYear+1;
-      this.value = val;
-      $( "#combiGraphAndList_"+id+" .slider-container .slider-range" ).slider("values", 0, val);
-      showResults(id);
-    });
-    $( "#combiGraphAndList_"+id+" .slider-container .endYear" ).val( graphData[id].maxYear+1 ).change(function()
-    {
-      var val = this.value;
-      if (isNaN(parseInt(val)) || val > graphData[id].maxYear+1) val = graphData[id].maxYear+1;
-      else if (val < graphData[id].minYear) val = graphData[id].minYear;
-      this.value = val;
-      $( "#combiGraphAndList_"+id+" .slider-container .slider-range" ).slider("values", 1, val);
-      showResults(id);
-    });
-    $( "#combiGraphAndList_"+id+" .slider-container .slider-range" ).slider({
-            range: true,
-            min: graphData[id].minYear,
-            max: graphData[id].maxYear+1,
-            values: [ graphData[id].minYear, graphData[id].maxYear+1 ],
-            slide: function( event, ui ) {
-                    $( "#combiGraphAndList_"+id+" .slider-container .startYear" ).val( ui.values[ 0 ] );
-                    $( "#combiGraphAndList_"+id+" .slider-container .endYear" ).val( ui.values[ 1 ] );
-                    showResults(id);
-            }
-    });
+	$(window).resize(function() {
+	  $("#combiGraphAndList_"+id+" .fig").trigger("redraw");
+	});
+
+	$( "#combiGraphAndList_"+id+" .slider-container .startYear" ).val( graphData[id].minYear ).change(function()
+	{
+	  var val = this.value;
+	  if (isNaN(parseInt(val)) || val < graphData[id].minYear) val = graphData[id].minYear;
+	  else if (val > graphData[id].maxYear+1) val = graphData[id].maxYear+1;
+	  this.value = val;
+	  $( "#combiGraphAndList_"+id+" .slider-container .slider-range" ).slider("values", 0, val);
+	  showResults(id);
+	});
+	$( "#combiGraphAndList_"+id+" .slider-container .endYear" ).val( graphData[id].maxYear+1 ).change(function()
+	{
+	  var val = this.value;
+	  if (isNaN(parseInt(val)) || val > graphData[id].maxYear+1) val = graphData[id].maxYear+1;
+	  else if (val < graphData[id].minYear) val = graphData[id].minYear;
+	  this.value = val;
+	  $( "#combiGraphAndList_"+id+" .slider-container .slider-range" ).slider("values", 1, val);
+	  showResults(id);
+	});
+	$( "#combiGraphAndList_"+id+" .slider-container .slider-range" ).slider({
+			range: true,
+			min: graphData[id].minYear,
+			max: graphData[id].maxYear+1,
+			values: [ graphData[id].minYear, graphData[id].maxYear+1 ],
+			slide: function( event, ui ) {
+					$( "#combiGraphAndList_"+id+" .slider-container .startYear" ).val( ui.values[ 0 ] );
+					$( "#combiGraphAndList_"+id+" .slider-container .endYear" ).val( ui.values[ 1 ] );
+					showResults(id);
+			}
+	});
 }
 
 function showResults(id, page)
@@ -110,7 +170,7 @@ function showResults(id, page)
   
   if (page == null)
   {
-      page = 0;
+	  page = 0;
   }
   
   graphData[id].currentPage = page;
@@ -123,63 +183,55 @@ function showResults(id, page)
   var matchingResults = new Array();
   for (obj in graphData[id].results)
   {
-      var year = graphData[id].results[obj].year;
+	  var year = graphData[id].results[obj].year;
 
-      if (min <= year && year < max)
-      {
-          matchingResults[matchingResults.length] = graphData[id].results[obj];
-      }
+	  if (min <= year && year < max)
+	  {
+		  matchingResults[matchingResults.length] = graphData[id].results[obj];
+	  }
   }
 
   if (matchingResults.length > 0)
   {
-    matchingResults = matchingResults.sort(graphData[id].currentSortOrder);
+	matchingResults = matchingResults.sort(graphData[id].currentSortOrder);
 
-    var start = page * maxPageSize;
-    var end = (start + maxPageSize) > matchingResults.length ? matchingResults.length : (start + maxPageSize);
+	var start = page * maxPageSize;
+	var end = (start + maxPageSize) > matchingResults.length ? matchingResults.length : (start + maxPageSize);
 
-    var records = "<ul class='results'>";
-    
-    // now display the requested page
-    for (var i = start; i < end; i++)
-    {
-        records += matchingResults[i].label;        
-    }
-    records += "</ul>";
-    $("#combiGraphAndList_"+id+" .body").append(records);
+	var records = "<ul class='results'>";
+	
+	// now display the requested page
+	for (var i = start; i < end; i++)
+	{
+		records += matchingResults[i].label;		
+	}
+	records += "</ul>";
+	$("#combiGraphAndList_"+id+" .body").append(records);
 
-    $("#combiGraphAndList_"+id+" .controls .prev").show();
-    $("#combiGraphAndList_"+id+" .controls .next").show();
-    if (page < 1) $("#combiGraphAndList_"+id+" .controls .prev").hide();
-    if (start + maxPageSize >= matchingResults.length) $(".combiGraphAndList .controls .next").hide();
-    $("#combiGraphAndList_"+id+" .resultstotal").html("Showing "+(start+1)+"-"+end+" of "+matchingResults.length+" ("+graphData[id].results.length+" total)");
+	$("#combiGraphAndList_"+id+" .controls .prev").show();
+	$("#combiGraphAndList_"+id+" .controls .next").show();
+	if (page < 1) $("#combiGraphAndList_"+id+" .controls .prev").hide();
+	if (start + maxPageSize >= matchingResults.length) $(".combiGraphAndList .controls .next").hide();
+	$("#combiGraphAndList_"+id+" .resultstotal").html("Showing "+(start+1)+"-"+end+" of "+matchingResults.length+" ("+graphData[id].results.length+" total)");
   }
   else
   {
-    // no results
-    $("#combiGraphAndList_"+id+" .resultstotal").html("Showing 0 of 0 ("+graphData[id].results.length+" total)");
-    $("#combiGraphAndList_"+id+" .body").append("No results");
+	// no results
+	$("#combiGraphAndList_"+id+" .resultstotal").html("Showing 0 of 0 ("+graphData[id].results.length+" total)");
+	$("#combiGraphAndList_"+id+" .body").append("No results");
   }
 }
 
 
 $(document).ready(function() {
-     $(".combiGraphAndList").each(function()
-     {
-        var id = getGraphId(this.id);
-        
-        if (graphData[id].results.length > 0)
-        {
-            initArray(id);
-            initEvents(id);
-            showResults(id);
-         }
-     });
-     
-     $(".combiGraphAndList:eq(0) .fig").trigger("redraw");
+	 $(".combiGraphAndList").each(function()
+	 {
+		var id = getGraphId(this.id);
+		initGraphData(id);
+	 });
 });
 
 function getGraphId(s)
 {
-    return s.substring(s.indexOf("_")+1);
+	return s.substring(s.indexOf("_")+1);
 }

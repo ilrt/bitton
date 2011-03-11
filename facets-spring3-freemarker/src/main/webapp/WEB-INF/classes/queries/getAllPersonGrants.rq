@@ -1,0 +1,10 @@
+prefix proj:   <http://vocab.ouls.ox.ac.uk/projectfunding#>
+prefix closed: <http://vocab.bris.ac.uk/rr/closed#>
+
+select distinct ?s
+{
+    graph ?g1 { ?s a proj:Grant. }
+    graph ?g2 { { ?s proj:hasCoInvestigator <%s> } UNION { ?s proj:hasCoInvestigator <%s> } }
+    graph ?g3 { ?s proj:startDate ?date. }
+}
+order by desc(?date)

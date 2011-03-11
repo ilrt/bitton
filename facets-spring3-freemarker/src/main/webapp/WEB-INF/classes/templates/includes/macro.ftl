@@ -137,56 +137,23 @@
 </#macro>
 
 <#macro generateGraphHTML graphCount>
+
+	<script type="text/javascript">
+		<#-- create global object for each collection -->
+		if (typeof graphData == "undefined") graphData = new Object();
+		graphData[${graphCount}] = new Object();
+	</script>
+
     <div class="combiGraphAndList" id="combiGraphAndList_${graphCount}">
         <div class="fig">
-            <script type="text/javascript+protovis">
-                // force lower data range to be 0
-                graphData[${graphCount}].data[graphData[${graphCount}].data.length] = 0;
-
-                /* Sizing and scales. */
-                graphData[${graphCount}].w = $('#combiGraphAndList_${graphCount} .fig').width();
-                graphData[${graphCount}].h = $('#combiGraphAndList_${graphCount} .fig').height();
-                graphData[${graphCount}].x = pv.Scale.ordinal(graphData[${graphCount}].labels).splitBanded(0, graphData[${graphCount}].w);
-                graphData[${graphCount}].y = pv.Scale.linear(graphData[${graphCount}].data).range(0, graphData[${graphCount}].h);
-
-                /* The root panel. */
-                graphData[${graphCount}].vis = new pv.Panel()
-                    .width(graphData[${graphCount}].w)
-                    .height(graphData[${graphCount}].h)
-                    .bottom(5)
-                    .left(0)
-                    .right(0)
-                    .top(5);
-
-                /* X-axis ticks. */
-                graphData[${graphCount}].vis.add(pv.Rule)
-                    .data(graphData[${graphCount}].labels)
-                    .bottom(-10)
-                    .height(15)
-                    .left(function(d) graphData[${graphCount}].x(d))
-                    .strokeStyle("#000");
-
-                /* The bars. */
-                graphData[${graphCount}].bar = graphData[${graphCount}].vis.add(pv.Bar)
-                    .data(graphData[${graphCount}].data)
-                    .height(function(d) graphData[${graphCount}].y(d))
-                    .width(function() graphData[${graphCount}].vis.width()/graphData[${graphCount}].labels.length)
-                    .left(function(d) graphData[${graphCount}].x(this.index))
-                    .fillStyle("#AAA")
-                    .bottom(0);
-
-                $('#combiGraphAndList_${graphCount} .fig').bind("redraw",function() {
-                  graphData[${graphCount}].w = $('#combiGraphAndList_${graphCount} .fig').width();
-                  graphData[${graphCount}].h = $('#combiGraphAndList_${graphCount} .fig').height();
-                  graphData[${graphCount}].x = pv.Scale.ordinal(graphData[${graphCount}].labels).splitBanded(0, graphData[${graphCount}].w);
-                  graphData[${graphCount}].y = pv.Scale.linear(graphData[${graphCount}].data).range(0, graphData[${graphCount}].h);
-                  graphData[${graphCount}].vis.width(graphData[${graphCount}].w).height(graphData[${graphCount}].h);
-                  graphData[${graphCount}].vis.render();
-                });
-
-                graphData[${graphCount}].vis.render();
-            </script>
-
+			<script type="text/javascript+protovis">
+				/* The root panel. */
+				graphData[${graphCount}].vis = new pv.Panel();
+				initGraph(${graphCount});
+				initEvents(${graphCount});
+				showResults(${graphCount});
+				graphData[${graphCount}].vis.render();
+			</script>
         </div><!-- END #fig -->
 
         <div class="slider-container">
