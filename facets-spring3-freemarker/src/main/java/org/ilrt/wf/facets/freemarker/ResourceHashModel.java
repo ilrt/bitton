@@ -25,6 +25,7 @@ import freemarker.template.TemplateScalarModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -93,6 +94,9 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
             String s = iterator.next().getPredicate().getURI();
             list.add("<-"+s);
         }
+        
+        Collections.sort(list);
+        
         return new SimpleCollection(list);
     }
 
@@ -128,6 +132,9 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
             }
 
         }
+        
+        Collections.sort(list);
+        
         return new SimpleCollection(list);
     }
 
@@ -135,6 +142,7 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
 
     @Override
     public TemplateModel get(String s) throws TemplateModelException {
+
         if ("label".equals(s)) {
             if (resource.hasProperty(RDFS.label)) 
                 return new SimpleScalar(resource.getProperty(RDFS.label).getLiteral().getLexicalForm());
@@ -149,7 +157,7 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
         
         if (invert) s = s.substring(2);
         
-        String uri = prefixMapping.expandPrefix(s);      
+        String uri = prefixMapping.expandPrefix(s);
 
         Property property = ResourceFactory.createProperty(uri);
         
@@ -162,12 +170,39 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
         List<TemplateModel> list = new ArrayList<TemplateModel>();
         
         while (iter.hasNext()) {
-            RDFNode item = invert ? iter.next().getSubject() : iter.next().getObject() ;
-            list.add(resolveModel(item));
+            RDFNode item = invert ? iter.next().getSubject() : iter.next().getObject();
+            TemplateModel tm = resolveModel(item);
+            boolean found = false;
+            for (int i = 0; i < list.size(); i++) {
+                if ((list.get(i) instanceof ResourceHashModel && tm instanceof ResourceHashModel)) {
+                    ResourceHashModel rhm1 = (ResourceHashModel) tm;
+                    ResourceHashModel rhm2 = (ResourceHashModel) list.get(i);
+
+                    if (rhm1.get("label") instanceof ResourceHashModel && rhm1 instanceof ResourceHashModel) {
+                        if (((ResourceHashModel) rhm1.get("label")).get("label").toString().compareTo(((ResourceHashModel) rhm2.get("label")).get("label").toString()) < 1) {
+                            list.add(i, tm);
+                            found = true;
+                            break;
+                        }
+                    } else if (rhm1.get("label").toString().compareTo(rhm2.get("label").toString()) < 1) {
+                        list.add(i, tm);
+                        found = true;
+                        break;
+                    }
+                } else if (tm.toString().compareTo(list.get(i).toString()) < 1) {
+                    list.add(i, tm);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                list.add(tm);
+            }
         }
-        
+
         return new SimpleSequence(list);
     }
+
 
     @Override
     public boolean isEmpty() throws TemplateModelException {
@@ -177,7 +212,6 @@ public class ResourceHashModel implements TemplateHashModelEx, TemplateScalarMod
     }
 
     // ---------- TemplateScalarModel interface methods
-
 
     @Override
     public String getAsString() throws TemplateModelException {
