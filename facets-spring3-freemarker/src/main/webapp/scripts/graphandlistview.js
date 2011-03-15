@@ -48,6 +48,12 @@ function initGraphData(id)
 
 	graphData[id].minYear = years[0];
 	graphData[id].maxYear = years[years.length-1];
+	
+	if (years.length == 0) 
+	{
+		graphData[id].minYear = graphData[id].maxYear = 0;
+		return;
+	}
 
 	for (i=graphData[id].minYear; i<=graphData[id].maxYear; i++)
 	{
@@ -91,21 +97,13 @@ function initGraph(id)
 		.right(0)
 		.top(5);
 
-	/* X-axis ticks. */
-	graphData[id].vis.add(pv.Rule)
-		.data(graphData[id].labels)
-		.bottom(-10)
-		.height(15)
-		.left(function(d) { return graphData[id].x(d) })
-		.strokeStyle("#000");
-
 	/* The bars. */
 	graphData[id].bar = graphData[id].vis.add(pv.Bar)
 		.data(graphData[id].data)
 		.height(function(d) { return graphData[id].y(d) } )
-		.width(function() { return graphData[id].vis.width()/graphData[id].labels.length } )
+		.width(function() { return (graphData[id].vis.width()/graphData[id].labels.length-1) } )
 		.left(function(d) { return graphData[id].x(this.index) } )
-		.fillStyle("#AAA")
+		.fillStyle("#B4C49E")
 		.bottom(0);
 
 	$('#combiGraphAndList_'+id+' .fig').bind("redraw",function() {

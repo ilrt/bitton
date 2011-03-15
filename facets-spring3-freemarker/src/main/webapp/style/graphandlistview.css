@@ -33,14 +33,14 @@
 
 .combiGraphAndList .slider-container input
 {
-    width: 80px;
-    text-align:center;
+    width: 60px;
+	height:20px;
+	text-align:center;
     color:#f6931f;
-    font-weight:bold;
     padding:0px;
     margin:0px;
-    border:0px solid;
-    background-color:#eee;
+    border:1px solid #B3B3B3;
+	background-color:#F2F2F2;
 }
 
 .combiGraphAndList .slider-container .valueLeft
@@ -97,4 +97,14 @@
     display:block;
     color:#555;
     font-style:italic;
+}
+
+.slider-outer .ui-slider-horizontal
+{
+	margin-top:5px;
+}
+
+.slider-outer .valueLeft
+{
+	margin-top:-4px;
 }
