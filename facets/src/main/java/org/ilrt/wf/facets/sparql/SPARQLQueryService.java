@@ -604,10 +604,21 @@ public class SPARQLQueryService implements FacetQueryService {
         while (rs.hasNext()) {
             QuerySolution soln = rs.next();
             Map<String, RDFNode> row = new HashMap<String, RDFNode>();
+            /**
+             * FIXME
+             * 
+             * This is a flawed work around for an issue in Arnos
+             * It means that any row containing a null is skipped,
+             * thus optionals and unions may break
+             */
+            boolean hasNulls = false;
             for (String var: rs.getResultVars()) {
                 RDFNode node = soln.get(var);
                 
-                if (node == null) continue;
+                if (node == null) {
+                    hasNulls = true;
+                    continue;
+                }
                 
                 // Associate resources with our model
                 // This saves some work later
@@ -615,7 +626,7 @@ public class SPARQLQueryService implements FacetQueryService {
                 if (describeNodes && node.isResource()) 
                     getReses.addDescribeNode(node.asNode());
             }
-            results.add(row);
+            if (!hasNulls) results.add(row);
         }
         qe.close();
         
