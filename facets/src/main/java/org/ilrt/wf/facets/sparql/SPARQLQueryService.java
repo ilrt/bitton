@@ -606,6 +606,9 @@ public class SPARQLQueryService implements FacetQueryService {
             Map<String, RDFNode> row = new HashMap<String, RDFNode>();
             for (String var: rs.getResultVars()) {
                 RDFNode node = soln.get(var);
+                
+                if (node == null) continue;
+                
                 // Associate resources with our model
                 // This saves some work later
                 row.put(var, resultModel.asRDFNode(node.asNode()));
