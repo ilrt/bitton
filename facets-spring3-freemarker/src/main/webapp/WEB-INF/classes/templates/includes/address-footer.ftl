@@ -14,4 +14,10 @@
 		<p>Copyright 2011 University of Bristol. Funded by <a href="http://www.jisc.ac.uk">JISC</a><br />
 		Designed and built by <a href="http://www.ilrt.bristol.ac.uk">ILRT</a></p>
 	</div><!-- /credits -->
+
+
+        <div id="pi" style="float: right;">
+          <#if resource??><a href="${resource!'#'}">&#928;</a></#if>
+        </div>
+
 </div><!-- /footer -->
