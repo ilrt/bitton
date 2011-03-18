@@ -174,17 +174,19 @@
             <div class="valueRight">
                 <input type="text" class="endYear" />
             </div>
-        </div><!-- END class="slider-container" -->
+        </div><!-- END .slider-container -->
 
         <div class="clearing">&nbsp;</div>
 
         <div class="results">
+
+          <div class="results-header"></div><!-- END .results-header -->
           
 		  <div class="filters">
             <input type='text' class='resultfilter'/>
 		    <select class="ordering"></select>
           </div><!-- END .filters -->
-            
+
           <div class="body"></div><!-- END class="body" -->
 
           <div class="controls">
@@ -193,9 +195,9 @@
             <span class="next">Next</span>
           </div><!-- END .controls -->
 
-        </div><!-- END class="results" -->
+        </div><!-- END .results -->
 
-    </div><!-- END class="combiGraphAndList" -->
+    </div><!-- END .combiGraphAndList -->
 </#macro>
 
 <#macro debug resource>

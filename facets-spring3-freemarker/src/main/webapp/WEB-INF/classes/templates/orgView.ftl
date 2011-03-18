@@ -55,7 +55,7 @@
 						<h2>No research outputs available</h2>
 				</#if>
 
-			</div><!-- END id="tabs-pub" -->
+			</div><!-- END #tabs-pub -->
 
 			<#-- Grants -->
 			<div class="inner" id="tabs-grants">
@@ -86,9 +86,9 @@
 					</ul>
 
 				<#else>
-									<h2>No grants available</h2>
+					<h2>No grants available</h2>
 				</#if>
-			</div> <!-- END id="tabs-grants" -->
+			</div> <!-- END #tabs-grants -->
 
 			<#-- Members -->
 			<div class="inner" id="tabs-members">
@@ -107,9 +107,9 @@
 				<#else>
 					<h2>No members</h2>
 				</#if>
-			</div><!-- END id="tabs-members" -->
-		</div><!-- /tabbedcontent -->
-	</div> <!-- END  id="tabs" -->
+			</div><!-- END #tabs-members -->
+		</div><!-- .tabbedcontent -->
+	</div> <!-- END  #tabs -->
 
 	<#if view??><p><em><a href="javascript:history.go(-1)">Return to results</a></em></p></#if>
 

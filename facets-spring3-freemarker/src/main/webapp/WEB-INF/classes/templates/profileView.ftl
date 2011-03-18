@@ -94,7 +94,7 @@
 				<#else>
 					<h2>No research outputs available</h2>
 				</#if>
-			</div><!-- END id="tabs-pub" -->
+			</div><!-- END #tabs-pub -->
 
 			<#-- Grants -->
 			<div class="inner" id="tabs-grants">
@@ -125,7 +125,7 @@
 				<#else>
 					<h2>No grants available</h2>
 				</#if>
-			</div> <!-- END id="tabs-grants" -->
+			</div> <!-- END #tabs-grants -->
 
 			<#-- collaborators -->
 			<div class="inner" id="tabs-collab">
@@ -139,9 +139,9 @@
 				<#else>
 					<h2>No collaborators</h2>
 				</#if>
-			</div> <!-- END id="tabs-collab" -->
-		</div> <!-- END class="tabbedcontent" -->
-	</div> <!-- END  id="tabs" -->
+			</div> <!-- END #tabs-collab -->
+		</div> <!-- END .tabbedcontent -->
+	</div> <!-- END  #tabs -->
 
 </div><!-- /content -->
 <#include "includes/address-footer.ftl"/>
