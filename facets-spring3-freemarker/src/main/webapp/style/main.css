@@ -64,7 +64,7 @@ h1, h2, h3 {
 	padding: 4px 10px;
 }
 
-h3, h4 {
+h4 {
 	color: #666666;
 	font-weight: bold;
 	margin: 21px 0 -7px;
@@ -582,7 +582,7 @@ h2 span.count {
 	margin: 14px 0 0;
 }
 
-#facetcontainer h3 {
+#facetcontainer h4 {
 	margin-bottom: -4px;
 	margin-top: 0;
 	font-size: 1em;

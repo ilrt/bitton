@@ -5,7 +5,7 @@
 	<#-- do nothing, displaying this elsewhere -->
         <#elseif facet.name = "Department">
             <div class="facet alldept">
-                <h2 class="facet-title">${facet.name}</h2>
+                <h3 class="facet-title">${facet.name}</h3>
                     <#if facet.state.refinements?size &gt; 0>
                         <form action="" method="get">
                             ${facetStateInput(Request, facet.param, facet.paramValue)}
@@ -56,7 +56,7 @@
 
         <#else>
             <div class="facet" id="${facet.param}-facet">
-                <h2 class="facet-title">${facet.name}</h2>
+                <h3 class="facet-title">${facet.name}</h3>
                 <#if facet.state.root>
                     <@refinementList refinements=facet.state.refinements paramKey=facet.param/>
                 <#else>
