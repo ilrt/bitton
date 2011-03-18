@@ -62,7 +62,12 @@
 
 .combiGraphAndList .results .controls
 {
-    text-align:center;
+    text-align:right;
+}
+
+.combiGraphAndList .results .controls .active
+{
+    background-color:lightblue;
 }
 
 .combiGraphAndList .results .controls .prev, .combiGraphAndList .results .controls .next

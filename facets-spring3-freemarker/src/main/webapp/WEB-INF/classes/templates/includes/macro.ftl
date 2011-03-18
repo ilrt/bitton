@@ -190,9 +190,9 @@
           <div class="body"></div><!-- END class="body" -->
 
           <div class="controls">
-            <span class="prev">Previous</span>
+            <span class="prev button">&lt; prev</span>
             <span class="pages"></span>
-            <span class="next">Next</span>
+            <span class="next button">next &gt;</span>
           </div><!-- END .controls -->
 
         </div><!-- END .results -->

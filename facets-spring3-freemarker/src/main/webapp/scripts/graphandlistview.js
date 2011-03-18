@@ -187,7 +187,7 @@ function initEvents(id)
 	});
 }
 
-function showResults(id, page, searchtext)
+function showResults(id, page)
 {
   var maxPageSize = graphData[id].maxPageSize;
   
@@ -195,6 +195,8 @@ function showResults(id, page, searchtext)
   {
 	  page = 0;
   }
+  
+  searchtext = $("#combiGraphAndList_"+id+" .resultfilter").val();
   
   graphData[id].currentPage = page;
 
@@ -237,10 +239,9 @@ function showResults(id, page, searchtext)
 	records += "</ul>";
 	$("#combiGraphAndList_"+id+" .body").append(records);
 
-	$("#combiGraphAndList_"+id+" .controls .prev").show();
-	$("#combiGraphAndList_"+id+" .controls .next").show();
-	if (page < 1) $("#combiGraphAndList_"+id+" .controls .prev").hide();
-	if (start + maxPageSize >= matchingResults.length) $(".combiGraphAndList .controls .next").hide();
+	$("#combiGraphAndList_"+id+" .controls .button").addClass("active");
+	if (page < 1) $("#combiGraphAndList_"+id+" .controls .prev").removeClass("active");
+	if (start + maxPageSize >= matchingResults.length) $("#combiGraphAndList_"+id+" .controls .next").removeClass("active");
 	$("#combiGraphAndList_"+id+" .resultstotal").html(
         "Showing <b>"+(start+1)+"-"+end+"</b> of <b>"+matchingResults.length+"</b> "+graphData[id].type+" between <b>"+min+"</b> and <b>"+max+"</b>"
     );
@@ -248,7 +249,7 @@ function showResults(id, page, searchtext)
 	// create Search Box
 	$(".resultfilter").change(function()
 	{
-		filterResults(this.value.toLowerCase());
+		showResults(id,graphData[id].currentPage);
 	});
   }
   else
@@ -258,9 +259,55 @@ function showResults(id, page, searchtext)
 	$("#combiGraphAndList_"+id+" .body").append("No results");
   }
   
+  showPaginationControls(id, page, Math.ceil(matchingResults.length/maxPageSize));
+  
   renderImpacts();
 }
 
+function showPaginationControls(id, current, total)
+{
+    var window = 2;
+    var start = current - window;
+    start = start < 0 ? 0 : start;
+    
+    var end = current + window;
+    end = end >= total ? total-1 : end;
+    
+    var totalToShow = (window * 2) + 1;
+    totalToShow = totalToShow > total ? total : totalToShow;
+    
+    var content="";
+    
+    if (start > 0)
+    {
+        content += "<a href='' onclick='showResults("+id+", 0); return false;'>1</a>";
+        content += (start > 1) ? "..." : " | ";
+    }
+    
+    for (var i = start; i <= end; i++)
+    {
+        if (i == current) content += (i+1);
+        else content += "<a href='' onclick='showResults("+id+", "+i+"); return false;'>"+(i+1)+"</a>";
+        
+        if (i+1 <= end) content += " | ";
+    }
+    console.log(end + " " + totalToShow);
+    if (end+1 < totalToShow) content += " | ";
+
+    for (var j = i; j < totalToShow; j++)
+    {
+        content += "<a href='' onclick='showResults("+id+", "+j+"); return false;'>"+(j+1)+"</a>";
+        
+        if (j+1 < totalToShow) content += " | ";
+    }
+
+    if (end+1 < total)
+    {
+        content += (end+1 < total-1) ? "..." : " | ";
+        content += "<a href='' onclick='showResults("+id+", "+(total-1)+"); return false;'>"+total+"</a>";
+    }
+    $("#combiGraphAndList_"+id+" .pages").html(content);
+}
 
 $(document).ready(function() {
 	 $(".combiGraphAndList").each(function()
