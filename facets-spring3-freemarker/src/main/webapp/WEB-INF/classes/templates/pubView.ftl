@@ -111,7 +111,7 @@
 
 
 	</div><!-- /col3of3 -->
-<@debug resource=resource/>
+
 </div><!-- /content -->
 
 <#include "includes/address-footer.ftl"/>
