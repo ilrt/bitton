@@ -210,7 +210,7 @@ function applyTabs()
 function renderImpacts()
 {
     $('.show_impacts').click(function() {
-        $(this).next().toggleClass('open').blur();
+        $(this).toggleClass('open').blur();
 
         /* Switch the wording: */
         $stem = $(this).text().substr(5);
@@ -220,8 +220,7 @@ function renderImpacts()
             $(this).text('show ' + $stem);
         }
 
-        if ($(this).next().hasClass('hide')) $(this).next().removeClass('hide');
-		else $(this).next().addClass('hide');
+        $(this).next().toggleClass('hide');
 		
         return false;
     });
