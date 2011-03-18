@@ -75,35 +75,29 @@
 
 		<p><a href="#">Where does this data come from?</a></p>
 
-		<!--
-		<table class="debug">
-			<#list resource?keys as key>
-			<#list resource[key] as value>
-			<tr><td>${key}</td><td>${value}</td></tr>
-			</#list>
-			</#list>
-		</table>
-		-->
-
 	</div><!-- /col1-2of3 -->
 	<div class="col3of3">
 
-		<div class="section">
-			<h2>1 impact</h2>
-			<ul class="objects">
-				<li class="impact"><a href="#">Cited in article in New Scientist</a></li>
-			</ul>
-			<p class="button"><a class="add" href="#">New impact</a></p>
-		</div><!-- /section -->
+		<#if resource['<-'+resrev+'associatedPublication']??>
+			<div class="section">
+				<h2>${resource['<-'+resrev+'associatedPublication']?size} impact<#if resource['<-'+resrev+'associatedPublication']?size != 1>s</#if></h2>
+				<ul class="objects">
+					<#list resource['<-'+resrev+'associatedPublication'] as impact>
+						<li class="impact"><@displayImpact impact=impact/> <span class="otherdetails"></span></li>
+					</#list>
+				</ul>
+				<p class="button"><a class="add" href="#">New impact</a></p>
+			</div><!-- /section -->
+		</#if>
 
 		<#if resource[dc + 'contributor']??>
 		<div class="section">
 			<h2>${resource[dc + 'contributor']?size} contributors</h2>
 			<ul class="objects">
 				<#list resource[dc + 'contributor'] as contributor>
-				<li class="person">
-				<@displayPerson person=contributor/>
-				</li>
+					<li class="person">
+						<@displayPerson person=contributor/>
+					</li>
 				</#list>
 			</ul>
 		</div><!-- /section -->
@@ -118,7 +112,7 @@
 
 
 	</div><!-- /col3of3 -->
-
+<@debug resource=resource/>
 </div><!-- /content -->
 
 <#include "includes/address-footer.ftl"/>

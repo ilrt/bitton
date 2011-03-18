@@ -887,7 +887,7 @@ ul.tabs {
 	padding: 10px;
 }
 
-a.impacts:link, a.impacts:visited {
+a.show_impacts:link, a.show_impacts:visited {
 	display: inline-block;
 	color: #214D63;
 	background: #DDE9F0;
@@ -903,16 +903,16 @@ a.impacts:link, a.impacts:visited {
 	text-decoration: none;
 }
 
-a.impacts:hover {
+a.show_impacts:hover {
 	background: #E6EFF4;
 }
 
-ul.results a.show:link, ul.results a.show:visited {
+ul.results a.show_impacts:link, ul.results a.show_impacts:visited {
 	background: #DDE9F0 url(../images/icon-plus-blue.png) left center no-repeat;
 	padding-left: 20px;
 }
 
-ul.results a.show:hover {
+ul.results a.show_impactsw:hover {
 	background-color: #E6EFF4;
 }
 
@@ -954,6 +954,7 @@ div.impacts ul.results span.otherdetails {
 	color: #777;
 }
 
+.hide { display: none; }
 
 
 

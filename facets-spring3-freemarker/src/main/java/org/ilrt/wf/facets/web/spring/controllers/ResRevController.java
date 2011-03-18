@@ -345,6 +345,10 @@ public class ResRevController extends AbstractController {
                 else if(type.equals("http://purl.org/dc/terms/Publication")) {
                     return PUBLICATION_VIEW_NAME;
                 }
+				else if (type.equals("http://vocab.bris.ac.uk/resrev#ImpactEvidence"))
+				{
+					return IMPACT_VIEW_NAME;
+				}
             }
 
         }
@@ -395,6 +399,7 @@ public class ResRevController extends AbstractController {
     public static String CONTACT_VIEW_NAME = "contactView";
     public static String PROFILE_VIEW_NAME = "profileView";
     public static String GRANT_VIEW_NAME = "grantView";
+	public static String IMPACT_VIEW_NAME = "impactView";
     public static String ORGANISATION_VIEW_NAME = "orgView";
     public static String PUBLICATION_VIEW_NAME = "pubView";
     public static String DEFAULT_VIEW = "defaultView";

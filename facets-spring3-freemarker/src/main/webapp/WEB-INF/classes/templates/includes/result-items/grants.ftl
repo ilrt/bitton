@@ -27,4 +27,15 @@ Please use the following markup:
         </#if>
 
     </span>
+
+	<#if result['<-'+resrev+'associatedPublication']??>
+		<a href="" class="show_impacts">show ${result['<-'+resrev+'associatedPublication']?size} impact<#if result['<-'+resrev+'associatedPublication']?size != 1>s</#if></a>
+		<div class="impacts hide">
+			<ul class="results">
+				<#list result['<-'+resrev+'associatedPublication'] as impact>
+					<li class="impact"><@displayImpact impact=impact/> <span class="otherdetails"></span></li>
+				</#list>
+			</ul>
+		</div>
+	</#if>
 </li>

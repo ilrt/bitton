@@ -216,6 +216,8 @@ function showResults(id, page)
 	$("#combiGraphAndList_"+id+" .resultstotal").html("Showing 0 of 0 ("+graphData[id].results.length+" total)");
 	$("#combiGraphAndList_"+id+" .body").append("No results");
   }
+  
+  renderImpacts();
 }
 
 

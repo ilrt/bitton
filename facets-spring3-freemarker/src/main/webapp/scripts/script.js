@@ -43,7 +43,7 @@ $(document).ready(function(){
 
         applyTabs();
 
-        renderImpacts();
+		renderImpacts();
 
         shrink($('#pubtype-facet ul'),5);
         shrink($('#pubyear-facet ul'),5);
@@ -209,20 +209,20 @@ function applyTabs()
 
 function renderImpacts()
 {
-    $('#impacts1').hide();
-
-    $('#show1').click(function() {
-        $('#show1').toggleClass('open').blur();
+    $('.show_impacts').click(function() {
+        $(this).next().toggleClass('open').blur();
 
         /* Switch the wording: */
-        $stem = $('#show1').text().substr(5);
-        if($('#show1').hasClass('open')) {
-            $('#show1').text('hide ' + $stem);
+        $stem = $(this).text().substr(5);
+        if($(this).hasClass('open')) {
+            $(this).text('hide ' + $stem);
         } else {
-            $('#show1').text('show ' + $stem);
+            $(this).text('show ' + $stem);
         }
 
-        $('#impacts1').toggle();
+        if ($(this).next().hasClass('hide')) $(this).next().removeClass('hide');
+		else $(this).next().addClass('hide');
+		
         return false;
     });
-};
+}

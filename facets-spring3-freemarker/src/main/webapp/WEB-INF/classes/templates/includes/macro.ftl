@@ -98,6 +98,12 @@
     <a href="item?res=${org?html?replace("#","%23")}">
         <#if org[rdfs + 'label']??>${org[rdfs + 'label']?first}</#if></a></#macro>
 
+<#macro displayImpact impact>
+    <a href="item?res=${impact?html?replace("#","%23")}">
+        <#if impact[dc + 'title']??>${impact[dc + 'title']?first}</#if>
+	</a>
+</#macro>
+
 <#macro linkToPageFor item>
     <a href="<@drillForResult result=item/>"><@label resource=item/></a>
 </#macro>
