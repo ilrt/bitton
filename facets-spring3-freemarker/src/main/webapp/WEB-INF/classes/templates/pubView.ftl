@@ -76,7 +76,7 @@
 		<p><a href="#">Where does this data come from?</a></p>
 
 	</div><!-- /col1-2of3 -->
-	<div class="col3of3">
+	<div class="col3of3 sidebar">
 
 		<#if resource['<-'+resrev+'associatedPublication']??>
 			<div class="section">
