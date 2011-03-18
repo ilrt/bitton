@@ -38,6 +38,9 @@
 		<#if resource['<-' + dc + 'contributor']??>
 			<li>Has contributed to <b>${resource['<-' + dc + 'contributor']?size}</b> publication<#if resource['<-' + dc + 'contributor']?size != 1>s</#if></li>
 		</#if>
+                <#if resource['<-http://vocab.bris.ac.uk/resrev#associatedResearcher']??>
+                        <li>Is involved in <b>${resource['<-http://vocab.bris.ac.uk/resrev#associatedResearcher']?size}</b> impacts</li>
+                </#if>
 	</ul>
 
 	<#if resource['<-' + foaf + 'member']??>

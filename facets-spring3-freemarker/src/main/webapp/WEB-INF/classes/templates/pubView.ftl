@@ -89,7 +89,6 @@
 				<p class="button"><a class="add" href="#">New impact</a></p>
 			</div><!-- /section -->
 		</#if>
-
 		<#if resource[dc + 'contributor']??>
 		<div class="section">
 			<h2>${resource[dc + 'contributor']?size} contributors</h2>
@@ -112,7 +111,7 @@
 
 
 	</div><!-- /col3of3 -->
-<@debug resource=resource/>
+
 </div><!-- /content -->
 
 <#include "includes/address-footer.ftl"/>
