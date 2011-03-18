@@ -241,7 +241,9 @@ function showResults(id, page, searchtext)
 	$("#combiGraphAndList_"+id+" .controls .next").show();
 	if (page < 1) $("#combiGraphAndList_"+id+" .controls .prev").hide();
 	if (start + maxPageSize >= matchingResults.length) $(".combiGraphAndList .controls .next").hide();
-	$("#combiGraphAndList_"+id+" .resultstotal").html("Showing "+(start+1)+"-"+end+" of "+matchingResults.length+" ("+graphData[id].results.length+" total)");
+	$("#combiGraphAndList_"+id+" .resultstotal").html(
+        "Showing <b>"+(start+1)+"-"+end+"</b> of <b>"+matchingResults.length+"</b> "+graphData[id].type+" between <b>"+min+"</b> and <b>"+max+"</b>"
+    );
 
 	// create Search Box
 	$(".resultfilter").change(function()

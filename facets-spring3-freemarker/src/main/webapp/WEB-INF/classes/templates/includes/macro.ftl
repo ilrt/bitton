@@ -180,7 +180,7 @@
 
         <div class="results">
 
-          <div class="results-header"></div><!-- END .results-header -->
+          <div class="resultstotal"></div><!-- END .resultstotal -->
           
 		  <div class="filters">
             <input type='text' class='resultfilter'/>
@@ -191,7 +191,7 @@
 
           <div class="controls">
             <span class="prev">Previous</span>
-            <span class="resultstotal"></span>
+            <span class="pages"></span>
             <span class="next">Next</span>
           </div><!-- END .controls -->
 

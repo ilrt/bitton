@@ -71,6 +71,10 @@
 					<#if graphCount??><#assign graphCount=graphCount+1/><#else><#assign graphCount=0/></#if>
 					<@generateGraphHTML graphCount=graphCount/>
 
+                    <script type="text/javascript">
+                        graphData[${graphCount}].type="publications";
+                    </script>
+
 					<#-- Generate listing HTML output -->
 					<ul style="display:none" id="data_${graphCount}">
 						<#list outputlist.collection as item>
@@ -102,6 +106,10 @@
 					<#if graphCount??><#assign graphCount=graphCount+1/><#else><#assign graphCount=0/></#if>
 					<@generateGraphHTML graphCount=graphCount/>
 
+                    <script type="text/javascript">
+                        graphData[${graphCount}].type="grants";
+                    </script>
+
 					<#-- Generate listing HTML output -->
 					<ul style="display:none" id="data_${graphCount}">
 						<#list grantlist.collection as item>
@@ -119,7 +127,7 @@
 										</ul>
 									</div>
 								</#if>
-							</li>
+							</li>grants
 						</#list>
 					</ul>
 				<#else>
