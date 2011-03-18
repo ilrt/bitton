@@ -26,7 +26,9 @@ function initGraphData(id)
 	graphData[id].labels = new Array();
 	graphData[id].currentSortOrder = null;
 	graphData[id].results = new Array();
-	
+    graphData[id].maxPageSize = 10;
+    graphData[id].currentPage = 0;
+                        
 	var years = new Array();
 	
 	$("#data_"+id).children().each(function() {
@@ -38,6 +40,7 @@ function initGraphData(id)
 			var o = new Object();
 			o.year = year;
 			o.label = $(this).outerHTML();
+			o.searchable = $(this).text().toLowerCase();
 			graphData[id].results[graphData[id].results.length] = o;
 			years[years.length] = year;
 		}
@@ -58,27 +61,51 @@ function initGraphData(id)
 	for (i=graphData[id].minYear; i<=graphData[id].maxYear; i++)
 	{
 		var count = 0;
-		for (j in years) { if (years[j] == i) count++; }
+		for (j in years) {if (years[j] == i) count++;}
 		graphData[id].data[graphData[id].data.length] = count;
 		graphData[id].labels[graphData[id].labels.length] = i;
 	}
 	
 	// force lower data range to be 0
 	graphData[id].data[graphData[id].data.length] = 0;
-	
+
+    // apply sort options to all lists
+    var sortOptions = new Array();
+    var obj = new Object();
+    obj = new Object();
+    obj.title = "Date (desc)";
+    obj.fun = sortResultsOnDateThenLabelDesc;
+    sortOptions['sortResultsOnDateThenLabelDesc'] = obj;
+    obj = new Object();
+    obj.title = "Date (asc)";
+    obj.fun = sortResultsOnDateThenLabelAsc;
+    sortOptions['sortResultsOnDateThenLabelAsc'] = obj;
+    obj.title = "Title (asc)";
+    obj.fun = sortResultsOnLabelAsc;
+    sortOptions['sortResultsOnLabelAsc'] = obj;
+    obj = new Object();
+    obj.title = "Title (desc)";
+    obj.fun = sortResultsOnLabelDesc;
+    sortOptions['sortResultsOnLabelDesc'] = obj;
+                            
 	// init the sort list
-	for (var i in graphData[id].sortOptions)
+	for (var i in sortOptions)
 	{
-		var obj = graphData[id].sortOptions[i];
+		var obj = sortOptions[i];
 		if (graphData[id].currentSortOrder == null) graphData[id].currentSortOrder = obj.fun;
 		$("#combiGraphAndList_"+id+" .ordering").append("<option value='" + i +"'>"+obj.title+"</option>");
 	}
 	$("#combiGraphAndList_"+id+" .ordering").change(function(){
-		graphData[id].currentSortOrder = graphData[id].sortOptions[this.value].fun;
+		graphData[id].currentSortOrder = sortOptions[this.value].fun;
 		showResults(id, graphData[id].currentPage);
 	});
 	
 	years = null; // freeup
+		
+	$("#combiGraphAndList_"+id+" .resultfilter").keyup(function()
+	{
+		showResults(id, 0, this.value);
+	});
 }
 
 function initGraph(id)
@@ -100,9 +127,9 @@ function initGraph(id)
 	/* The bars. */
 	graphData[id].bar = graphData[id].vis.add(pv.Bar)
 		.data(graphData[id].data)
-		.height(function(d) { return graphData[id].y(d) } )
-		.width(function() { return (graphData[id].vis.width()/graphData[id].labels.length-1) } )
-		.left(function(d) { return graphData[id].x(this.index) } )
+		.height(function(d) {return graphData[id].y(d)} )
+		.width(function() {return (graphData[id].vis.width()/graphData[id].labels.length-1)} )
+		.left(function(d) {return graphData[id].x(this.index)} )
 		.fillStyle("#B4C49E")
 		.bottom(0);
 
@@ -160,7 +187,7 @@ function initEvents(id)
 	});
 }
 
-function showResults(id, page)
+function showResults(id, page, searchtext)
 {
   var maxPageSize = graphData[id].maxPageSize;
   
@@ -180,10 +207,16 @@ function showResults(id, page)
   for (obj in graphData[id].results)
   {
 	  var year = graphData[id].results[obj].year;
-
 	  if (min <= year && year < max)
 	  {
-		  matchingResults[matchingResults.length] = graphData[id].results[obj];
+		if (searchtext != null && graphData[id].results[obj].searchable.indexOf(searchtext) != -1)
+		{
+			matchingResults[matchingResults.length] = graphData[id].results[obj];
+		}
+		else if (searchtext == null)
+		{
+			matchingResults[matchingResults.length] = graphData[id].results[obj];
+		}
 	  }
   }
 
@@ -209,6 +242,12 @@ function showResults(id, page)
 	if (page < 1) $("#combiGraphAndList_"+id+" .controls .prev").hide();
 	if (start + maxPageSize >= matchingResults.length) $(".combiGraphAndList .controls .next").hide();
 	$("#combiGraphAndList_"+id+" .resultstotal").html("Showing "+(start+1)+"-"+end+" of "+matchingResults.length+" ("+graphData[id].results.length+" total)");
+
+	// create Search Box
+	$(".resultfilter").change(function()
+	{
+		filterResults(this.value.toLowerCase());
+	});
   }
   else
   {

@@ -179,15 +179,20 @@
         <div class="clearing">&nbsp;</div>
 
         <div class="results">
+          
+		  <div class="filters">
+            <input type='text' class='resultfilter'/>
+		    <select class="ordering"></select>
+          </div><!-- END .filters -->
+            
           <div class="body"></div><!-- END class="body" -->
 
           <div class="controls">
             <span class="prev">Previous</span>
             <span class="resultstotal"></span>
             <span class="next">Next</span>
-          </div>
+          </div><!-- END .controls -->
 
-          <select class="ordering"></select>
         </div><!-- END class="results" -->
 
     </div><!-- END class="combiGraphAndList" -->

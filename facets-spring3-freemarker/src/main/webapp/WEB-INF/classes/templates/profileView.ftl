@@ -68,31 +68,6 @@
 					<#if graphCount??><#assign graphCount=graphCount+1/><#else><#assign graphCount=0/></#if>
 					<@generateGraphHTML graphCount=graphCount/>
 
-					<script>
-						<#-- vars -->
-						graphData[${graphCount}].maxPageSize = 5;
-						graphData[${graphCount}].currentPage = 0;
-
-						var sortOptions = new Array();
-						var obj = new Object();
-						obj.title = "Title (asc)";
-						obj.fun = sortResultsOnLabelAsc;
-						sortOptions['sortResultsOnLabelAsc'] = obj;
-						obj = new Object();
-						obj.title = "Title (desc)";
-						obj.fun = sortResultsOnLabelDesc;
-						sortOptions['sortResultsOnLabelDesc'] = obj;
-						obj = new Object();
-						obj.title = "Date (asc)";
-						obj.fun = sortResultsOnDateThenLabelAsc;
-						sortOptions['sortResultsOnDateThenLabelAsc'] = obj;
-						obj = new Object();
-						obj.title = "Date (desc)";
-						obj.fun = sortResultsOnDateThenLabelDesc;
-						sortOptions['sortResultsOnDateThenLabelDesc'] = obj;
-						graphData[${graphCount}].sortOptions = sortOptions;
-					</script>
-
 					<#-- Generate listing HTML output -->
 					<ul style="display:none" id="data_${graphCount}">
 						<#list outputlist.collection as item>
@@ -123,32 +98,6 @@
 				<#if grantlist?? && 0 < grantlist.size>
 					<#if graphCount??><#assign graphCount=graphCount+1/><#else><#assign graphCount=0/></#if>
 					<@generateGraphHTML graphCount=graphCount/>
-
-					<script>
-						<#-- vars -->
-						graphData[${graphCount}].maxPageSize = 5;
-						graphData[${graphCount}].currentPage = 0;
-
-						<!-- set specific sort options for this dataset -->
-						var sortOptions = new Array();
-						var obj = new Object();
-						obj.title = "Title (asc)";
-						obj.fun = sortResultsOnLabelAsc;
-						sortOptions['sortResultsOnLabelAsc'] = obj;
-						obj = new Object();
-						obj.title = "Title (desc)";
-						obj.fun = sortResultsOnLabelDesc;
-						sortOptions['sortResultsOnLabelDesc'] = obj;
-						obj = new Object();
-						obj.title = "Date (asc)";
-						obj.fun = sortResultsOnDateThenLabelAsc;
-						sortOptions['sortResultsOnDateThenLabelAsc'] = obj;
-						obj = new Object();
-						obj.title = "Date (desc)";
-						obj.fun = sortResultsOnDateThenLabelDesc;
-						sortOptions['sortResultsOnDateThenLabelDesc'] = obj;
-						graphData[${graphCount}].sortOptions = sortOptions;
-					</script>
 
 					<#-- Generate listing HTML output -->
 					<ul style="display:none" id="data_${graphCount}">
