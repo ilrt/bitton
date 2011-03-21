@@ -6,11 +6,59 @@
         Used for creating the publication listing on my research and my department pages
 */
 
+.row
+{
+    position:relative;
+    padding-bottom:1em;
+
+}
+
+.row .label
+{
+    width:120px;
+    padding-top:5px;
+    color:#4e4f53;
+}
+
+
+.row .col2
+{
+    width:470px;
+    margin-top:0px;
+    margin-left:110px;
+    position:absolute;
+    top:0px;
+}
+
+.sorting 
+{
+    float:right;
+    margin-top:-1.5em;
+}
+
+.sorting span
+{
+    color:#4e4f53;
+}
+
+.resultstotal
+{
+    margin-top:1em;
+}
+
+.listingcontrols
+{
+    background-color:#deecf5;
+    padding:5px;
+    padding-left:15px;
+    padding-right:15px;
+}
+
 .combiGraphAndList .fig
 {
-    height: 100px;
-    margin-left:80px;
-    margin-right:80px;
+    height: 50px;
+    margin-left:205px; /* 15 + 110 + 80 */
+    margin-right:95px; /* 80 + 15 */
     margin-bottom:1em;
     margin-top: 14px;
 }
@@ -35,13 +83,13 @@
 .combiGraphAndList .slider-container input
 {
     width: 60px;
-	height:20px;
-	text-align:center;
+    height:20px;
+    text-align:center;
     color:#444;
     padding:0px;
     margin:0px;
     border:1px solid #B3B3B3;
-	background-color:#F2F2F2;
+    background-color:#FFF;
 }
 
 .combiGraphAndList .slider-container .valueLeft
@@ -63,26 +111,28 @@
 .combiGraphAndList .results .controls
 {
     text-align:right;
-}
-
-.combiGraphAndList .results .controls .active
-{
-    background-color:lightblue;
+    font-weight:bold;
+    color:#7e7e7e;
 }
 
 .combiGraphAndList .results .controls .prev, .combiGraphAndList .results .controls .next
 {
-    color:blue;
-    text-decoration:underline;
-    padding:0.2em;
+    margin:1em;
+    padding:0.3em;
     cursor:pointer;
-    border:1px solid lightblue;
+    color:#d6d6d4;
 }
 
-
-.combiGraphAndList .resultstotal
+.combiGraphAndList .results .controls .active
 {
-    color:#888;
+    border:1px solid #d6d6d4;
+    background: #cfdaba; /* for non-css3 browsers */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#000000');
+    background: -webkit-gradient(linear, left top, left bottom, from(#fcfcfa), to(#cfdaba));
+    background: -moz-linear-gradient(top,  #fcfcfa,  #cfdaba);
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    color:#447710;
 }
 
 .combiGraphAndList .results .body

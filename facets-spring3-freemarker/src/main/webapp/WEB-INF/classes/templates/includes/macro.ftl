@@ -162,30 +162,41 @@
 			</script>
         </div><!-- END #fig -->
 
-        <div class="slider-container">
-            <div class="slider-outer">
-                <div class="slider-inner">
-                    <div class="valueLeft">
-                        <input type="text" class="startYear" />
+        <div class="listingcontrols">
+            <div class="row">
+                <div class="label">Narrow by date</div>
+                <div class="slider-container col2">
+                    <div class="slider-outer">
+                        <div class="slider-inner">
+                            <div class="valueLeft">
+                                <input type="text" class="startYear" />
+                            </div>
+                            <div class="slider-range"></div>
+                        </div>
                     </div>
-                    <div class="slider-range"></div>
-                </div>
-            </div>
-            <div class="valueRight">
-                <input type="text" class="endYear" />
-            </div>
-        </div><!-- END .slider-container -->
+                    <div class="valueRight">
+                        <input type="text" class="endYear" />
+                    </div>
+                </div><!-- END .slider-container -->
+          </div><!-- END .row -->
+
+            <div class="row">
+                <div class="label">Keyword search</div>
+                <div class="filters col2">
+                <input type='text' class='resultfilter'/>
+                </div><!-- END .filters -->
+            </div><!-- END .row -->
+
+        </div><!-- END .listingcontrols -->
 
         <div class="clearing">&nbsp;</div>
 
-        <div class="results">
+        <div class="resultsheader">
+            <h2 class="resultstotal"></h2><!-- END .resultstotal -->
+            <div class="sorting"><span>Sort by</span> <select class="ordering"></select></div>
+        </div>
 
-          <div class="resultstotal"></div><!-- END .resultstotal -->
-          
-		  <div class="filters">
-            <input type='text' class='resultfilter'/>
-		    <select class="ordering"></select>
-          </div><!-- END .filters -->
+        <div class="results">
 
           <div class="body"></div><!-- END class="body" -->
 

@@ -812,10 +812,6 @@ a.back:hover, a.back:focus, a.back:active {
 /* =tabbed content 
  * ====================================== */
 
-div.tabbed {
-	width: 720px;
-}
-
 ul.tabs {
 	background: #fff url(../images/tabbed-content-top.png) center bottom no-repeat;
 	width: 100%;
@@ -895,7 +891,7 @@ ul.tabs {
 
 #tabs
 {
-        width:720px;
+        width:630px;
 }
 
 .tabbedcontent .inner {

@@ -130,7 +130,7 @@ function initGraph(id)
 		.height(function(d) {return graphData[id].y(d)} )
 		.width(function() {return (graphData[id].vis.width()/graphData[id].labels.length-1)} )
 		.left(function(d) {return graphData[id].x(this.index)} )
-		.fillStyle("#B4C49E")
+		.fillStyle("#bfbfbf")
 		.bottom(0);
 
 	$('#combiGraphAndList_'+id+' .fig').bind("redraw",function() {
@@ -243,7 +243,7 @@ function showResults(id, page)
 	if (page < 1) $("#combiGraphAndList_"+id+" .controls .prev").removeClass("active");
 	if (start + maxPageSize >= matchingResults.length) $("#combiGraphAndList_"+id+" .controls .next").removeClass("active");
 	$("#combiGraphAndList_"+id+" .resultstotal").html(
-        "Showing <b>"+(start+1)+"-"+end+"</b> of <b>"+matchingResults.length+"</b> "+graphData[id].type+" between <b>"+min+"</b> and <b>"+max+"</b>"
+        "Showing <b>"+(start+1)+"-"+end+"</b> of <b>"+matchingResults.length+"</b> "+graphData[id].type/*+" between <b>"+min+"</b> and <b>"+max+"</b>"*/
     );
 
 	// create Search Box
@@ -291,7 +291,7 @@ function showPaginationControls(id, current, total)
         
         if (i+1 <= end) content += " | ";
     }
-    console.log(end + " " + totalToShow);
+
     if (end+1 < totalToShow) content += " | ";
 
     for (var j = i; j < totalToShow; j++)
