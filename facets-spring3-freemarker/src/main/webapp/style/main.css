@@ -353,7 +353,8 @@ a#logo-jisc {
 #researchernav #nav-mydepartment { width: 129px; margin-right: 0; }
 #researchernav #nav-myresearch a { background-image: url(../images/tab-myresearch.png); }
 #researchernav #nav-mydepartment a { background-image: url(../images/tab-mydepartment.png); }
-
+#researchernav #nav-myresearch a.current { background-image: url(../images/tab-myresearch-current.png); }
+#researchernav #nav-mydepartment a.current { background-image: url(../images/tab-mydepartment-current.png); }
 
 /* =forms
  *  * =========================================== */
