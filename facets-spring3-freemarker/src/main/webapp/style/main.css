@@ -742,6 +742,10 @@ ul.results .amount {
 	/* font-weight: bold;*/
 }
 
+.departmentListing ul.results li {
+	margin-bottom: 7px;
+}
+
 /* =people listing
  *  * =========================================== */
 .people .col1of3
