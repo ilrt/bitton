@@ -28,11 +28,11 @@
 		<@printAlphabetHeader start=i size=grouping-1/>
 
 
-		<ul class="objects">
+		<ul class="results">
 			<#list 0..25 as let>
 			<#list departmentList as dept>
 			<#if alphabet[let] == dept['label']?substring(0, 1)>
-			<li class="group"><a href="item?res=${dept['dept']?url('utf-8')}">${dept['label']}</a> <span class="count">${dept['gcount']} people</span></li>
+			<li class="group"><a class="title" href="item?res=${dept['dept']?url('utf-8')}">${dept['label']}</a> <span class="otherdetails">${dept['gcount']} people, N publications, N grants <a href="#" class="show_impacts">show N impacts</a></span></li>
 			</#if>
 			</#list>
 
@@ -41,7 +41,7 @@
 		</ul>
 		<!-- print the header for the next grouping of entries -->
 		<@printAlphabetHeader start=i size=grouping-1/>
-		<ul class="objects">
+		<ul class="results">
 			</#if>
 			</#list>
 		</ul>
