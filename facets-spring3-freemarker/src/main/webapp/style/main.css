@@ -632,6 +632,25 @@ a.help:hover {
 	color: #D1461F;
 }
 
+div.help {
+	margin: 14px 0;
+	padding: 4px 7px;
+	display: inline-block;
+	background: #f7f7f7;
+	color: #666;
+	font-size: 0.928571em;
+	border: 1px solid #e8e8e8;
+}
+
+div.help a:link, div.help a:visited {
+	color: #666;
+	background: transparent url(../images/icon-qmark-grey.png) left center no-repeat;
+	padding: 7px 7px 7px 23px;
+}
+
+div.help a:hover {
+	color: #D1461F;
+}
 
 
 /* =results
