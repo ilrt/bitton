@@ -120,6 +120,7 @@ ol ol ol { list-style-type: lower-roman; }
 dt {
 	font-weight: bold;
 	margin-top: 7px;
+	color: #333;
 }
 
 .veryweak {
@@ -699,41 +700,27 @@ ul.results .amount {
 /* =department listing
  *  * =========================================== */
 
-.bold
-{
-    font-weight:bold;
+.departmentListing form {
+	margin-top: 14px;
 }
 
-.departmentListing h1
-{
-    margin-bottom:1em;
+.departmentListing input[type=text] {
+	width: 20em;
 }
-
-.departmentListing h2
-{
-    line-height:1em;
-    border-bottom:1px solid #ddd;
-}
-
-.departmentListing h2 span
-{
-    position:relative;
-    top:0.5em;
-    left:1em;
-    padding-left:0.5em;
-    padding-right:0.5em;
-    background-color:#fff;
-}
-
 .quicklinks
 {
-    margin:1em;  
+    margin:1em 0;  
     font-weight:bold; 
+    color: #333;
 }
 
 .quicklinks a
 {
     margin-left:1em;
+}
+
+.departmentListing ul.objects li:first-letter {
+	/* font-weight: bold;*/
 }
 
 /* =people listing
