@@ -24,7 +24,7 @@
 
         <#elseif facet.name= "Most Popular Departments">
             <div class="facet popdept">
-                <h3 class="facet-title">Most popular:</h3>
+                <h4 class="facet-title">Most popular:</h4>
                 <#if facet.state.root>
                     <@refinementList refinements=facet.state.refinements paramKey=facet.param/>
                 <#else>
