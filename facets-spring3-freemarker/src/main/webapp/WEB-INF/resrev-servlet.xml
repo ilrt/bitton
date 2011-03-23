@@ -235,7 +235,7 @@
     </util:map>
     <util:map id="pubYearGroups" map-class="java.util.HashMap">
         <entry key="facetType" value="SimpleNumberRange"/>
-        <entry key="facetTitle" value="Years"/>
+        <entry key="facetTitle" value="Publication date"/>
         <entry key="linkProperty" value="http://purl.org/dc/terms/date"/>
         <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
         <entry key="numericRange" value="#{currentYear}:#{currentYear+1}#This year,#{currentYear - 1}:#{currentYear}#Last year,#{currentYear - 5}:#{currentYear - 1}#Last 5 years"/>
