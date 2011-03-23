@@ -281,7 +281,20 @@ public class ResRevController extends AbstractController {
         
         return mav;
     }
+    
+    @RequestMapping(value = PAGE_PATH, method = RequestMethod.GET)
+    public ModelAndView staticPageView(HttpServletRequest request) throws FacetViewServiceException {
+
+        // get requested page
+        String page = request.getParameter("name");
         
+        ModelAndView mav = createModelAndView("static/"+page+"View", request);
+        mav.addObject("viewcontext", "staticpage");
+        
+        return mav;
+    }
+    
+            
     // ---------- private methods
     private ModelAndView displayResourceOrFail(FacetViewSessionWrapper wrapper, String uri,
                                                HttpServletRequest request) {
@@ -498,6 +511,7 @@ public class ResRevController extends AbstractController {
     private final String RESEARCH_PATH = "/research";
     private final String DEPARTMENT_PATH = "/mydepartment";
     private final String DEPT_LIST_PATH = "/organisations";
+    private final String PAGE_PATH = "/page";
 
     private Logger log = Logger.getLogger(ResRevController.class);
 }

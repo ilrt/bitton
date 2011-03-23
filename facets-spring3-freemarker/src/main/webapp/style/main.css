@@ -1008,3 +1008,14 @@ div.impacts ul.results span.otherdetails {
     background: -moz-linear-gradient(top,  #fcfcfa,  #cfdaba);
     color:#447710;
 }
+
+/* Tweak to hide year facet label */
+#pubyear-facet h3
+{
+    display : none;
+}
+
+#static-page #content
+{
+    margin-top:3.5em;
+}
