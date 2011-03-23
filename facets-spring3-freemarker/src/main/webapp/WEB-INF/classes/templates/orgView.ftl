@@ -10,12 +10,11 @@
         <p><strong>Part of: </strong><@displayOrg org=resource[aiiso + 'part_of']?first/></p>
         </#if>
 
-
         <div id="tabs">
             <ul class="tabs">
                 <li class="first current"><a href="#tabs-pub">Research Outputs <span class="count"><#if outputlist??>${outputlist.size}<#else>0</#if></span></a></li>
                 <li><a href="#tabs-grants">Grants <span class="count"><#if grantlist??>${grantlist.size}<#else>0</#if></span></a></li>
-                <li><a href="#tabs-impacts">Impacts <span class="count">XYZ</span></a></li>
+                <li><a href="#tabs-impacts">Impacts <span class="count"><#if impactlist??>${impactlist.size}<#else>0</#if></span></a></li>
             </ul>
 
             <div class="tabbedcontent">
@@ -38,6 +37,7 @@
                                         <a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>.
                                         <span class='otherdetails'><#if item[dc + 'contributor']??><span class='contributor'><#list item[dc + 'contributor'] as contributor><@label resource=contributor/><#if contributor_has_next>, </#if></#list>.</span> </#if> <#if item[dc + 'date']??>(${item[dc + 'date']?first?date?string("yyyy")}) </#if><#if item[elements + 'publisher']??>${item[elements + 'publisher']?first}</#if><#if item[bibo + 'isbn']??> ${item[bibo + 'isbn']?first}</#if><#if item[bibo + 'volume']??> Vol. ${item[bibo + 'volume']?first}</#if><#if item[dc + 'isPartOf']??> Part of ${item[dc + 'isPartOf']?first['label']}</#if><#if item[bibo + 'pageStart']?? && item[bibo + 'pageEnd']??> Pages ${item[bibo + 'pageStart']?first} - ${item[bibo + 'pageEnd']?first}<#elseif item[bibo + 'pageStart']??> Page ${item[bibo + 'pageStart']?first}<#elseif item[bibo + 'pageEnd']??> Page ${item[bibo + 'pageEnd']?first}</#if></span>
                                         <#if item['<-'+resrev+'associatedPublication']??>
+                                            
                                             <a href="" class="show_impacts">show ${item['<-'+resrev+'associatedPublication']?size} impact<#if item['<-'+resrev+'associatedPublication']?size != 1>s</#if></a>
                                             <div class="impacts hide">
                                                 <ul class="results">
@@ -76,11 +76,12 @@
                                     <a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>.
                                     <#if item[proj + 'value']??><span class='amount'>&pound;${item[proj + 'value']?first}</span> </#if>
                                     <span class='otherdetails'><#if item[proj + 'hasPrincipalInvestigator']??><#list item[proj + 'hasPrincipalInvestigator'] as pi><#if pi[rdfs + 'label']??>${pi[rdfs + 'label']?first}</#if></#list></#if><#if item[proj + 'startDate']??> (${item[proj + 'startDate']?first?date?string('yyyy')})</#if><#if item[proj + 'hostedBy']??> <@label resource=item[proj + 'hostedBy']?first/></#if></span>
-                                    <#if item['<-'+resrev+'associatedPublication']??>
-                                        <a href="" class="show_impacts">show ${item['<-'+resrev+'associatedPublication']?size} impact<#if item['<-'+resrev+'associatedPublication']?size != 1>s</#if></a>
+                                    <#if item['<-'+resrev+'associatedGrant']??>
+                                        <#assign impactCount=impactCount+1/>
+                                        <a href="" class="show_impacts">show ${item['<-'+resrev+'associatedGrant']?size} impact<#if item['<-'+resrev+'associatedGrant']?size != 1>s</#if></a>
                                         <div class="impacts hide">
                                             <ul class="results">
-                                                <#list item['<-'+resrev+'associatedPublication'] as impact>
+                                                <#list item['<-'+resrev+'associatedGrant'] as impact>
                                                     <li class="impact"><@displayImpact impact=impact/> <span class="otherdetails"></span></li>
                                                 </#list>
                                             </ul>
@@ -96,7 +97,32 @@
                 </div> <!-- END #tabs-grants -->
 
                 <div class="inner" id="tabs-impacts">
-                    <h2>No grants available</h2>
+
+                    <#if impactlist?? && 0 < impactlist.size>
+
+                        <#if graphCount??><#assign graphCount=graphCount+1/><#else><#assign graphCount=0/></#if>
+                        <@generateGraphHTML graphCount=graphCount/>
+
+                        <script type="text/javascript">
+                            graphData[${graphCount}].type="grants";
+                        </script>
+
+                        <#-- Generate listing HTML output -->
+                        <ul style="display:none" id="data_${graphCount}">
+                            <#list impactlist.collection as item>
+                                <#if item[dc + 'date']??>
+                                    <li class='pub' date="${item[dc + 'date']?first?date?string("yyyy")}">
+                                        <a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>.
+                                        <span class='otherdetails'><#if item[dc + 'contributor']??><span class='contributor'><#list item[dc + 'contributor'] as contributor><@label resource=contributor/><#if contributor_has_next>, </#if></#list>.</span> </#if> <#if item[dc + 'date']??>(${item[dc + 'date']?first?date?string("yyyy")}) </#if><#if item[elements + 'publisher']??>${item[elements + 'publisher']?first}</#if><#if item[bibo + 'isbn']??> ${item[bibo + 'isbn']?first}</#if><#if item[bibo + 'volume']??> Vol. ${item[bibo + 'volume']?first}</#if><#if item[dc + 'isPartOf']??> Part of ${item[dc + 'isPartOf']?first['label']}</#if><#if item[bibo + 'pageStart']?? && item[bibo + 'pageEnd']??> Pages ${item[bibo + 'pageStart']?first} - ${item[bibo + 'pageEnd']?first}<#elseif item[bibo + 'pageStart']??> Page ${item[bibo + 'pageStart']?first}<#elseif item[bibo + 'pageEnd']??> Page ${item[bibo + 'pageEnd']?first}</#if></span>
+                                    </li>
+                                </#if>
+                            </#list>
+                        </ul>
+
+
+                    <#else>
+                        <h2>No impacts available</h2>
+                    </#if>
                 </div> <!-- END #tabs-impacts -->
 
             </div> <!-- .tabbedcontent -->
@@ -125,19 +151,17 @@
 
                 <#assign count=0/>
                 <ul class="objects">
-                    <#if resource[foaf + 'member']??>
-                        <#list resource[foaf + 'member'] as member>
-                            <#assign count=count+1/>
-                            <li class="person"><@displayPerson person=member/></li>
-                            <#if count=15><a href="">${resource[foaf + 'member']?size - count} more people &gt;</a><#break></#if>
-                        </#list>
-                    </#if>
+                    <#list resource[foaf + 'member'] as member>
+                        <#assign count=count+1/>
+                        <li class="person"><@displayPerson person=member/></li>
+                        <#if count=15><a href="">${resource[foaf + 'member']?size - count} more people &gt;</a><#break></#if>
+                    </#list>
                 </ul>
             <#else>
                 <h2>0 people</h2>
             </#if>
         </div><!-- END .section -->
-    </div>
+    </div><!-- END .col3of3 -->
 
 </div>
 

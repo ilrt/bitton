@@ -5,6 +5,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
 import com.hp.hpl.jena.util.FileManager;
@@ -64,16 +65,16 @@ public class ResRevController extends AbstractController {
         if (mav.getViewName().equalsIgnoreCase(PROFILE_VIEW_NAME))
         {
             Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
-            mav.addObject("outputlist", getListFromQuery("/queries/getPersonsPublications.rq", resourceObj));
-            mav.addObject("grantlist", getListFromQuery("/queries/getAllPersonGrants.rq", resourceObj));
+            mav.addObject("outputlist", getListFromQuery("/queries/getPersonsPublications.rq", resourceObj, null));
+            mav.addObject("grantlist", getListFromQuery("/queries/getAllPersonGrants.rq", resourceObj, null));
             mav.addObject("viewcontext", "people");
         }
 
         if (mav.getViewName().equalsIgnoreCase(ORGANISATION_VIEW_NAME))
         {
             Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
-            mav.addObject("outputlist", getListFromQuery("/queries/getAllDeptOutputs.rq", resourceObj));
-            mav.addObject("grantlist", getListFromQuery("/queries/getAllDeptGrants.rq", resourceObj));
+            mav.addObject("outputlist", getListFromQuery("/queries/getAllDeptOutputs.rq", resourceObj, null));
+            mav.addObject("grantlist", getListFromQuery("/queries/getAllDeptGrants.rq", resourceObj, null));
             mav.addObject("viewcontext", "organisations");
         }
         
@@ -196,11 +197,20 @@ public class ResRevController extends AbstractController {
 
         mav.addObject("resource",  new ResourceHashModel(resource));
 
+        // record all impacts we come across
+        List <Resource> impacts = new ArrayList<Resource>();
+        
         // get users publication information
-        mav.addObject("outputlist", getListFromQuery("/queries/getPersonsPublications.rq", resource));
+        ExtendedSimpleCollection outputs = getListFromQuery("/queries/getPersonsPublications.rq", resource, impacts);
+        ExtendedSimpleCollection grants = getListFromQuery("/queries/getAllPersonGrants.rq", resource, impacts);
+        
+        mav.addObject("outputlist", outputs);
 
         // get related grants for this user
-        mav.addObject("grantlist", getListFromQuery("/queries/getAllPersonGrants.rq", resource));
+        mav.addObject("grantlist", grants);
+
+        // pass back impacts associated with current person.
+        mav.addObject("impactlist", new ExtendedSimpleCollection(impacts, OBJECT_WRAPPER));
         
         // add flag to allow proview view to differentiate between displaying regular users and current user's profile view
         mav.addObject("profileview",  "true");
@@ -235,9 +245,9 @@ public class ResRevController extends AbstractController {
         
         mav.addObject("user",  new ResourceHashModel(user));
         mav.addObject("resource", new ResourceHashModel(department));
-        mav.addObject("outputlist", getListFromQuery("/queries/getAllDeptOutputs.rq", dept));
-        mav.addObject("grantlist", getListFromQuery("/queries/getAllDeptGrants.rq", dept));
-        
+        mav.addObject("outputlist", getListFromQuery("/queries/getAllDeptOutputs.rq", dept, null));
+        mav.addObject("grantlist", getListFromQuery("/queries/getAllDeptGrants.rq", dept, null));
+        mav.addObject("peoplelist", getListFromQuery("/queries/getAllDeptPeople.rq", dept, null));
         mav.addObject("viewcontext", "department");
         
         return mav;
@@ -345,7 +355,7 @@ public class ResRevController extends AbstractController {
                 else if(type.equals("http://purl.org/dc/terms/Publication")) {
                     return PUBLICATION_VIEW_NAME;
                 }
-				else if (type.equals("http://vocab.bris.ac.uk/resrev#ImpactEvidence"))
+				else if (type.equals(resrev+"ImpactEvidence"))
 				{
 					return IMPACT_VIEW_NAME;
 				}
@@ -354,6 +364,78 @@ public class ResRevController extends AbstractController {
         }
 
         return DEFAULT_VIEW;
+    }
+    
+    private List<Resource> findImpacts(List<Resource> resources)
+    {
+        List<Resource> impacts = new ArrayList<Resource>();
+        
+        for (Resource r : resources)
+        {
+            StmtIterator propiter = r.getModel().listStatements(null, impactPub, r);
+            while (propiter.hasNext())
+            {
+                Resource impact = propiter.nextStatement().getSubject();
+                Resource impactMetadata = getResearchImpactMetadata(impact);
+                StmtIterator it = impactMetadata.listProperties();
+                while (it.hasNext()) 
+                { 
+                    Statement p = it.nextStatement();
+                    impact.addProperty(p.getPredicate(), p.getObject());
+                }
+                it = impact.listProperties();
+                while (it.hasNext()) { System.out.println (it.nextStatement().asTriple().toString()); }                    
+                impacts.add(impact);
+                System.out.println ("o --");
+            }
+            propiter = r.getModel().listStatements(null, impactPerson, r);
+            while (propiter.hasNext())
+            {
+                Resource impact = propiter.nextStatement().getSubject();
+                Resource impactMetadata = getResearchImpactMetadata(impact);
+                StmtIterator it = impactMetadata.listProperties();
+                it = impact.listProperties();
+                while (it.hasNext()) 
+                { 
+                    Statement p = it.nextStatement();
+                    impact.addProperty(p.getPredicate(), p.getObject());
+                }
+                it = impact.listProperties();
+                while (it.hasNext()) { System.out.println (it.nextStatement().asTriple().toString()); }                    
+                impacts.add(impact);
+                System.out.println ("p --");
+            }
+            propiter = r.getModel().listStatements(null, impactGrant, r);
+            while (propiter.hasNext())
+            {
+                Resource impact = propiter.nextStatement().getSubject();
+                Resource impactMetadata = getResearchImpactMetadata(impact);
+                StmtIterator it = impactMetadata.listProperties();
+                while (it.hasNext()) 
+                { 
+                    Statement p = it.nextStatement();
+                    impact.addProperty(p.getPredicate(), p.getObject());
+                }
+                it = impact.listProperties();
+                while (it.hasNext()) { System.out.println (it.nextStatement().asTriple().toString()); }                    
+                impacts.add(impact);
+                System.out.println ("g --");
+            }
+        }
+        
+        System.out.println("We have " + impacts.size());
+        return impacts;
+    }
+    
+    
+    private Resource getResearchImpactMetadata(Resource resource)
+    {
+        StmtIterator iter = resource.getModel().listStatements(null, null, resource);
+        while (iter.hasNext())
+        {
+            return iter.nextStatement().getSubject();
+        }
+        return null;
     }
     
     private String getQuery(String queryFile) {
@@ -365,7 +447,7 @@ public class ResRevController extends AbstractController {
         return query;
     }
     
-    private Object getListFromQuery(String queryFile, Resource resource) {
+    private ExtendedSimpleCollection getListFromQuery(String queryFile, Resource resource, List<Resource> impacts) {
         String query = getQuery(queryFile);
         
         String completeQuery = query.replace("%s", resource.getURI());
@@ -377,6 +459,8 @@ public class ResRevController extends AbstractController {
         for (Map<String, RDFNode> soln: result) {
             hits.add((Resource) soln.get("s"));
         }
+        
+        if (impacts != null) impacts.addAll(findImpacts(hits));
 
         // Return as a viewable thingy 
         return new ExtendedSimpleCollection(hits, OBJECT_WRAPPER);
@@ -393,6 +477,12 @@ public class ResRevController extends AbstractController {
     private final Property userNameProp = ResourceFactory.createProperty(FOAF, "nick");
     private final Property memberProp = ResourceFactory.createProperty(FOAF, "member");
 
+    private static String resrev = "http://vocab.bris.ac.uk/resrev#";
+    private final Property impactPub = ResourceFactory.createProperty(resrev, "associatedPublication");
+    private final Property impactPerson = ResourceFactory.createProperty(resrev, "associatedResearcher");
+    private final Property impactGrant = ResourceFactory.createProperty(resrev, "associatedGrant");
+    private final Property impactBody = ResourceFactory.createProperty("http://www.w3.org/2000/10/annotation-ns#", "body");
+    
     public static String HOME_VIEW_NAME = "homeView";
     public static String MAIN_VIEW_NAME = "mainView";
     public static String ABOUT_VIEW_NAME = "aboutView";

@@ -1,0 +1,7 @@
+prefix rr: <http://vocab.bris.ac.uk/resrev#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?s
+{
+    graph ?g1 { <%s> foaf:member ?s }
+}

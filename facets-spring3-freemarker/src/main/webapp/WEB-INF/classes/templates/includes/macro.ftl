@@ -9,6 +9,7 @@
 <#assign bibo = "http://purl.org/ontology/bibo/">
 <#assign relationship = "http://purl.org/vocab/relationship/">
 <#assign proj = "http://vocab.ouls.ox.ac.uk/projectfunding#">
+<#assign annot = "http://www.w3.org/2000/10/annotation-ns#">
 
 <#assign alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'] />
 

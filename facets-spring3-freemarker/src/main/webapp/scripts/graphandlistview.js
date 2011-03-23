@@ -238,6 +238,8 @@ function showResults(id, page)
 	}
 	records += "</ul>";
 	$("#combiGraphAndList_"+id+" .body").append(records);
+    
+    renderImpacts();
 
 	$("#combiGraphAndList_"+id+" .controls .button").addClass("active");
 	if (page < 1) $("#combiGraphAndList_"+id+" .controls .prev").removeClass("active");
@@ -251,6 +253,8 @@ function showResults(id, page)
 	{
 		showResults(id,graphData[id].currentPage);
 	});
+  
+    showPaginationControls(id, page, Math.ceil(matchingResults.length/maxPageSize));
   }
   else
   {
@@ -258,10 +262,6 @@ function showResults(id, page)
 	$("#combiGraphAndList_"+id+" .resultstotal").html("Showing 0 of 0 ("+graphData[id].results.length+" total)");
 	$("#combiGraphAndList_"+id+" .body").append("No results");
   }
-  
-  showPaginationControls(id, page, Math.ceil(matchingResults.length/maxPageSize));
-  
-  renderImpacts();
 }
 
 function showPaginationControls(id, current, total)

@@ -209,7 +209,8 @@ function applyTabs()
 
 function renderImpacts()
 {
-    $('.show_impacts').click(function() {
+
+    $('.show_impacts').unbind('click').click(function() {
         $(this).toggleClass('open').blur();
 
         /* Switch the wording: */
