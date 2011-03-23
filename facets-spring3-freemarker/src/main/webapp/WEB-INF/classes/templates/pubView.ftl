@@ -46,7 +46,7 @@
 
 				<!-- else if it's a book:
 			<dl>
-				<dt>Published by:</dt>
+				<dt>Published in:</dt>
 				<dd>{name of publisher}</dd>
 				<#if resource[bibo + 'isbn']??>
 				<dt>ISBN:</dt>
@@ -55,6 +55,16 @@
 			</dl>
 
 				etc, etc.
+
+
+				The idea is that you'd get something like this for a journal article:
+
+				Published in: Journal of Business vol 63, no.1: pp. 91-98
+
+				For a book:
+
+				Published by: Universe Books, ISBN: 2938179512
+
 				-->
 
 
@@ -73,7 +83,7 @@
 		</div><!-- /citation -->
 		</#if>
 
-		<p><a href="#">Where does this data come from?</a></p>
+		<div class="help"><a href="#">Where does this data come from?</a></div>
 
 	</div><!-- /col1-2of3 -->
 	<div class="col3of3 sidebar">
@@ -86,7 +96,7 @@
 						<li class="impact"><@displayImpact impact=impact/> <span class="otherdetails"></span></li>
 					</#list>
 				</ul>
-				<p class="button"><a class="add" href="#">New impact</a></p>
+				<p class="button"><a class="add" href="#">Add impact</a></p>
 			</div><!-- /section -->
 		</#if>
 		<#if resource[dc + 'contributor']??>
@@ -101,14 +111,6 @@
 			</ul>
 		</div><!-- /section -->
 		</#if>
-
-		<div class="section">
-			<h2>funded by 1 grant</h2>
-			<ul class="objects">
-				<li class="grant"><a href="#">Title of grant goes here</a></li>
-			</ul>
-		</div><!-- /section -->
-
 
 	</div><!-- /col3of3 -->
 
