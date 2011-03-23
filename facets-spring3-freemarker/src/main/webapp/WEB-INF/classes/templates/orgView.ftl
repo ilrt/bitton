@@ -54,6 +54,7 @@
 
                     <#else>
                             <h2>No research outputs available</h2>
+                            <p>&nbsp;</p>
                     </#if>
 
                 </div><!-- END #tabs-pub -->
@@ -93,9 +94,11 @@
 
                     <#else>
                         <h2>No grants available</h2>
+                        <p>&nbsp;</p>
                     </#if>
                 </div> <!-- END #tabs-grants -->
 
+                <#-- Impacts -->
                 <div class="inner" id="tabs-impacts">
 
                     <#if impactlist?? && 0 < impactlist.size>
@@ -110,10 +113,21 @@
                         <#-- Generate listing HTML output -->
                         <ul style="display:none" id="data_${graphCount}">
                             <#list impactlist.collection as item>
-                                <#if item[dc + 'date']??>
-                                    <li class='pub' date="${item[dc + 'date']?first?date?string("yyyy")}">
+                                <#if item[annot + 'created']??>
+                                    <li class='pub' date="${item[annot + 'created']?first?date?string("yyyy")}">
                                         <a class='title' href='<@drillForResult result=item/>'><@label resource=item/></a>.
-                                        <span class='otherdetails'><#if item[dc + 'contributor']??><span class='contributor'><#list item[dc + 'contributor'] as contributor><@label resource=contributor/><#if contributor_has_next>, </#if></#list>.</span> </#if> <#if item[dc + 'date']??>(${item[dc + 'date']?first?date?string("yyyy")}) </#if><#if item[elements + 'publisher']??>${item[elements + 'publisher']?first}</#if><#if item[bibo + 'isbn']??> ${item[bibo + 'isbn']?first}</#if><#if item[bibo + 'volume']??> Vol. ${item[bibo + 'volume']?first}</#if><#if item[dc + 'isPartOf']??> Part of ${item[dc + 'isPartOf']?first['label']}</#if><#if item[bibo + 'pageStart']?? && item[bibo + 'pageEnd']??> Pages ${item[bibo + 'pageStart']?first} - ${item[bibo + 'pageEnd']?first}<#elseif item[bibo + 'pageStart']??> Page ${item[bibo + 'pageStart']?first}<#elseif item[bibo + 'pageEnd']??> Page ${item[bibo + 'pageEnd']?first}</#if></span>
+                                        <span class='otherdetails'>
+                                            <#if item[resrev + 'associatedResearcherName']??>
+                                            <span class='contributor'>
+                                                <#list item[resrev + 'associatedResearcherName'] as contributor>
+                                                    ${contributor}<#if contributor_has_next>, </#if>
+                                                </#list>.
+                                            </span>
+                                            </#if>
+                                            <#if item[annot + 'created']??>
+                                                (${item[annot + 'created']?first?date?string("dd-mm-yyyy")}) </#if>
+                                            <#if item[dc + 'description']??>${item[dc + 'description']?first}</#if>
+                                        </span>
                                     </li>
                                 </#if>
                             </#list>
@@ -122,6 +136,7 @@
 
                     <#else>
                         <h2>No impacts available</h2>
+                        <p>&nbsp;</p>
                     </#if>
                 </div> <!-- END #tabs-impacts -->
 

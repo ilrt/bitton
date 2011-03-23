@@ -245,9 +245,22 @@ public class ResRevController extends AbstractController {
         
         mav.addObject("user",  new ResourceHashModel(user));
         mav.addObject("resource", new ResourceHashModel(department));
-        mav.addObject("outputlist", getListFromQuery("/queries/getAllDeptOutputs.rq", dept, null));
-        mav.addObject("grantlist", getListFromQuery("/queries/getAllDeptGrants.rq", dept, null));
-        mav.addObject("peoplelist", getListFromQuery("/queries/getAllDeptPeople.rq", dept, null));
+
+                // record all impacts we come across
+        List <Resource> impacts = new ArrayList<Resource>();
+        
+        // get users publication information
+        ExtendedSimpleCollection outputs = getListFromQuery("/queries/getAllDeptOutputs.rq", dept, impacts);
+        ExtendedSimpleCollection grants = getListFromQuery("/queries/getAllDeptGrants.rq", dept, impacts);
+        ExtendedSimpleCollection members = getListFromQuery("/queries/getAllDeptPeople.rq", dept, impacts);
+        
+        mav.addObject("outputlist", outputs);
+        mav.addObject("grantlist", grants);
+        mav.addObject("peoplelist", members);
+        
+        // pass back impacts associated with this dept.
+        mav.addObject("impactlist", new ExtendedSimpleCollection(impacts, OBJECT_WRAPPER));
+        
         mav.addObject("viewcontext", "department");
         
         return mav;
@@ -375,51 +388,17 @@ public class ResRevController extends AbstractController {
             StmtIterator propiter = r.getModel().listStatements(null, impactPub, r);
             while (propiter.hasNext())
             {
-                Resource impact = propiter.nextStatement().getSubject();
-                Resource impactMetadata = getResearchImpactMetadata(impact);
-                StmtIterator it = impactMetadata.listProperties();
-                while (it.hasNext()) 
-                { 
-                    Statement p = it.nextStatement();
-                    impact.addProperty(p.getPredicate(), p.getObject());
-                }
-                it = impact.listProperties();
-                while (it.hasNext()) { System.out.println (it.nextStatement().asTriple().toString()); }                    
-                impacts.add(impact);
-                System.out.println ("o --");
+                impacts.add(mergeImpactMetadata(propiter.nextStatement().getSubject()));
             }
             propiter = r.getModel().listStatements(null, impactPerson, r);
             while (propiter.hasNext())
             {
-                Resource impact = propiter.nextStatement().getSubject();
-                Resource impactMetadata = getResearchImpactMetadata(impact);
-                StmtIterator it = impactMetadata.listProperties();
-                it = impact.listProperties();
-                while (it.hasNext()) 
-                { 
-                    Statement p = it.nextStatement();
-                    impact.addProperty(p.getPredicate(), p.getObject());
-                }
-                it = impact.listProperties();
-                while (it.hasNext()) { System.out.println (it.nextStatement().asTriple().toString()); }                    
-                impacts.add(impact);
-                System.out.println ("p --");
+                impacts.add(mergeImpactMetadata(propiter.nextStatement().getSubject()));
             }
             propiter = r.getModel().listStatements(null, impactGrant, r);
             while (propiter.hasNext())
             {
-                Resource impact = propiter.nextStatement().getSubject();
-                Resource impactMetadata = getResearchImpactMetadata(impact);
-                StmtIterator it = impactMetadata.listProperties();
-                while (it.hasNext()) 
-                { 
-                    Statement p = it.nextStatement();
-                    impact.addProperty(p.getPredicate(), p.getObject());
-                }
-                it = impact.listProperties();
-                while (it.hasNext()) { System.out.println (it.nextStatement().asTriple().toString()); }                    
-                impacts.add(impact);
-                System.out.println ("g --");
+                impacts.add(mergeImpactMetadata(propiter.nextStatement().getSubject()));
             }
         }
         
@@ -428,14 +407,24 @@ public class ResRevController extends AbstractController {
     }
     
     
-    private Resource getResearchImpactMetadata(Resource resource)
+    /**
+     * Merges together the 'head' and 'body' resources of an annotation
+     * @param impact
+     * @return 
+     */
+    private Resource mergeImpactMetadata(Resource impact)
     {
-        StmtIterator iter = resource.getModel().listStatements(null, null, resource);
-        while (iter.hasNext())
+        StmtIterator iter = impact.getModel().listStatements(null, null, impact);
+        if (iter.hasNext())
         {
-            return iter.nextStatement().getSubject();
+            StmtIterator it = iter.nextStatement().getSubject().listProperties();
+            while (it.hasNext()) 
+            { 
+                Statement p = it.nextStatement();
+                impact.addProperty(p.getPredicate(), p.getObject());
+            }
         }
-        return null;
+        return impact;
     }
     
     private String getQuery(String queryFile) {
@@ -460,6 +449,7 @@ public class ResRevController extends AbstractController {
             hits.add((Resource) soln.get("s"));
         }
         
+        // collect all impacts if we're passed something to put them in
         if (impacts != null) impacts.addAll(findImpacts(hits));
 
         // Return as a viewable thingy 
