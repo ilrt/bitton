@@ -982,4 +982,29 @@ div.impacts ul.results span.otherdetails {
 .hide { display: none; }
 
 
+/* == Pagination controls == */
+.controls
+{
+    text-align:right;
+    font-weight:bold;
+    color:#888;
+    margin-bottom: 14px;
+}
 
+.controls .prev, .controls .next
+{
+    margin:1em;
+    padding:0.3em;
+    cursor:pointer;
+    color:#d6d6d4;
+}
+
+.controls .active
+{
+    border:1px solid #d6d6d4;
+    background: #cfdaba; /* for non-css3 browsers */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#000000');
+    background: -webkit-gradient(linear, left top, left bottom, from(#fcfcfa), to(#cfdaba));
+    background: -moz-linear-gradient(top,  #fcfcfa,  #cfdaba);
+    color:#447710;
+}

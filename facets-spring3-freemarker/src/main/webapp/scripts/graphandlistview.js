@@ -281,7 +281,7 @@ function showPaginationControls(id, current, total)
     if (start > 0)
     {
         content += "<a href='' onclick='showResults("+id+", 0); return false;'>1</a>";
-        content += (start > 1) ? "..." : " | ";
+        content += (start > 1) ? "&nbsp;&nbsp;...&nbsp;&nbsp;" : "&nbsp;&nbsp;|&nbsp;&nbsp;";
     }
     
     for (var i = start; i <= end; i++)
@@ -289,21 +289,21 @@ function showPaginationControls(id, current, total)
         if (i == current) content += (i+1);
         else content += "<a href='' onclick='showResults("+id+", "+i+"); return false;'>"+(i+1)+"</a>";
         
-        if (i+1 <= end) content += " | ";
+        if (i+1 <= end) content += "&nbsp;&nbsp;|&nbsp;&nbsp;";
     }
 
-    if (end+1 < totalToShow) content += " | ";
+    if (end+1 < totalToShow) content += "&nbsp;&nbsp;|&nbsp;&nbsp;";
 
     for (var j = i; j < totalToShow; j++)
     {
         content += "<a href='' onclick='showResults("+id+", "+j+"); return false;'>"+(j+1)+"</a>";
         
-        if (j+1 < totalToShow) content += " | ";
+        if (j+1 < totalToShow) content += "&nbsp;&nbsp;|&nbsp;&nbsp;";
     }
 
     if (end+1 < total)
     {
-        content += (end+1 < total-1) ? "..." : " | ";
+        content += (end+1 < total-1) ? "&nbsp;&nbsp;...&nbsp;&nbsp;" : "&nbsp;&nbsp;|&nbsp;&nbsp;";
         content += "<a href='' onclick='showResults("+id+", "+(total-1)+"); return false;'>"+total+"</a>";
     }
     $("#combiGraphAndList_"+id+" .pages").html(content);
