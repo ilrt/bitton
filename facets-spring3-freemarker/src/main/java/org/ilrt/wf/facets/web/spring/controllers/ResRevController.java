@@ -402,7 +402,6 @@ public class ResRevController extends AbstractController {
             }
         }
         
-        System.out.println("We have " + impacts.size());
         return impacts;
     }
     

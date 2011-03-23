@@ -169,7 +169,7 @@
                     <#list resource[foaf + 'member'] as member>
                         <#assign count=count+1/>
                         <li class="person"><@displayPerson person=member/></li>
-                        <#if count=15><a href="">${resource[foaf + 'member']?size - count} more people &gt;</a><#break></#if>
+                        <#if count=15><a href="people?pdept=U${resource?replace('/','%2F')?replace(':','%3A')?replace('#','%23')}%23${resource[foaf + 'name']?first?html}">${resource[foaf + 'member']?size - count} more people &gt;</a><#break></#if>
                     </#list>
                 </ul>
             <#else>

@@ -750,13 +750,15 @@ ul.results .amount {
  *  * =========================================== */
 .people .col1of3
 {
-    display:none;
+    display:block;
+    float:right;
 }
 
 .people .col2-3of3 {
     float: left;
-    width: 100%;
+    width: 636px;
 }
+
 
 
 
