@@ -115,7 +115,7 @@
 		</div><!-- /citation -->
 		</#if>
 
-		<div class="help"><a href="/page?name=contact">Where does this data come from?</a></div>
+		<div class="help"><a href="page?name=datasources">Where does this data come from?</a></div>
 
 	</div><!-- /col1-2of3 -->
 	<div class="col3of3 sidebar">

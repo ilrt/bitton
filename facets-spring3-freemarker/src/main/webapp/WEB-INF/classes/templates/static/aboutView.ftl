@@ -14,6 +14,8 @@
             
         <p>For more information about the project, read the <a href="http://researchrevealed.ilrt.bris.ac.uk/">project blog</a></p>
 
+        <p>Also see information about the <a href="page?name=datasources">data sources used in this project</a>.</p>
+
      </div>
 
 
