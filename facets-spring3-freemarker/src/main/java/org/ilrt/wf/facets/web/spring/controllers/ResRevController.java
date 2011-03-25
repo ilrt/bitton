@@ -12,6 +12,9 @@ import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleCollection;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,14 +54,17 @@ public class ResRevController extends AbstractController {
     // ---------- public methods that are mapped to URLs
     
     @RequestMapping(value = ITEM_PATH, method = RequestMethod.GET)
-    public ModelAndView resourceView(HttpServletRequest request) throws FacetViewServiceException {
+    public ModelAndView resourceView(HttpServletRequest request) throws FacetViewServiceException, MalformedURLException, URISyntaxException {
 
         // get the session object
         HttpSession session = request.getSession(true);
 
-        String resource = request.getParameter(RESOURCE_PARAMETER);
+        String url = request.getParameter(RESOURCE_PARAMETER);
+        if (url.toUpperCase().startsWith("U")) url = url.substring(1);
+        
+        URL resource = new URL(url);
 
-        ModelAndView mav = displayResource(session, request, resource);
+        ModelAndView mav = displayResource(session, request, resource.toString());
         
         mav.addObject("viewcontext", "resource");
         
