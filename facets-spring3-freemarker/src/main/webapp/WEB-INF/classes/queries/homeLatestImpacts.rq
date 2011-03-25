@@ -9,10 +9,10 @@ select distinct ?uri ?title ?date
 {
     graph ?g1 
     {
-        ?uri rdf:type <http://vocab.bris.ac.uk/resrev#ResearchImpact>.
-        ?uri annot:created ?date. 
-        ?uri annot:body ?body.
-        ?body dc:title ?title.
+        ?s rdf:type <http://vocab.bris.ac.uk/resrev#ResearchImpact>.
+        ?s annot:created ?date. 
+        ?s annot:body ?uri.
+        ?uri dc:title ?title.
     } 
 } 
 order by desc(?date)
