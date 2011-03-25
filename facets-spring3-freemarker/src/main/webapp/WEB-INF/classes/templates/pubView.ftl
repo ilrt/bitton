@@ -14,8 +14,21 @@
 				<dt>Output type:</dt>
 				<dd>
 				<#list resource[rdf + 'type'] as type>
-				<#if type?contains(bibo?string)>${type?substring(bibo?length)}</#if>
+                    
+                    <#if type?contains(bibo?string)>
+                        <#assign pubType=type?substring(bibo?length)/>
+                        ${pubType}
+                    </#if>
 				</#list>
+<#if !pubType??>
+				<#list resource[dc + 'type'] as type>
+                    
+                    <#if type?contains(resrev?string)>
+                        <#assign pubType=type?substring(resrev?length)/>
+                        ${pubType}
+                    </#if>
+				</#list>
+</#if>
 				</dd>
 			</dl>
 
@@ -37,23 +50,42 @@
 			</dl>
 
 			<!-- if it's a journal article or simiar: -->
-			<dl>
-				<dt>Published in:</dt>
-				<dd>{name of parent publication}<#if resource[bibo + 'volume']??>, vol ${resource[bibo + 'volume']?first}</#if><#if resource[bibo + 'pageStart']?? && resource[bibo + 'pageEnd']??>, pp. ${resource[bibo + 'pageStart']?first} - ${resource[bibo + 'pageEnd']?first}</#if>
-
-				</dd>
-			</dl>
-
-				<!-- else if it's a book:
-			<dl>
-				<dt>Published in:</dt>
-				<dd>{name of publisher}</dd>
-				<#if resource[bibo + 'isbn']??>
-				<dt>ISBN:</dt>
-				<dd>${resource[bibo + 'isbn']?first}</dd>
-				</#if>
-			</dl>
-
+            <#if pubType="Article" || pubType="Conference_Contribution" || pubType="Chapter">
+                <dl>
+                    <dt>Published in:</dt>
+                    <dd><#if resource[elements + 'publisher']??>${resource[elements + 'publisher']?first}<#elseif resource[dc + 'isPartOf']??>${resource[dc + 'isPartOf']?first}</#if><#if resource[bibo + 'volume']??>, vol ${resource[bibo + 'volume']?first}</#if><#if resource[bibo + 'pageStart']?? && resource[bibo + 'pageEnd']??>, pp. ${resource[bibo + 'pageStart']?first} - ${resource[bibo + 'pageEnd']?first}</#if><#if resource[bibo + 'isbn']??>. ISBN: ${resource[bibo + 'isbn']?first}</#if>
+                    </dd>
+                </dl>
+            <#elseif pubType="Book">
+                <#if resource[elements + 'publisher']??>
+                    <dl>
+                        <dt>Published in:</dt>
+                        <dd>${resource[elements + 'publisher']?first}<#if resource[bibo + 'isbn']??>, ISBN: ${resource[bibo + 'isbn']?first}</#if></dd>
+                    </dl>
+                </#if>
+            <#elseif pubType="Report">
+                <#if resource[bibo + 'volume']??>
+                    <dl>
+                        <dt>Volume:</dt>
+                        <dd>${resource[bibo + 'volume']?first}<#if resource[bibo + 'isbn']??>, ISBN: ${resource[bibo + 'isbn']?first}</#if></dd>
+                    </dl>
+                </#if>
+            <#else>
+                <#-- print out any other relevant details we might have -->
+                <#if resource[elements + 'publisher']??>
+                    <dl>
+                        <dt>Published in:</dt>
+                        <dd>${resource[elements + 'publisher']?first}</dd>
+                    </dl>
+                </#if>
+                <#if resource[bibo + 'isbn']??>
+                    <dl>
+                        <dt>ISBN:</dt>
+                        <dd>${resource[bibo + 'isbn']?first}</dd>
+                    </dl>
+                </#if>
+            </#if>
+<#--
 				etc, etc.
 
 
@@ -83,7 +115,7 @@
 		</div><!-- /citation -->
 		</#if>
 
-		<div class="help"><a href="#">Where does this data come from?</a></div>
+		<div class="help"><a href="/page?name=contact">Where does this data come from?</a></div>
 
 	</div><!-- /col1-2of3 -->
 	<div class="col3of3 sidebar">
