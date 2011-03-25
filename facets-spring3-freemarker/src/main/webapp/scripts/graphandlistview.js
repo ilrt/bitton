@@ -73,18 +73,18 @@ function initGraphData(id)
     var sortOptions = new Array();
     var obj = new Object();
     obj = new Object();
-    obj.title = "Date (desc)";
+    obj.title = "Newest first";
     obj.fun = sortResultsOnDateThenLabelDesc;
     sortOptions['sortResultsOnDateThenLabelDesc'] = obj;
     obj = new Object();
-    obj.title = "Date (asc)";
+    obj.title = "Oldest first";
     obj.fun = sortResultsOnDateThenLabelAsc;
     sortOptions['sortResultsOnDateThenLabelAsc'] = obj;
-    obj.title = "Title (asc)";
+    obj.title = "Title (A-Z)";
     obj.fun = sortResultsOnLabelAsc;
     sortOptions['sortResultsOnLabelAsc'] = obj;
     obj = new Object();
-    obj.title = "Title (desc)";
+    obj.title = "Title (Z-A)";
     obj.fun = sortResultsOnLabelDesc;
     sortOptions['sortResultsOnLabelDesc'] = obj;
                             
