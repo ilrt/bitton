@@ -130,6 +130,11 @@
 				</ul>
 				<p class="button"><a class="add" href="#">Add impact</a></p>
 			</div><!-- /section -->
+        <#else>
+            <div class="section">
+                <h2>0 impacts</h2>
+                <p class="button"><a class="add" href="#">Add impact</a></p>
+            </div>
 		</#if>
 		<#if resource[dc + 'contributor']??>
 		<div class="section">
