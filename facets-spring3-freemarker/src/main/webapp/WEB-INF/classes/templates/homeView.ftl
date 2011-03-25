@@ -53,18 +53,16 @@
 	<div class="col2of2 sidebar">
 		<div class="section">
 			<h2>About Research Revealed</h2>
-				<p>Research Revealed is a <a href="http://www.jisc.ac.uk">JISC</a>-funded project to demonstrate a fine-grained, access controlled, view layer application for research, built over a content integration repository layer. Etc, etc. </p>
-				<p>Pellentesque ac nulla id justo luctus ultricies vel non magna. Ut imperdiet tincidunt arcu. Ut odio nisi, auctor ut commodo id, fermentum ac sapien. Nulla magna lacus, euismod in consequat ut, fermentum in lacus. Duis congue vehicula urna nec rhoncus.</p>
+				<p>Research Revealed is a <a href="http://www.jisc.ac.uk">JISC</a>-funded project to demonstrate a fine-grained, access controlled, view layer application for research, built over a content integration repository layer.</p>
+				<p><a href="page?name=about">Read more about the research revealed project</a></p>
 
 		</div><!-- /section -->
 		<div class="section">
 			<h2>Latest impacts</h2>
 				<ul class="objects">
-					<li class="impact"><a href="#">Title of a recent impact goes here</a></li>
-					<li class="impact"><a href="#">Title of a recent impact goes here</a></li>
-					<li class="impact"><a href="#">Title of a recent impact goes here</a></li>
-					<li class="impact"><a href="#">Title of a recent impact goes here</a></li>
-					<li class="impact"><a href="#">Title of a recent impact goes here</a></li>
+                    <#list latestImpacts as item>
+    					<li class="impact"><a href="item?res=U${item['uri']?url('utf-8')}">${item['title']}</a> ${item['date']?datetime("yyyy-MM-dd")?string("dd MMM yyyy")}</li>
+                    </#list>
 				</ul>
 
 		</div><!-- /section -->

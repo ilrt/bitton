@@ -1,0 +1,20 @@
+prefix proj:   <http://vocab.ouls.ox.ac.uk/projectfunding#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix resrev: <http://vocab.bris.ac.uk/resrev>
+prefix annot: <http://www.w3.org/2000/10/annotation-ns#>
+prefix dc: <http://purl.org/dc/terms/>
+
+select distinct ?uri ?title ?date
+{
+    graph ?g1 
+    {
+        ?uri rdf:type <http://vocab.bris.ac.uk/resrev#ResearchImpact>.
+        ?uri annot:created ?date. 
+        ?uri annot:body ?body.
+        ?body dc:title ?title.
+    } 
+} 
+order by desc(?date)
+limit 10
+                        

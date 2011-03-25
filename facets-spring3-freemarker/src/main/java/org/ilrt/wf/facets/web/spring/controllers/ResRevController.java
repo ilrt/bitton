@@ -123,10 +123,11 @@ public class ResRevController extends AbstractController {
         int peopleCount = facetQueryService.performSelect(getQuery("/queries/homePeopleCount.rq"), false).get(0).get("count").asLiteral().getInt();
         List<Map<String, RDFNode>> outputSummary = this.facetQueryService.performSelect(getQuery("/queries/homeOutputSummaries.rq"), false);
         List<Map<String, RDFNode>> grantSummary = this.facetQueryService.performSelect(getQuery("/queries/homeGrantsSummaries.rq"), false);
+        List<Map<String, RDFNode>> latestImpacts = facetQueryService.performSelect(getQuery("/queries/homeLatestImpacts.rq"), false);
         
         mav.addObject("deptCount", deptCount);
         mav.addObject("peopleCount", peopleCount);
-        
+
         int outputTotal = 0;
         for (Map<String, RDFNode> outputRow: outputSummary) {
             outputTotal += outputRow.get("scount").asLiteral().getInt();
@@ -140,7 +141,8 @@ public class ResRevController extends AbstractController {
         mav.addObject("grantSummary", new SimpleCollection(grantSummary, OBJECT_WRAPPER));
         mav.addObject("outputSummary", new SimpleCollection(outputSummary, OBJECT_WRAPPER));
         mav.addObject("outputTotal", outputTotal);
-        mav.addObject("grantTotal", grantTotal);
+        mav.addObject("grantTotal", grantTotal);   
+        mav.addObject("latestImpacts", new SimpleCollection(latestImpacts, OBJECT_WRAPPER));
         
         return mav;
     }
