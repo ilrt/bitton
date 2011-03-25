@@ -80,6 +80,7 @@ function initGraphData(id)
     obj.title = "Oldest first";
     obj.fun = sortResultsOnDateThenLabelAsc;
     sortOptions['sortResultsOnDateThenLabelAsc'] = obj;
+    obj = new Object();
     obj.title = "Title (A-Z)";
     obj.fun = sortResultsOnLabelAsc;
     sortOptions['sortResultsOnLabelAsc'] = obj;
