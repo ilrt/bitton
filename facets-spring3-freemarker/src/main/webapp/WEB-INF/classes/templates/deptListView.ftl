@@ -6,7 +6,7 @@
 
 	<div class="col1-2of3">
 
-		<#assign grouping = 3 />
+		<#assign grouping = 4 />
 		<#assign currLet = 'A'/>
 		<#assign i = 0/>
 
