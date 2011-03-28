@@ -623,7 +623,7 @@ public class SPARQLQueryService implements FacetQueryService {
                 // Associate resources with our model
                 // This saves some work later
                 row.put(var, resultModel.asRDFNode(node.asNode()));
-                if (describeNodes && node.isResource()) 
+                if (describeNodes && node.isResource())
                     getReses.addDescribeNode(node.asNode());
             }
             if (!hasNulls) results.add(row);
@@ -631,8 +631,8 @@ public class SPARQLQueryService implements FacetQueryService {
         qe.close();
         
         // We can skip this. Hurrah!
-        if (!describeNodes || results.isEmpty()) return results;
-        
+        if (!describeNodes || results.isEmpty() || getReses.getResultURIs().isEmpty()) return results;
+                
         getReses.setQueryDescribeType();
         qe = qef.get(getReses);
         Model m = qe.execDescribe(resultModel);

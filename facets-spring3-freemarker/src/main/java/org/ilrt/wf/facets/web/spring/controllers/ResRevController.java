@@ -89,6 +89,11 @@ public class ResRevController extends AbstractController {
         
         if (mav.getViewName().equalsIgnoreCase(PUBLICATION_VIEW_NAME))
         {
+            Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
+            List<Map<String, RDFNode>> label = getRawListFromQuery("/queries/getJournalName.rq", resourceObj);
+            mav.addObject("journalName", 
+                    label.isEmpty() ? "unknown" : label.get(0).get("label")
+                    );
             mav.addObject("viewcontext", "pubs");
         }
         
@@ -456,6 +461,12 @@ public class ResRevController extends AbstractController {
             queryFileCache.put(queryFile, query);
         }
         return query;
+    }
+    
+    private List<Map<String, RDFNode>> getRawListFromQuery(String queryFile, Resource resource) {
+        String query = getQuery(queryFile);
+        String completeQuery = query.replace("%s", resource.getURI());
+        return facetQueryService.performSelect(completeQuery, true);
     }
     
     private ExtendedSimpleCollection getListFromQuery(String queryFile, Resource resource, List<Resource> impacts) {
