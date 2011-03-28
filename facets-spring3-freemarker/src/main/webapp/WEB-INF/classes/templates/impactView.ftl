@@ -15,6 +15,7 @@
 				<dd>${resource[dc + 'description']?first}</dd>
 			</dl>
 
+            <#if resource[resrev + 'associatedPublicationTitle']?? && 0 < resource[resrev + 'associatedPublicationTitle']?size>
 			<dl>
 				<dt>Publications:</dt>
 				<dd>
@@ -25,16 +26,20 @@
 					</ul>
 				</dd>
 			</dl>
-			<dl>
-				<dt>Grants:</dt>
-				<dd>
-					<ul>
-						<#list resource[resrev + 'associatedGrantName'] as item>
-							<li>${item}</li>
-						</#list>
-					</ul>
-				</dd>
-			</dl>
+            </#if>
+            <#if resource[resrev + 'associatedGrantName']?? && 0 < resource[resrev + 'associatedGrantName']?size>
+                <dl>
+                    <dt>Grants:</dt>
+                    <dd>
+                        <ul>
+                            <#list resource[resrev + 'associatedGrantName'] as item>
+                                <li>${item}</li>
+                            </#list>
+                        </ul>
+                    </dd>
+                </dl>
+            </#if>
+            <#if resource[resrev + 'associatedResearcherName']?? && 0 < resource[resrev + 'associatedResearcherName']?size>
 			<dl>
 				<dt>Researchers involved:</dt>
 				<dd>
@@ -45,7 +50,7 @@
 					</ul>
 				</dd>
 			</dl>
-
+            </#if>
 
 		</div><!-- END #impactdetails -->
 
