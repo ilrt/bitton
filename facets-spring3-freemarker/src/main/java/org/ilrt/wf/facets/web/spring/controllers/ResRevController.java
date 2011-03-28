@@ -499,8 +499,7 @@ public class ResRevController extends AbstractController {
     private final Property impactPub = ResourceFactory.createProperty(resrev, "associatedPublication");
     private final Property impactPerson = ResourceFactory.createProperty(resrev, "associatedResearcher");
     private final Property impactGrant = ResourceFactory.createProperty(resrev, "associatedGrant");
-    private final Property impactBody = ResourceFactory.createProperty("http://www.w3.org/2000/10/annotation-ns#", "body");
-    
+
     public static String HOME_VIEW_NAME = "homeView";
     public static String MAIN_VIEW_NAME = "mainView";
     public static String ABOUT_VIEW_NAME = "aboutView";
@@ -521,8 +520,6 @@ public class ResRevController extends AbstractController {
     private final String HOME_PATH = "/";
     private final String VIEW_PATH = "/*";
     private final String ITEM_PATH = "/item";
-    private final String ABOUT_PATH = "/about/";
-    private final String CONTACT_PATH = "/contact/";
     private final String PROFILE_PATH = "/profile";
     private final String RESEARCH_PATH = "/research";
     private final String DEPARTMENT_PATH = "/mydepartment";
