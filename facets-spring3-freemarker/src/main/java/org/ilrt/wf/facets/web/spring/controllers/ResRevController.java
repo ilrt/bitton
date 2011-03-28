@@ -70,17 +70,15 @@ public class ResRevController extends AbstractController {
         
         if (mav.getViewName().equalsIgnoreCase(PROFILE_VIEW_NAME))
         {
-            Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
-            mav.addObject("outputlist", getListFromQuery("/queries/getPersonsPublications.rq", resourceObj, null));
-            mav.addObject("grantlist", getListFromQuery("/queries/getAllPersonGrants.rq", resourceObj, null));
+            Resource person = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
+            getInformationForPerson(person, mav);
             mav.addObject("viewcontext", "people");
         }
 
         if (mav.getViewName().equalsIgnoreCase(ORGANISATION_VIEW_NAME))
         {
-            Resource resourceObj = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
-            mav.addObject("outputlist", getListFromQuery("/queries/getAllDeptOutputs.rq", resourceObj, null));
-            mav.addObject("grantlist", getListFromQuery("/queries/getAllDeptGrants.rq", resourceObj, null));
+            Resource dept = ((ResourceHashModel)(mav.getModel().get("resource"))).getResource();
+            getInformationForDept(dept, mav);
             mav.addObject("viewcontext", "organisations");
         }
         
@@ -153,22 +151,7 @@ public class ResRevController extends AbstractController {
         return mav;
     }
 
-    @RequestMapping(value = ABOUT_PATH, method = RequestMethod.GET)
-    public ModelAndView aboutView(HttpServletRequest request) throws FacetViewServiceException {
-
-        ModelAndView mav = createModelAndView(ABOUT_VIEW_NAME, request);
-        mav.addObject("viewcontext", "about");
-        return mav;
-    }
-
-    @RequestMapping(value = CONTACT_PATH, method = RequestMethod.GET)
-    public ModelAndView contactView(HttpServletRequest request) throws FacetViewServiceException {
-
-        ModelAndView mav = createModelAndView(CONTACT_VIEW_NAME, request);
-        mav.addObject("viewcontext", "contact");
-        return mav;
-    }
-
+    /*
     @RequestMapping(value = RESEARCH_PATH, method = RequestMethod.GET)
     public ModelAndView researchView(HttpServletRequest request) throws FacetViewServiceException {
         String username = request.getRemoteUser();
@@ -187,7 +170,7 @@ public class ResRevController extends AbstractController {
         
         return mav;
     }
-
+*/
     @RequestMapping(value = PROFILE_PATH, method = RequestMethod.GET)
     public ModelAndView profileView(HttpServletRequest request, HttpServletResponse response) throws FacetViewServiceException {
         String username = request.getRemoteUser();
@@ -203,26 +186,10 @@ public class ResRevController extends AbstractController {
 
         Resource resource = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
 
-        mav.addObject("resource",  new ResourceHashModel(resource));
-
-        // record all impacts we come across
-        List <Resource> impacts = new ArrayList<Resource>();
-        
-        // get users publication information
-        ExtendedSimpleCollection outputs = getListFromQuery("/queries/getPersonsPublications.rq", resource, impacts);
-        ExtendedSimpleCollection grants = getListFromQuery("/queries/getAllPersonGrants.rq", resource, impacts);
-        
-        mav.addObject("outputlist", outputs);
-
-        // get related grants for this user
-        mav.addObject("grantlist", grants);
-
-        // pass back impacts associated with current person.
-        mav.addObject("impactlist", new ExtendedSimpleCollection(impacts, OBJECT_WRAPPER));
+        getInformationForPerson(resource, mav);
         
         // add flag to allow proview view to differentiate between displaying regular users and current user's profile view
         mav.addObject("profileview",  "true");
-        
         mav.addObject("viewcontext", "profile");
         
         return mav;
@@ -244,32 +211,16 @@ public class ResRevController extends AbstractController {
         ModelAndView mav = createModelAndView(ORGANISATION_VIEW_NAME, request);
 
         Resource user = facetQueryService.getInformationAboutIndirect(userNameProp, ResourceFactory.createPlainLiteral(username));
+
         // TODO: some people are associated with more than one department
         ResIterator it = user.getModel().listResourcesWithProperty(memberProp, user);
         Resource dept = it.next();
         if (it.hasNext()) log.warn("User: " + username + " has more than one department");
         
-        Resource department = facetQueryService.getInformationAbout(dept);
-        
-        mav.addObject("user",  new ResourceHashModel(user));
-        mav.addObject("resource", new ResourceHashModel(department));
-
-                // record all impacts we come across
-        List <Resource> impacts = new ArrayList<Resource>();
-        
-        // get users publication information
-        ExtendedSimpleCollection outputs = getListFromQuery("/queries/getAllDeptOutputs.rq", dept, impacts);
-        ExtendedSimpleCollection grants = getListFromQuery("/queries/getAllDeptGrants.rq", dept, impacts);
-        ExtendedSimpleCollection members = getListFromQuery("/queries/getAllDeptPeople.rq", dept, impacts);
-        
-        mav.addObject("outputlist", outputs);
-        mav.addObject("grantlist", grants);
-        mav.addObject("peoplelist", members);
-        
-        // pass back impacts associated with this dept.
-        mav.addObject("impactlist", new ExtendedSimpleCollection(impacts, OBJECT_WRAPPER));
-        
+        mav.addObject("user",  new ResourceHashModel(user));        
         mav.addObject("viewcontext", "department");
+        
+        getInformationForDept(dept, mav);
         
         return mav;
     }
@@ -318,6 +269,58 @@ public class ResRevController extends AbstractController {
         }
     }
 
+    /**
+     * Gets all related information (pubs, grants, impacts) for a given department
+     * @param dept
+     * @param mav 
+     */
+    private void getInformationForDept(Resource dept, ModelAndView mav)
+    {
+        Resource department = facetQueryService.getInformationAbout(dept);
+        
+        mav.addObject("resource", new ResourceHashModel(department));
+
+                // record all impacts we come across
+        List <Resource> impacts = new ArrayList<Resource>();
+        
+        // get users publication information
+        ExtendedSimpleCollection outputs = getListFromQuery("/queries/getAllDeptOutputs.rq", dept, impacts);
+        ExtendedSimpleCollection grants = getListFromQuery("/queries/getAllDeptGrants.rq", dept, impacts);
+        ExtendedSimpleCollection members = getListFromQuery("/queries/getAllDeptPeople.rq", dept, impacts);
+        
+        mav.addObject("outputlist", outputs);
+        mav.addObject("grantlist", grants);
+        mav.addObject("peoplelist", members);
+        
+        // pass back impacts associated with this dept.
+        mav.addObject("impactlist", new ExtendedSimpleCollection(impacts, OBJECT_WRAPPER));        
+    }
+
+    /**
+     * Gets related information for a person (impacts, grants outputs)
+     * @param person
+     * @param mav 
+     */
+    private void getInformationForPerson(Resource person, ModelAndView mav)
+    {
+        mav.addObject("resource",  new ResourceHashModel(person));
+
+        // record all impacts we come across
+        List <Resource> impacts = new ArrayList<Resource>();
+        
+        // get users publication information
+        ExtendedSimpleCollection outputs = getListFromQuery("/queries/getPersonsPublications.rq", person, impacts);
+        ExtendedSimpleCollection grants = getListFromQuery("/queries/getAllPersonGrants.rq", person, impacts);
+        
+        mav.addObject("outputlist", outputs);
+
+        // get related grants for this user
+        mav.addObject("grantlist", grants);
+
+        // pass back impacts associated with current person.
+        mav.addObject("impactlist", new ExtendedSimpleCollection(impacts, OBJECT_WRAPPER));
+    }
+    
     private ModelAndView displayResourceOrFail(String uri, HttpServletRequest request) {
 
         Resource r = new ResourceImpl(uri);
@@ -330,7 +333,6 @@ public class ResRevController extends AbstractController {
             return mav;
         }
     }
-
 
 
     private ModelAndView displayResource(HttpSession session, HttpServletRequest request, String uri)
@@ -466,7 +468,13 @@ public class ResRevController extends AbstractController {
         // Reduce this down to a list<resource>
         List<Resource> hits = new ArrayList<Resource>(result.size());
         for (Map<String, RDFNode> soln: result) {
-            hits.add((Resource) soln.get("s"));
+            Resource res = (Resource) soln.get("s");
+            hits.add(res);
+            StmtIterator it = res.listProperties();
+            while (it.hasNext())
+            {
+            System.out.println(it.next().asTriple().toString());
+            }
         }
         
         // collect all impacts if we're passed something to put them in
