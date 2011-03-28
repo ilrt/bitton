@@ -1019,3 +1019,12 @@ div.impacts ul.results span.otherdetails {
 {
     margin-top:3.5em;
 }
+
+/* Search examples used on the help page */
+.code
+{
+    background:#ddd;
+    padding:1em;
+    margin:2px;
+    font-family:courier;
+}

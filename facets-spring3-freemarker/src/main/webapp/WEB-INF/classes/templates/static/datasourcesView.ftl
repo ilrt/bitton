@@ -39,7 +39,7 @@
         <p>Information about organisations outside of the University are a by product of the public Grants and Publication data we gather.</p>
 
         <h3>Impacts:</h3>
-        <p>Impact data is gathered from UoB staff using the <a href="http://resrev.ilrt.bris.ac.uk/caboto-rr/"Bookmarklet tool</a>.</p>
+        <p>Impact data is gathered from UoB staff using the <a href="http://resrev.ilrt.bris.ac.uk/caboto-rr/">Bookmarklet tool</a>.</p>
 
      </div>
 

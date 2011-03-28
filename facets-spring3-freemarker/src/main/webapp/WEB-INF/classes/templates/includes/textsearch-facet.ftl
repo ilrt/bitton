@@ -6,7 +6,7 @@
                         ${facetStateInput(Request, facet.param, facet.paramValue)}
                         <input type="text" name="${facet.param}" id="${facet.param}" value="<#if facet.state.paramValue??>${facet.state.paramValue}</#if>" placeholder="Search within these results" />
                         <input type="submit" value="Go"/>
-			<a class="help" href="#">Advanced search tips</a>
+			<a class="help" href="page?name=search">Advanced search tips</a>
 			<!--
                                                     #DEVNOTE:
                                                     Possibly offer some help on lucene searching
