@@ -53,7 +53,7 @@
             <#if pubType="Article" || pubType="Conference_Contribution" || pubType="Chapter">
                 <dl>
                     <dt>Published in:</dt>
-                    <dd><#if resource[elements + 'publisher']??>${resource[elements + 'publisher']?first}<#elseif resource[dc + 'isPartOf']??>${resource[dc + 'isPartOf']?first}</#if><#if resource[bibo + 'volume']??>, vol ${resource[bibo + 'volume']?first}</#if><#if resource[bibo + 'pageStart']?? && resource[bibo + 'pageEnd']??>, pp. ${resource[bibo + 'pageStart']?first} - ${resource[bibo + 'pageEnd']?first}</#if><#if resource[bibo + 'isbn']??>. ISBN: ${resource[bibo + 'isbn']?first}</#if>
+                    <dd><#if resource[elements + 'publisher']??>${resource[elements + 'publisher']?first}<#elseif resource[dc + 'isPartOf']??>${journalName}</#if><#if resource[bibo + 'volume']??>, vol ${resource[bibo + 'volume']?first}</#if><#if resource[bibo + 'pageStart']?? && resource[bibo + 'pageEnd']??>, pp. ${resource[bibo + 'pageStart']?first} - ${resource[bibo + 'pageEnd']?first}</#if><#if resource[bibo + 'isbn']??>. ISBN: ${resource[bibo + 'isbn']?first}</#if>
                     </dd>
                 </dl>
             <#elseif pubType="Book">
