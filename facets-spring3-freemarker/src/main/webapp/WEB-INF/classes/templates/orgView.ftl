@@ -162,7 +162,7 @@
         <div class="section">
             <#if resource[foaf + 'member']??>
 
-                <h2>${resource[foaf + 'member']?size} people</h2>
+                <h2>${resource[foaf + 'member']?size} <#if resource[foaf + 'member']?size = 1>person<#else>people</#if></h2>
 
                 <#assign count=0/>
                 <ul class="objects">

@@ -32,7 +32,7 @@
 			<#list 0..25 as let>
 			<#list departmentList as dept>
 			<#if alphabet[let] == dept['label']?substring(0, 1)>
-			<li class="group"><a class="title" href="item?res=${dept['dept']?url('utf-8')}">${dept['label']}</a> <span class="otherdetails">${dept['gcount']} people, N publications, N grants</span></li>
+			<li class="group"><a class="title" href="item?res=${dept['dept']?url('utf-8')}">${dept['label']}</a> <span class="otherdetails">${dept['peoplecount']} <#if dept['peoplecount'] = 1>person<#else>people</#if>, ${dept['pubcount']} publication<#if dept['pubcount'] != 1>s</#if>, ${dept['grantcount']} grant<#if dept['grantcount'] != 1>s</#if></span></li>
 			</#if>
 			</#list>
 
