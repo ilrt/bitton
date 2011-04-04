@@ -54,6 +54,10 @@ p, ul, ol, dl, blockquote {
 	margin: 14px 0;
 }
 
+.small {
+	font-size: 0.928571em;
+}
+
 h1, h2, h3 {
 	color: #D1461F;
 	font-weight: bold;
@@ -74,6 +78,7 @@ h1 {
 	margin-top: 0;
 	font-size: 1.57142857em;
 	line-height: 28px;
+	margin-bottom: 7px;
 }
 
 h2 {
@@ -1022,6 +1027,21 @@ div.impacts ul.results {
 div.impacts ul.results span.otherdetails {
 	color: #777;
 }
+
+p.flag a {
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 24px;
+}
+
+a.flagoff {
+	background-image: url(../images/icon-flag-off.png);
+}
+
+a.flagon {
+	background-image: url(../images/icon-flag-on.png);
+}
+
 
 .hide { display: none; }
 

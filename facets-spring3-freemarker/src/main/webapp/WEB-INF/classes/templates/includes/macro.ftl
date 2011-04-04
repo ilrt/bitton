@@ -186,8 +186,6 @@
 
         </div><!-- END .listingcontrols -->
 
-        <div class="clearing">&nbsp;</div>
-
         <div class="resultsheader">
             <h2 class="resultstotal"></h2><!-- END .resultstotal -->
             <div class="sorting"><span>Sort by</span> <select class="ordering"></select></div>

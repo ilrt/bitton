@@ -63,7 +63,7 @@
 		<div class="section">
                 <p class="button"><a class="edit" href="#">Edit impact</a></p>
 
-		<p class="flag"><a href="#">Flag as high priority</a></p>
+		<p class="flag"><a class="flagoff" href="#">Flag as high priority</a></p>
 
 	</div><!-- /section -->
 		<div class="help"><a href="page?name=datasources">Where does this data come from?</a></div>

@@ -134,7 +134,7 @@
         <#else>
             <div class="section">
                 <h2>No impacts</h2>
-		<p>No impacts currently logged, but you can add one:</p>
+		<p class="small">No impacts currently logged, but you can add one:</p>
                 <p class="button"><a class="add" href="#">Add impact</a></p>
             </div>
 		</#if>
