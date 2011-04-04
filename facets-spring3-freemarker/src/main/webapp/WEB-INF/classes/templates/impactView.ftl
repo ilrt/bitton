@@ -1,11 +1,12 @@
 <#include "includes/macro.ftl"/>
 <#include "includes/header.ftl"/>
 
-<!-- main content -->
 <div id="content" class="impact">
-	<div class="col1-2of3">
+	<#if view??><div id="topinfo"><a class="back" href="javascript:history.go(-1)">Back to search results</a></div></#if>
 
-		<a class="back" href="javascript:history.go(-1)">Back</a>
+	<div class="col1-3of4">
+
+	<div class="inner">
 
 		<h1>${resource[dc + 'title']?first}</h1>
 
@@ -54,7 +55,20 @@
 
 		</div><!-- END #impactdetails -->
 
-	</div><!-- END .col1-2of3 -->
+
+</div><!-- /inner -->
+</div><!-- /col -->
+
+	<div class="col4of4 sidebar">
+		<div class="section">
+                <p class="button"><a class="edit" href="#">Edit impact</a></p>
+
+		<p class="flag"><a href="#">Flag as high priority</a></p>
+
+	</div><!-- /section -->
+		<div class="help"><a href="page?name=datasources">Where does this data come from?</a></div>
+
+	</div><!-- /col4of4 -->
 
 </div><!-- /content -->
 
