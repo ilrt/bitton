@@ -16,6 +16,10 @@
 
         <p>Also see information about the <a href="page?name=datasources">data sources used in this project</a>.</p>
 
+        <h2>Impacts</h2>
+
+        <p>A convenient way to add impacts is to use the Impact Bookmarklet.</p>
+        <p>Details of how to add it here...</p>
      </div>
 
 

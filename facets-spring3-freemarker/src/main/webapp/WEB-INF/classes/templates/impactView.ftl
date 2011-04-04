@@ -64,9 +64,12 @@
                 <p class="button"><a class="edit" href="#">Edit impact</a></p>
 
 		<p class="flag"><a class="flagoff" href="#">Flag as high priority</a></p>
+		<!-- DEVNOTE: if flag is set to 'on' then use this:
+		<p class="flag"><a class="flagon" href="#">Remove flag</a></p>
+		-->
 
 	</div><!-- /section -->
-		<div class="help"><a href="page?name=datasources">Where does this data come from?</a></div>
+		<div class="help"><a href="page?name=about">More about impacts</a></div>
 
 	</div><!-- /col4of4 -->
 
