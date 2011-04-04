@@ -3,10 +3,11 @@
 
 <!-- main content -->
 <div id="content" class="pub">
-	<div class="col1-2of3">
+		<#if view??><div id="topinfo"><a class="back" href="javascript:history.go(-1)">Back to search results</a></div></#if>
+	<div class="col1-3of4">
 
-		<#if view??><a class="back" href="javascript:history.go(-1)">Back to search results</a></#if>
 
+		<div class="inner">
 		<h1>${resource[dc + 'title']?first}</h1>
 
 		<div id="pubdetails">
@@ -115,10 +116,10 @@
 		</div><!-- /citation -->
 		</#if>
 
-		<div class="help"><a href="page?name=datasources">Where does this data come from?</a></div>
 
-	</div><!-- /col1-2of3 -->
-	<div class="col3of3 sidebar">
+	</div><!-- /inner -->
+	</div><!-- /col1-3of4 -->
+	<div class="col4of4 sidebar">
 
 		<#if resource['<-'+resrev+'associatedPublication']??>
 			<div class="section">
@@ -132,7 +133,8 @@
 			</div><!-- /section -->
         <#else>
             <div class="section">
-                <h2>0 impacts</h2>
+                <h2>No impacts</h2>
+		<p>No impacts currently logged, but you can add one:</p>
                 <p class="button"><a class="add" href="#">Add impact</a></p>
             </div>
 		</#if>
@@ -149,7 +151,9 @@
 		</div><!-- /section -->
 		</#if>
 
-	</div><!-- /col3of3 -->
+		<div class="help"><a href="page?name=datasources">Where does this data come from?</a></div>
+
+	</div><!-- /col4of4 -->
 
 </div><!-- /content -->
 

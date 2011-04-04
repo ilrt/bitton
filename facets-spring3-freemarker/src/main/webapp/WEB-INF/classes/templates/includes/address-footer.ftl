@@ -16,6 +16,6 @@
 	</div><!-- /credits -->
 
 
-          <#if resource??><a style="float: right; display: block; color: #aaa; font-size: 11px;" href="${resource!'#'}">(Debug link)</a></#if>
+	<#if resource??><a style="float: right; display: block; color: #aaa; font-size: 11px;" href="${resource!'#'}">{{Debug link}}</a></#if>
 
 </div><!-- /footer -->

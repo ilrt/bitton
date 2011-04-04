@@ -1,9 +1,12 @@
 <#include "includes/macro.ftl"/>
 <#include "includes/header.ftl"/>
 
-    <div id="content">
+<div id="content" class="grant">
+	<#if view??><div id="topinfo"><a class="back" href="javascript:history.go(-1)">Back to search results</a></div></#if>
 
-        <#if view??><p><a href="javascript:history.go(-1)">&laquo; Return to results</a></p></#if>
+	<div class="col1-3of4">
+
+	<div class="inner">
 
         <h1>${resource[dc + 'title']?first}</h1>
 
@@ -25,30 +28,6 @@
           <p>${resource[dc + 'abstract']?first}</p>
         </#if>
         
-        <p><strong>Principal Investigators:</strong></p>
-
-        <#if resource[proj + 'hasPrincipalInvestigator']??>
-            <ul>
-                <#list resource[proj + 'hasPrincipalInvestigator'] as pi>
-                    <#if pi[rdfs + 'label']??>
-                      <li><@displayPerson person=pi/></li>
-                    </#if>
-                </#list>
-            </ul>
-        </#if>
-
-        <p><strong>Co-Investigators:</strong></p>
-
-        <#if resource[proj + 'hasCoInvestigator']??>
-            <ul>
-                <#list resource[proj + 'hasCoInvestigator'] as pi>
-                  <#if pi[rdfs + 'label']??>
-                      <li><@displayPerson person=pi/></li>
-                  </#if>
-                </#list>
-            </ul>
-        </#if>
-
         <p><strong>Hosted by:</strong></p>
 
         <#if resource[proj + 'hostedBy']??>
@@ -61,8 +40,40 @@
 
 
 
-     </div>
+</div><!-- /inner -->
+</div><!-- /col -->
 
+	<div class="col4of4 sidebar">
+		<div class="section">
+
+        <#if resource[proj + 'hasPrincipalInvestigator']??>
+        <h2>Principal investigators</h2>
+            <ul class="objects">
+                <#list resource[proj + 'hasPrincipalInvestigator'] as pi>
+                    <#if pi[rdfs + 'label']??>
+                      <li class="person"><@displayPerson person=pi/></li>
+                    </#if>
+                </#list>
+            </ul>
+        </#if>
+
+        <#if resource[proj + 'hasCoInvestigator']??>
+	<h2>Co-investigators</h2>
+            <ul class="objects">
+                <#list resource[proj + 'hasCoInvestigator'] as pi>
+                  <#if pi[rdfs + 'label']??>
+                      <li class="person"><@displayPerson person=pi/></li>
+                  </#if>
+                </#list>
+            </ul>
+        </#if>
+
+	</div><!-- /section -->
+		<div class="help"><a href="page?name=datasources">Where does this data come from?</a></div>
+
+	</div><!-- /col4of4 -->
+
+</div><!-- /content -->
 <#include "includes/address-footer.ftl"/>
 
 <#include "includes/footer.ftl"/>
