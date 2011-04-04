@@ -502,8 +502,9 @@ a.less {
 }
 
 #mastercategories ul {
-	margin: 0 0 21px;
+	margin: 0 0 21px 5px;
 	list-style-type: none;
+	/*font-size: 0.928571em;*/
 }
 
 #mastercategories h2 {
@@ -511,7 +512,7 @@ a.less {
 	border: none;
 	padding: 0;
 	margin-top: 14px;
-	margin-bottom: 5px;
+	margin-bottom: 4px;
 	line-height: 21px;
 }
 
@@ -743,7 +744,6 @@ ul.results .amount {
 }
 
 .departmentListing ul.results li {
-	margin-bottom: 7px;
 }
 
 /* =people listing
