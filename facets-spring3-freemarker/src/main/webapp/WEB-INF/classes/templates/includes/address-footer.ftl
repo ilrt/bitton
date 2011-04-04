@@ -1,8 +1,8 @@
 <!-- footer for the page -->
 <div id="footer">
 	<ul id="footernav">
-		<li><a href="#">About</a></li>
-		<li><a href="#">Contact</a></li>
+		<li><a href="page?name=about">About</a></li>
+		<li><a href="page?name=contact">Contact</a></li>
 		<li><a href="#">Disclaimer</a></li>
 		<li class="last"><a href="#">Copyright</a></li>
 	</ul>
@@ -16,8 +16,6 @@
 	</div><!-- /credits -->
 
 
-        <div id="pi" style="float: right;">
-          <#if resource??><a href="${resource!'#'}">&#928;</a></#if>
-        </div>
+          <#if resource??><a style="float: right; display: block; color: #aaa; font-size: 11px;" href="${resource!'#'}">(Debug link)</a></#if>
 
 </div><!-- /footer -->

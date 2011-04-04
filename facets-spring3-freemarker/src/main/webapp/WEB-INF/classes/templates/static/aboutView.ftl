@@ -6,9 +6,9 @@
 
     <div id="content">
 
-        <h2>About the Research Revealed browser</h2>
+        <h1>About the Research Revealed browser</h1>
 
-        <h3>A Subtitle</h3>
+        <h2>A Subtitle</h2>
 
         <p>This is the browser</p>
             

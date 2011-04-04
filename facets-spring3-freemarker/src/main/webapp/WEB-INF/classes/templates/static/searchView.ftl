@@ -5,12 +5,13 @@
 <div id="static-page">
 
     <div id="content">
+    <div class="col1-2of3">
 
-        <h2>Searching using the Research Revealed browser</h2>
+        <h1>Searching using the Research Revealed browser</h1>
 
         <p>The search engine used in the Research Revealed system is based on <a href="http://lucene.apache.org/">Lucene</a>. Lucene uses a slightly different syntax to other search engines (such as Google).</p>
 
-        <h3>Boolean Operators</h3>
+        <h2>Boolean Operators</h2>
         
         <div class="code">"jakarta apache" AND "Apache Lucene"</div> 
 
@@ -18,9 +19,7 @@
 
         <div class="code">(jakarta OR apache) AND website</div>
 
-        <p>&nbsp;</p>
-
-        <h3>Wildcard Searches</h3>
+        <h2>Wildcard Searches</h2>
         <p>To perform a single character wildcard search use the "?" symbol.<br/>
         <p>To perform a multiple character wildcard search use the "*" symbol.</p>
         <p>The single character wildcard search looks for terms that match that with the single character replaced. For example, to search for "text" or "test" you can use the search:</p>
@@ -30,7 +29,8 @@
         <div class="code">test*</div>
 
         <p>More examples can be found on the <a href="http://lucene.apache.org/java/2_4_0/queryparsersyntax.html">Lucene syntax page</a></p>
-     </div>
+</div><!-- /col -->
+     </div><!-- /content -->
 
 
 <#include "../includes/address-footer.ftl"/>

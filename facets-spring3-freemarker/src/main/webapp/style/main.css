@@ -1023,8 +1023,9 @@ div.impacts ul.results span.otherdetails {
 /* Search examples used on the help page */
 .code
 {
-    background:#ddd;
-    padding:1em;
+    background:#eee;
+    padding:0.5em;
     margin:2px;
     font-family:courier;
+    margin: 14px 0;
 }

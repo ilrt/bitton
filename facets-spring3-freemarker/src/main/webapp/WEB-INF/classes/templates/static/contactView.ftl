@@ -6,9 +6,9 @@
 
     <div id="content">
 
-        <h2>Leave feedback</h2>
+        <h1>Leave feedback</h1>
 
-        <h3>Your comments</h3>
+        <h2>Your comments</h2>
 
         <p>If you want to contact the Research Revealled team, please use the form below.</p>
             

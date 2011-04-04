@@ -53,8 +53,7 @@
 	<div class="col2of2 sidebar">
 		<div class="section">
 			<h2>About Research Revealed</h2>
-				<p>Research Revealed is a <a href="http://www.jisc.ac.uk">JISC</a>-funded project to demonstrate a fine-grained, access controlled, view layer application for research, built over a content integration repository layer.</p>
-				<p><a href="page?name=about">Read more about the research revealed project</a></p>
+				<p>Research Revealed is a <a href="http://www.jisc.ac.uk">JISC</a>-funded project to demonstrate a fine-grained, access controlled, view layer application for research, built over a content integration repository layer. <a href="page?name=about">More about the project&hellip;</a></p>
 
 		</div><!-- /section -->
 		<div class="section">

@@ -12,29 +12,21 @@
 
         <#if resource['<-' + foaf + 'member']??>
             <#if resource['<-' + foaf + 'member']?size = 1>
-               <div class="departments">
-                   <dl>
-                       <dt>Department</dt>
+	    	<p><strong>Department:</strong> 
                        <#list resource['<-' + foaf + 'member'] as member>
                             <#if member[rdfs + 'label']?? && member[rdfs + 'label']?first != invalidUrl>
-                                <dd><@displayOrg org=member/></dd>
+                                <@displayOrg org=member/> 
                             </#if>
                        </#list>
-                   </dl>
-               </div>
+		       </p>
             <#else>
-               <div class="departments">
-                   <dl>
-                       <dt>My Departments</dt>
-                       <dd>
+	    	<p><strong>My Department:</strong>
                            <#list resource['<-' + foaf + 'member'] as member>
                                 <#if member[rdfs + 'label']?? && member[rdfs + 'label']?first != invalidUrl>
-                                    <dd><@displayOrg org=member/></dd>,
+                                    <@displayOrg org=member/> 
                                 </#if>
                            </#list>
-                        </dd>
-                    </dl>
-               </div>
+			   </p>
            </#if>
         </#if>
 
