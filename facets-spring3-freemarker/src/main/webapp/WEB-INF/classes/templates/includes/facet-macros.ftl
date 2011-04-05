@@ -94,7 +94,7 @@
 </#macro>
 
 <#macro listItem><li class="facet-list-item"></#macro>
-<#macro listItemSelected label url><li class="facet-list-item selected"><span>${label}</span> <a href="${url}"><em>${label}</em></a></#macro>
+<#macro listItemSelected label url><li class="facet-list-item selected"><a href="${url}"><em>${label}</em></a></#macro>
 
 <#-- macro for displaying a list of refinements -->
 <#macro refinementList refinements paramKey>
