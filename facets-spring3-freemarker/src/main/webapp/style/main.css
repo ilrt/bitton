@@ -706,15 +706,6 @@ div.help a:hover {
 /* =results
  *  * =========================================== */
 
-div#loading {
-	background: #fff url(../images/loading.gif) top center no-repeat;
-	padding-top: 36px;
-	margin: 28px 0;
-	color: #D1461F;
-	font-weight: bold;
-	text-align: center;
-}
-
 ul.results {
 	margin-left: 4px;
 	padding: 0;
@@ -1092,4 +1083,33 @@ a.flagon {
     margin:2px;
     font-family:courier;
     margin: 14px 0;
+}
+
+/* == Loading indicator == */
+
+div#loading {
+    position:fixed;
+    height:100%;
+    width:100%;
+    top:0px;
+    margin:0px;
+    background-color: rgba(10, 10, 10, 0.5);
+    color: #D1461F;
+    font-weight: bold;
+    text-align: center;
+    z-index:100; /* push above slider controls */
+    padding-top:10em;
+}
+
+div#loading div
+{
+    background-image: url(http://localhost:8080/resrev//images/loading.gif);
+    background-repeat: no-repeat;
+    background-position: 10px 50%;
+    background-color:white;
+    padding:1em;
+    padding-left:50px;
+    margin-top:10em;
+    border:2px solid #D1461F;
+    display:inline;
 }

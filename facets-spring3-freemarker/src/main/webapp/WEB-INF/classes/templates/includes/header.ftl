@@ -23,7 +23,7 @@
     <script src="${contextPath}/scripts/script.js"></script>
 </head>
 <body>
-
+<div id="loading"><div>Searching database</div></div>
 <div id="page">
   <div id="header">
     <#include "header-title.ftl"/>

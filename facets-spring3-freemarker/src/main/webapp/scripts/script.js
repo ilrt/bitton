@@ -40,10 +40,22 @@ function shrink(list,n) {
 }
 
 $(document).ready(function(){ 
+    $('#loading').hide();
+    
+    
+    window.onbeforeunload = function()  {
+        $('#loading').show();
 
+        // allow user to cancel popup window
+        $(document).keyup(function(e)
+        {
+            if (e.keyCode == 27) { $('#loading').hide(); }   // esc
+        });
+    };
+    
         applyTabs();
 
-		renderImpacts();
+        renderImpacts();
 
         shrink($('#pubtype-facet ul'),5);
         shrink($('#pubyear-facet ul'),5);
