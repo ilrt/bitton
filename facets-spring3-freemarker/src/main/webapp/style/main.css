@@ -782,21 +782,6 @@ ul.results .amount {
 .departmentListing ul.results li {
 }
 
-/* =people listing
- *  * =========================================== */
-.people .col1of3
-{
-    display:block;
-    float:right;
-}
-
-.people .col2-3of3 {
-    float: left;
-    width: 636px;
-}
-
-
-
 
 /* =publication view
  *  * =========================================== */
