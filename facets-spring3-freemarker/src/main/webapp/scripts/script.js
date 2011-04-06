@@ -61,6 +61,7 @@ $(document).ready(function(){
 //			$(this).parent().children(".content").slideToggle().removeClass("collapsed");
 //	});
 
+	// code to automatically pull in completor snippet and initalise it
 //	$(".autoselect").each(function(){
 //		var title = $(this).attr("title");
 //		var submit = $(this).attr("submit");
