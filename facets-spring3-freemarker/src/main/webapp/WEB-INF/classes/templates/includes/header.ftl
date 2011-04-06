@@ -19,6 +19,7 @@
     <script src="${contextPath}/scripts/jquery.outerhtml.min.js"></script>
     <script src="${contextPath}/scripts/jquery.placeholder.min.js"></script>
     <script src="${contextPath}/scripts/protovis-r3.2.js"></script>
+    <script src="${contextPath}/scripts/jquery.ui.ipad.js"></script>
     <script src="${contextPath}/scripts/graphandlistview.js"></script>
     <script src="${contextPath}/scripts/script.js"></script>
 </head>
