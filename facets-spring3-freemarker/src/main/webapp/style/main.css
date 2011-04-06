@@ -1084,7 +1084,7 @@ div#loading {
 
 div#loading div
 {
-    background-image: url(http://localhost:8080/resrev//images/loading.gif);
+    background-image: url(../images/loading.gif);
     background-repeat: no-repeat;
     background-position: 10px 50%;
     background-color:white;
