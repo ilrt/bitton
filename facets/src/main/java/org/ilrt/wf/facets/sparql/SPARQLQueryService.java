@@ -617,16 +617,20 @@ public class SPARQLQueryService implements FacetQueryService {
                 
                 if (node == null) {
                     hasNulls = true;
-                    continue;
+                    row.put(var, null);
                 }
+                else
+                {
                 
                 // Associate resources with our model
                 // This saves some work later
                 row.put(var, resultModel.asRDFNode(node.asNode()));
                 if (describeNodes && node.isResource())
                     getReses.addDescribeNode(node.asNode());
+                }
             }
-            if (!hasNulls) results.add(row);
+            // allow select queries to return null results
+            if (!hasNulls || !describeNodes) results.add(row);
         }
         qe.close();
         

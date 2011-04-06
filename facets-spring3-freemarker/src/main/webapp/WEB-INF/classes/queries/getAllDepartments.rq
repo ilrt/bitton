@@ -18,6 +18,11 @@ SELECT ?dept ?pubcount ?peoplecount ?grantcount ?label
         }
         GROUP BY ?dept
     }
+    GRAPH ?v2
+    {
+        ?dept rdfs:label ?label .
+    }
+    optional
     {
         SELECT DISTINCT ?dept (COUNT(DISTINCT ?pub) AS ?pubcount)
         {
@@ -28,6 +33,7 @@ SELECT ?dept ?pubcount ?peoplecount ?grantcount ?label
         }
         GROUP BY ?dept
     }
+    optional
     {
         SELECT DISTINCT ?dept (COUNT(DISTINCT ?grant) AS ?grantcount)
         {
@@ -37,10 +43,6 @@ SELECT ?dept ?pubcount ?peoplecount ?grantcount ?label
             }
         }
         GROUP BY ?dept
-    }
-    GRAPH ?v2
-    {
-        ?dept rdfs:label ?label .
     }
 }
 ORDER BY ?label

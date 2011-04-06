@@ -16,7 +16,7 @@
 		<form action="item" method="get">
 			<select class="autocomplete" name="res" id="res">
 				<option value="">Start typing a name to filter these results</option>
-				<#list departmentList as dept><option value="${dept['dept']}">${dept['label']}</option></#list>
+				<#list departmentList as dept><#if dept['dept']??><option value="${dept['dept']}">${dept['label']}</option></#if></#list>
 			</select>
 			<input type="submit" value="Go"/>
 		</form>
@@ -31,9 +31,16 @@
 		<ul class="results">
 			<#list 0..25 as let>
 			<#list departmentList as dept>
-			<#if alphabet[let] == dept['label']?substring(0, 1)>
-			<li class="group"><a class="title" href="item?res=${dept['dept']?url('utf-8')}">${dept['label']}</a> <span class="otherdetails">${dept['peoplecount']} <#if dept['peoplecount'] = 1>person<#else>people</#if>, ${dept['pubcount']} publication<#if dept['pubcount'] != 1>s</#if>, ${dept['grantcount']} grant<#if dept['grantcount'] != 1>s</#if></span></li>
-			</#if>
+				<#if dept['dept']?? && alphabet[let] == dept['label']?substring(0, 1)>
+					<li class="group">
+						<a class="title" href="item?res=${dept['dept']?url('utf-8')}">${dept['label']}</a>
+						<span class="otherdetails">
+							<#if dept['peoplecount']??>${dept['peoplecount']} <#if dept['peoplecount'] = 1>person<#else>people</#if><#else>0 people</#if>, 
+							<#if dept['pubcount']??>${dept['pubcount']} publication <#if dept['pubcount'] != 1>s</#if><#else>0 publications</#if>,
+							<#if dept['grantcount']??>${dept['grantcount']} grant<#if dept['grantcount'] != 1>s</#if><#else>0 grants</#if>
+						</span>
+					</li>
+				</#if>
 			</#list>
 
 			<#assign i=i+1/>
@@ -59,11 +66,11 @@
 		<div class="section">
 			<h2>Popular</h2>
 			<ul class="objects">
-				<li class="group"><a href="#">Department of Chemical Engineering</a></li>
-				<li class="group"><a href="#">Department of Chemical Engineering</a></li>
-				<li class="group"><a href="#">Department of Chemical Engineering</a></li>
-				<li class="group"><a href="#">Department of Chemical Engineering</a></li>
-				<li class="group"><a href="#">Department of Chemical Engineering</a></li>
+                                <li class="group"><a href="item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fresearch-revealed-hub%2Forganisation_units%2FCHEM%23org">School of Chemistry</a></li>
+				<li class="group"><a href="item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fresearch-revealed-hub%2Forganisation_units%2FGEOG%23org">School of Clinical Sciences</a></li>
+				<li class="group"><a href="item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fresearch-revealed-hub%2Forganisation_units%2FSSCM%23org">School of Social and Community Medicine</a></li>
+				<li class="group"><a href="item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fresearch-revealed-hub%2Forganisation_units%2FGEOG%23org">School of Geographical Sciences</a></li>
+                                <li class="group"><a href="item?res=http%3A%2F%2Fresrev.ilrt.bris.ac.uk%2Fresearch-revealed-hub%2Forganisation_units%2FFSCI%23org">Faculty of Science</a></li>
 			</ul>
 		</div><!-- /section -->
 	</div><!-- /col -->
