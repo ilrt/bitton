@@ -44,7 +44,7 @@ $(document).ready(function(){
     
     
     window.onbeforeunload = function()  {
-        $('#loading').show();
+        $('#loading').delay(2000).show(0);
 
         // allow user to cancel popup window
         $(document).keyup(function(e)
