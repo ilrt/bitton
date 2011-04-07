@@ -4,6 +4,11 @@
  */
 var slider_uID = 1;
 
+if (jQuery.browser.safari)
+{
+	jQuery(window).bind("unload", jQuery.noop); 
+}
+
 $(document).ready(function(){ 
 	initLoadingIndicator();
 	
