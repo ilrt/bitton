@@ -481,11 +481,6 @@ public class ResRevController extends AbstractController {
         for (Map<String, RDFNode> soln: result) {
             Resource res = (Resource) soln.get("s");
             hits.add(res);
-            StmtIterator it = res.listProperties();
-            while (it.hasNext())
-            {
-            System.out.println(it.next().asTriple().toString());
-            }
         }
         
         // collect all impacts if we're passed something to put them in
