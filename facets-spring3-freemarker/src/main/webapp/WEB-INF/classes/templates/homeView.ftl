@@ -56,8 +56,16 @@
 
 	<div class="col2of2 sidebar">
 		<div class="section">
-			<h2>About Research Revealed</h2>
-				<p>Research Revealed is a <a href="http://www.jisc.ac.uk">JISC</a>-funded project to demonstrate a fine-grained, access controlled, view layer application for research, built over a content integration repository layer. <a href="page?name=about">More about the project&hellip;</a></p>
+			<h2>What is Research Revealed?</h2>
+
+			<p>Research Revealed provides an integrated view of research-related <a href="page?name=datasources">data sources</a> for the University of Bristol.  It allows you to:</p>
+
+			<ul>
+				<li>View research outputs, grants and impacts for indviduals and departments within the University</li>
+				<li>Explore and filter research data across the whole univeristy according to specific criteria</li>
+			</ul>
+
+			<p>Research Revealed is funded by <link>JISC</link> and developed bu the <link>Web Futures team at ILRT</link>.  For more information about the project, read the <a href="http://researchrevealed.ilrt.bris.ac.uk/">project blog</a>.</p>
 
 		</div><!-- /section -->
 		<div class="section">
