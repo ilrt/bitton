@@ -4,6 +4,9 @@
  */
 var slider_uID = 1;
 
+
+// adding workaround for safari back button issue
+// http://bugs.jquery.com/ticket/5813
 if (jQuery.browser.safari)
 {
 	jQuery(window).bind("unload", jQuery.noop); 
@@ -15,6 +18,8 @@ $(document).ready(function(){
 	applyTabs();
 
 	renderImpacts();
+	
+	addFurtherSearchOptions();
 
 	shrink($('#pubtype-facet ul'),5);
 	shrink($('#pubyear-facet ul'),5);
@@ -196,4 +201,29 @@ function initLoadingIndicator()
 			if (e.keyCode == 27) { $('#loading').hide(); }   // esc
 		});
 	};
+}
+
+// hack to produce link under search result facet to direct user to specific facet pages
+function addFurtherSearchOptions()
+{
+	var text = "show more detailed filtering options";
+	var searchtext = getUrlVars()["search"];
+	$(".search #textType-facet .selected a:contains(Grants)").parent().after("<p><a href='grants?gsearch="+searchtext+"'>"+text+"</a></p>");
+	$(".search #textType-facet .selected a:contains(Research)").parent().after("<p><a href='pubs?search="+searchtext+"'>"+text+"</a></p>");
+	$(".search #textType-facet .selected a:contains(People)").parent().after("<p><a href='people?psearch="+searchtext+"'>"+text+"</a></p>");
+}
+
+// Read a page's GET URL variables and return them as an associative array.
+// http://jquery-howto.blogspot.com/2009/09/get-url-parameters-values-with-jquery.html
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
 }
