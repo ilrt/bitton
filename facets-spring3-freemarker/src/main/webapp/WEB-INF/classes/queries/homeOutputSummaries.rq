@@ -7,3 +7,4 @@ select distinct ?type ?scount ?label
     { select ?type (count(distinct ?s) as ?scount) { graph ?g1 { ?s dc:type ?type } } group by ?type }
     graph ?g2 { ?type rdfs:label ?label }
 }
+order by desc(?scount)
