@@ -26,6 +26,9 @@ publications = PublicationGenerator.new 200
 grants = GrantGenerator.new 30
 depts = DeptGenerator.new 15
 
+out.start_record
+out.write(people.get_random_person, "foaf:nick", "bob")
+
 people.serialise out
 publications.serialise out
 grants.serialise out
