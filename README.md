@@ -1,10 +1,10 @@
-* Welcome to Bitton *
+# Welcome to Bitton #
 
-** What is Bitton? **
+## What is Bitton? ##
 
 Bitton is a facetted browser that works over SPARQL stores. As supplied it is configured for navigating research information, however it is reasonably flexible and could be reused for other data.
 
-** Getting Started: Prerequisites **
+## Getting Started: Prerequisites ##
 
 Bitton speaks SPARQL 1.1 over HTTP, so you need a SPARQL server. We also provide some example data to get you started.
 
@@ -21,7 +21,7 @@ And finally start the server:
 
     $ ./fuseki-server --loc DB /research
 
-** Running the service **
+## Running the service ##
 
 Move to bitton directory and compile it, then move to the web app directory:
 
@@ -36,4 +36,4 @@ Finally run it:
 
     $ mvn jetty:run
 
-Visit [the server](http://localhost:8080/) (username: bob, password: bobspassword) and explore.
+Visit [the server](http://localhost:8080/) (username: `bob`, password: `bobspassword`) and explore.
