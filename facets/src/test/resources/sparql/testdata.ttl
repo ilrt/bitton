@@ -1,0 +1,40 @@
+@prefix ns: <http://example.com/ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ns:b1 ns:broader ns:a .
+ns:b2 ns:broader ns:a .
+ns:b3 ns:broader ns:a .
+
+ns:a ns:narrower ns:n1, ns:n2, ns:n3, ns:n4 .
+
+<r01> a ns:Thing ; ns:prop ns:value ; ns:range 2 ; ns:label "alpha" ; ns:opt "rare" .
+<r02> a ns:Thing ; ns:prop ns:novalue ; ns:range 2 ; ns:label "alpha" .
+<r03> a ns:Thing ; ns:prop ns:value ; ns:range 3 ; ns:label "alpha" .
+<r04> a ns:Thing ; ns:prop ns:novalue ; ns:range 3 ; ns:label "alpha" .
+<r05> a ns:Thing ; ns:prop ns:value ; ns:range 4 ; ns:label "aleph" .
+<r06> a ns:Thing ; ns:prop ns:novalue ; ns:range 4 ; ns:label "aleph" .
+<r07> a ns:Thing ; ns:prop ns:value ; ns:range 5 ; ns:label "aleph" .
+<r08> a ns:Thing ; ns:prop ns:novalue ; ns:range 5 ; ns:label "aleph" .
+<r09> a ns:Thing ; ns:prop ns:value ; ns:range 6 ; ns:label "beta" .
+<r10> a ns:Thing ; ns:prop ns:novalue ; ns:range 6 ; ns:label "beta" .
+<r11> a ns:Thing ; ns:prop ns:value ; ns:range 7 ; ns:label "beta" .
+<r12> a ns:Thing ; ns:prop ns:novalue ; ns:range 7 ; ns:label "beta" .
+<r13> a ns:Thing ; ns:prop ns:value ; ns:range 8 ; ns:label "gamma" .
+<r14> a ns:Thing ; ns:prop ns:novalue ; ns:range 8 ; ns:label "gamma" .
+ns:value rdfs:label "Dummy Label".
+
+ns:y1 ns:broader ns:x .
+ns:y2 ns:broader ns:x .
+ns:y3 ns:broader ns:x .
+ns:z1 ns:broader ns:y2 .
+ns:z2 ns:broader ns:y2 .
+ns:z3 ns:broader ns:y1 .
+
+ns:x ns:narrower ns:y1 , ns:y2 , ns:y3 .
+ns:y2 ns:narrower ns:z1 , ns:z2 .
+ns:y1 ns:narrower ns:z3 .
+
+ns:desc ns:ifp "pldms" ;
+    rdfs:label "Damian" ;
+    ns:prop2 ns:val2 .
+

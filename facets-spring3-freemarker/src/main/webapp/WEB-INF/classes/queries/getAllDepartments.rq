@@ -1,0 +1,48 @@
+prefix aiiso:   <http://purl.org/vocab/aiiso/schema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix closed: <http://vocab.bris.ac.uk/rr/closed#>
+prefix rr: <http://vocab.bris.ac.uk/resrev#>
+
+SELECT ?dept ?pubcount ?peoplecount ?grantcount ?label
+{
+    {
+        SELECT DISTINCT ?dept (COUNT(DISTINCT ?person) AS ?peoplecount)
+        {
+            GRAPH ?v1
+            {
+                ?dept rdf:type aiiso:Institution .
+                ?dept foaf:member ?person .
+            }
+        }
+        GROUP BY ?dept
+    }
+    GRAPH ?v2
+    {
+        ?dept rdfs:label ?label .
+    }
+    optional
+    {
+        SELECT DISTINCT ?dept (COUNT(DISTINCT ?pub) AS ?pubcount)
+        {
+            GRAPH ?v1
+            {
+                ?pub rr:department ?dept .
+            }
+        }
+        GROUP BY ?dept
+    }
+    optional
+    {
+        SELECT DISTINCT ?dept (COUNT(DISTINCT ?grant) AS ?grantcount)
+        {
+            GRAPH ?v1
+            {
+                ?grant closed:hostedBy ?dept .
+            }
+        }
+        GROUP BY ?dept
+    }
+}
+ORDER BY ?label

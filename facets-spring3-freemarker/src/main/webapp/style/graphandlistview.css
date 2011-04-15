@@ -1,0 +1,137 @@
+/* 
+    Document   : publications
+    Created on : 05-Jan-2011, 13:11:37
+    Author     : cmcpb
+    Description:
+        Used for creating the publication listing on my research and my department pages
+*/
+
+.row
+{
+    position:relative;
+    padding-bottom:1em;
+
+}
+
+.row .label
+{
+    width:120px;
+    padding-top:5px;
+    color:#4e4f53;
+}
+
+
+.row .col2
+{
+    width:470px;
+    margin-top:0px;
+    margin-left:110px;
+    position:absolute;
+    top:0px;
+}
+
+.sorting 
+{
+    float:right;
+    margin-top:-1.5em;
+}
+
+.sorting span
+{
+    color:#4e4f53;
+}
+
+.resultstotal
+{
+    margin-top:1em;
+}
+
+.listingcontrols
+{
+    background-color:#deecf5;
+    padding:5px;
+    padding-left:15px;
+    padding-right:15px;
+}
+
+.combiGraphAndList .fig
+{
+    height: 50px;
+    margin-left:205px; /* 15 + 110 + 80 */
+    margin-right:95px; /* 80 + 15 */
+    margin-bottom:1em;
+    margin-top: 14px;
+}
+
+.combiGraphAndList .slider-container .slider-outer
+{
+    width: 100%;
+    float: left;
+    margin-right: -80px;
+}
+
+.combiGraphAndList .slider-container .slider-inner
+{
+    margin-right: 80px;
+}
+
+.combiGraphAndList .slider-container .slider-range
+{
+    margin-left: 80px;
+}
+
+.combiGraphAndList .slider-container input
+{
+    width: 60px;
+    height:20px;
+    text-align:center;
+    color:#444;
+    padding:0px;
+    margin:0px;
+    border:1px solid #B3B3B3;
+    background-color:#FFF;
+}
+
+.combiGraphAndList .slider-container .valueLeft
+{
+    float: left;
+}
+
+.combiGraphAndList .slider-container .valueRight
+{
+    float: right;
+}
+
+.clearing
+{
+  height: 0;
+  clear: both;
+}
+
+.combiGraphAndList .results .body
+{
+    border:0px solid #ccc;
+    padding:14px 0;
+}
+
+.results .title
+{
+    text-decoration: underline;
+}
+
+.results .citation
+{
+    display:block;
+    color:#555;
+    font-style:italic;
+}
+
+.slider-outer .ui-slider-horizontal
+{
+	margin-top:5px;
+}
+
+.slider-outer .valueLeft
+{
+	margin-top:-4px;
+}

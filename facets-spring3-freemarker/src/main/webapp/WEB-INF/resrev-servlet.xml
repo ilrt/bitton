@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+    <!-- Registered prefixes -->
+
+    <util:map id="prefixes" map-class="java.util.HashMap">
+
+        <!-- People, organizations and agents -->
+        <entry key="foaf" value="http://xmlns.com/foaf/0.1/"/>
+
+        <!-- Organisational structure -->
+        <entry key="aiiso" value="http://purl.org/vocab/aiiso/schema#"/>
+
+        <!-- Grants -->
+        <entry key="proj" value="http://vocab.ouls.ox.ac.uk/projectfunding#"/>
+
+        <!-- title, abstract, source (provenance) -->
+        <entry key="dc" value="http://purl.org/dc/terms"/>
+
+        <!--  label -->
+        <entry key="rdfs" value="http://www.w3.org/2000/01/rdf-schema#"/>
+
+        <!-- sameAs -->
+        <entry key="owl" value="http://www.w3.org/2002/07/owl#"/>
+
+        <!-- Inferred hierarchical info -->
+        <entry key="closed" value="http://vocab.bris.ac.uk/rr/closed#"/>
+
+    </util:map>
+
+    <bean name="currentYear" class="java.lang.Integer">
+        <constructor-arg value="#{ T(java.util.Calendar).getInstance().get(T(java.util.Calendar).YEAR)}" />
+    </bean>
+
+    <!-- Facet configurations -->
+
+    <!--
+    <util:map id="grantName" map-class="java.util.HashMap">
+        <entry key="facetType" value="AlphaNumeric"/>
+        <entry key="facetTitle" value="Grant Titles"/>
+        <entry key="linkProperty" value="http://purl.org/dc/terms/title"/>
+        <entry key="constraintType"
+               value="http://vocab.ouls.ox.ac.uk/projectfunding/projectfunding#Grant"/>
+        <entry key="paramName" value="grant"/>
+    </util:map>-->
+    
+    <util:map id="grantSearch" map-class="java.util.HashMap">
+        <entry key="facetType" value="TextSearch"/>
+        <entry key="facetTitle" value="Search Grants"/>
+        <entry key="constraintType" value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="paramName" value="gsearch"/>
+    </util:map>
+    
+    <util:map id="grantFunder" map-class="java.util.HashMap">
+        <entry key="facetType" value="Flat"/>
+        <entry key="facetTitle" value="Funder"/>
+        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding#funds"/>
+        <entry key="constraintType"
+               value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="linkInvert" value="true"/>
+        <entry key="paramName" value="funder"/>
+    </util:map>
+
+    <util:map id="deptNames" map-class="java.util.HashMap">
+        <entry key="facetType" value="Flat"/>
+        <entry key="facetTitle" value="Department"/>
+        <entry key="linkProperty" value="http://vocab.bris.ac.uk/rr/closed#hostedBy"/>
+        <entry key="constraintType"
+               value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="requireLabel" value="true"/>
+        <entry key="paramName" value="dept"/>
+    </util:map>
+
+
+    <util:map id="grantValues" map-class="java.util.HashMap">
+        <entry key="facetType" value="SimpleNumberRange"/>
+        <entry key="facetTitle" value="Grant Values"/>
+        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding#value"/>
+        <entry key="constraintType"
+               value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="numericRange" value="0:50000,50000:100000,100000:250000,250000:500000,500000:1000000,1000000:5000000"/>
+        <entry key="numericRangeType" value="http://www.w3.org/2001/XMLSchema#integer"/>
+        <entry key="numericRangeFormat" value="£###,###"/>
+        <entry key="paramName" value="grantValues"/>
+    </util:map>
+   
+    <util:map id="grantStartYear" map-class="java.util.HashMap">
+        <entry key="facetType" value="SimpleNumberRange"/>
+        <entry key="facetTitle" value="Start Year"/>
+        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding#startDate"/>
+        <entry key="constraintType"
+               value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="numericRange" value="2004-01-01:2005-01-01,2005-01-01:2006-01-01,2006-01-01:2007-01-01,2007-01-01:2008-01-01,2008-01-01:2009-01-01,2009-01-01:2010-01-01,2010-01-01:2011-01-01,2011-01-01:2012-01-01"/>
+        <entry key="numericRangeType" value="http://www.w3.org/2001/XMLSchema#date"/>
+        <entry key="paramName" value="grantStartYear"/>
+    </util:map>
+
+    <util:map id="grantEndYear" map-class="java.util.HashMap">
+        <entry key="facetType" value="SimpleNumberRange"/>
+        <entry key="facetTitle" value="End Year"/>
+        <entry key="linkProperty" value="http://vocab.ouls.ox.ac.uk/projectfunding#endDate"/>
+        <entry key="constraintType"
+               value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="numericRange" value="2004-01-01:2005-01-01,2005-01-01:2006-01-01,2006-01-01:2007-01-01,2007-01-01:2008-01-01,2008-01-01:2009-01-01,2009-01-01:2010-01-01,2010-01-01:2011-01-01,2011-01-01:2012-01-01,2012-01-01:2013-01-01,2013-01-01:2014-01-01,2014-01-01:2015-01-01,2015-01-01:2016-01-01,2016-01-01:2017-01-01,2017-01-01:2018-01-01,2018-01-01:2019-01-01"/>
+        <entry key="numericRangeType" value="http://www.w3.org/2001/XMLSchema#date"/>
+        <entry key="paramName" value="grantEndYear"/>
+    </util:map>
+
+    <util:list id="grantFacets" list-class="java.util.ArrayList">
+        <ref bean="grantSearch"/>
+        <ref bean="grantFunder"/>
+        <ref bean="deptNames"/>
+        <ref bean="grantValues"/>
+        <ref bean="grantStartYear"/>
+        <ref bean="grantEndYear"/>
+    </util:list>
+
+    <util:map id="grantProps" map-class="java.util.HashMap">
+        <entry key="viewName" value="Grants"/>
+        <entry key="facetList" value-ref="grantFacets"/>
+        <entry key="viewId" value="grants"/>
+        <entry key="viewType" value="http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+    </util:map>
+
+    <!-- Organisation facets -->
+    <!--
+    <util:map id="orgName" map-class="java.util.HashMap">
+        <entry key="facetType" value="AlphaNumeric"/>
+        <entry key="facetTitle" value="Organisation Names"/>
+        <entry key="linkProperty" value="http://www.w3.org/2000/01/rdf-schema#label"/>
+        <entry key="constraintType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
+        <entry key="paramName" value="orgName"/>
+    </util:map>
+    <util:map id="orgDeptNames" map-class="java.util.HashMap">
+        <entry key="facetType" value="Hierarchical"/>
+        <entry key="facetTitle" value="Department Names"/>
+        <entry key="linkProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
+        <entry key="widerProperty" value="http://purl.org/vocab/aiiso/schema#part_of"/>
+        <entry key="facetBase" value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org"/>
+        <entry key="constraintType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
+        <entry key="paramName" value="orgDept"/>
+    </util:map>
+    <util:list id="orgFacets" list-class="java.util.ArrayList">
+        <ref bean="orgName"/>
+        <ref bean="orgDeptNames"/>
+    </util:list>
+
+    <util:map id="orgProps" map-class="java.util.HashMap">
+        <entry key="viewName" value="Organisations"/>
+        <entry key="facetList" value-ref="orgFacets"/>
+        <entry key="viewId" value="organisations"/>
+        <entry key="viewType" value="http://purl.org/vocab/aiiso/schema#Institution"/>
+    </util:map>
+    -->
+
+    <!-- People facets -->
+    <!--<util:map id="peopleName" map-class="java.util.HashMap">
+        <entry key="facetType" value="AlphaNumeric"/>
+        <entry key="facetTitle" value="Name"/>
+        <entry key="linkProperty" value="http://www.w3.org/2000/01/rdf-schema#label"/>
+        <entry key="constraintType" value="http://xmlns.com/foaf/0.1/Person"/>
+        <entry key="paramName" value="pname"/>
+    </util:map>-->
+    <util:map id="peopleSearch" map-class="java.util.HashMap">
+        <entry key="facetType" value="TextSearch"/>
+        <entry key="facetTitle" value="Search People"/>
+        <entry key="constraintType" value="http://xmlns.com/foaf/0.1/Person"/>
+        <entry key="paramName" value="psearch"/>
+    </util:map>
+    <util:map id="peopleDeptNames" map-class="java.util.HashMap">
+        <entry key="facetType" value="EnumFlat"/>
+        <entry key="facetTitle" value="Department"/>
+        <entry key="linkProperty" value="http://vocab.bris.ac.uk/rr/closed#member"/>
+        <entry key="linkInvert" value="true"/>
+        <entry key="enumList" value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ACAD#org|Academic Faculties,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DARG#org|Academic Registry,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ACRC#org|Advanced Computing Centre (URC),http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ARTF#org|Arts Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ALSP#org|Avon Longitudinal Study of Parents and Children,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BSSS#org|Biological Sciences Services Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BCCE#org|Bristol Colloid Centre,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BIRH#org|Bristol Institute for Research in the Humanities and Arts,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BURW#org|Burwalls Centre for Continuing Education,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BCAP#org|Capital Projects,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CAOP#org|Catering Operations,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ANAT#org|Centre for Comparative and Clinical Anatomy,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DEAF#org|Centre for Deaf Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PHED#org|Centre for Exercise Nutrition and Health Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/AUDI#org|Centre for Hearing and Balance Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CMPO#org|Centre for Market and Public Organisation,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/OPPO#org|Centre for Public Engagement,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ATHF#org|Centre for Sport Exercise &amp; Health,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DSEH#org|Centre for Sport Exercise and Health,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CITI#org|Centre for the Study of Ethnicity and Citizenship (URC),http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/NBCS#org|Clinical Science at North Bristol,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CSSB#org|Clinical Science at South Bristol,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DCMM#org|Communications Division,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/COBM#org|Community-Based Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/VCAD#org|Companion Animal Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DLPG#org|Dental Postgraduate Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ACFI#org|Department of Accounting and Finance,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/AERO#org|Department of Aerospace Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ARCH#org|Department of Archaeology and Anthropology,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CIVE#org|Department of Civil Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CLAS#org|Department of Classics &amp; Ancient History,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CMCC#org|Department of Clinical Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/COSC#org|Department of Computer Science,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DRAM#org|Department of Drama: Theatre Film Television,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ECON#org|Department of Economics,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/EENG#org|Department of Electrical &amp; Electronic Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/EMAT#org|Department of Engineering Mathematics,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ENGL#org|Department of English,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FREN#org|Department of French,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/GERM#org|Department of German,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/HILA#org|Department of Hispanic Portuguese and Latin American Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/HART#org|Department of Historical Studies (History of Arts),http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/HIST#org|Department of Historical Studies (History),http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ITAL#org|Department of Italian,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MGRC#org|Department of Management,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MECH#org|Department of Mechanical Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MUSI#org|Department of Music,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PHIL#org|Department of Philosophy,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/POLI#org|Department of Politics,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/RUSS#org|Department of Russian,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SMED#org|Department of Social Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SOCI#org|Department of Sociology,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/THRS#org|Department of Theology and Religious Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CHHT#org|Division of Child Health,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SURG#org|Division of Surgery,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/EDSU#org|Education Support Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DEDU#org|Edof Ploneucation Support Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ENGF#org|Engineering Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DEST#org|Estates,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FOAT#org|Faculty of Arts,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FENG#org|Faculty of Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FMVS#org|Faculty of Medical and Veterinary Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FMDY#org|Faculty of Medicine and Dentistry,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FSCI#org|Faculty of Science,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FSSL#org|Faculty of Social Sciences and Law,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DFAS#org|Farm Animal Science,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DFIN#org|Finance Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FINC#org|Finance Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FRPE#org|Food Refrigeration and Process Engineering Research Centre,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/GSAH#org|Graduate School of Arts and Humanities,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/EDUC#org|Graduate School of Education,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/IPSS#org|Information Processes and Systems,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DISR#org|Information Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ISER#org|Information Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ISCA#org|Information Services Central Administration,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ISYS#org|Information Systems and Computing,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/IAST#org|Institute for Advanced Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ILRT#org|Institute for Learning and Research Technology,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/IFAC#org|Interface Analysis Centre (URC),http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/INTL#org|International Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/JISC#org|Joint Information Systems Committee,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/LCVS#org|Langford Clinical Veterinary Service,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FARM#org|Langford Farm,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/LANG#org|Language Centre,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/LTSS#org|Learning Technology Support Service,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/IMAN#org|Library Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MEED#org|Medical Education,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MSAD#org|Medical Sciences Building,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MVSF#org|Medical and Veterinary Sciences Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MEDI#org|Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MDYF#org|Medicine and Dentistry Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MVEN#org|Merchant Venturers' School of Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CHAP#org|Multifaith Chaplaincy,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/NORA#org|Norah Fry Research Centre,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CORP#org|Other Corporate Areas,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DPER#org|Personnel Services and Staff Development,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PERS#org|Personnel Services and Staff Development,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DPPP#org|Planning Policy and Project Support,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/POLP#org|Policy Press,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PRIM#org|Primary Health Care,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/INFO#org|Public Relations Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/QUEN#org|Queen's School of Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DRES#org|Research and Enterprise Development,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ORED#org|Research and Enterprise Development,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SRES#org|Residences Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/RESS#org|Residential Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DRCO#org|Residential and Hospitality Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SPOL#org|School for Policy Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ACHS#org|School of Applied Community and Health Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SART#org|School of Arts,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BIOC#org|School of Biochemistry,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BISC#org|School of Biological Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PANM#org|School of Cellular and Molecular Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CHEM#org|School of Chemistry,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SOCS#org|School of Clinical Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/GELY#org|School of Earth Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/EFIM#org|School of Economics Finance and Management,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PSYC#org|School of Experimental Psychology,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/GEOG#org|School of Geographical Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/HUMS#org|School of Humanities,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/LAWD#org|School of Law,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MATH#org|School of Mathematics,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MODL#org|School of Modern Languages,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ORDS#org|School of Oral &amp; Dental Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PHYS#org|School of Physics,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PHPH#org|School of Physiology and Pharmacology,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SSCM#org|School of Social and Community Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SPAI#org|School of Sociology Politics and International Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/VESC#org|School of Veterinary Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SCIF#org|Science Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DSTM#org|Senior Team,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CASU#org|Services Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ASUB#org|Services Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SSLF#org|Social Sciences and Law Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/STCS#org|Student Counselling Service,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SRAA#org|Student Recruitment Access and Admissions,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/STSS#org|Students Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/STHE#org|Students' Health Service,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SUPP#org|Support Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/NSQI#org|The Bristol Centre for Nanoscience and Quantum Information,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org|The University of Bristol,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/VGEN#org|Veterinary General,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/VPIM#org|Veterinary Pathology and Infection and Immunity,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/VICH#org|Vice-Chancellor's Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/WIDE#org|Widening Participation and Undergraduate Recruitment Office"/>
+        <entry key="constraintType" value="http://xmlns.com/foaf/0.1/Person"/>
+        <entry key="requireCounts" value="false"/>
+        <entry key="paramName" value="pdept"/>
+    </util:map>
+    <util:list id="pFacets" list-class="java.util.ArrayList">
+        <ref bean="peopleSearch"/>
+        <ref bean="peopleDeptNames"/>
+    </util:list>
+    <util:map id="personProps" map-class="java.util.HashMap">
+        <entry key="viewName" value="People"/>
+        <entry key="facetList" value-ref="pFacets"/>
+        <entry key="viewId" value="people"/>
+        <entry key="viewType" value="http://xmlns.com/foaf/0.1/Person"/>
+    </util:map>
+
+    <!-- Publications -->
+    <util:map id="pubSearch" map-class="java.util.HashMap">
+        <entry key="facetType" value="TextSearch"/>
+        <entry key="facetTitle" value="Search"/>
+        <entry key="linkProperty" value="http://www.w3.org/2000/01/rdf-schema#label"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
+        <entry key="paramName" value="search"/>
+    </util:map>
+    <util:map id="pubType" map-class="java.util.HashMap">
+        <entry key="facetType" value="Flat"/>
+        <entry key="facetTitle" value="Type of Output"/>
+        <entry key="linkProperty" value="http://purl.org/dc/terms/type"/>
+        <entry key="constraintType"
+               value="http://purl.org/dc/terms/Publication"/>
+        <entry key="paramName" value="pubtype"/>
+        <entry key="order" value="Descending, ByCount"/>
+    </util:map>
+    <util:map id="pubDept" map-class="java.util.HashMap">
+        <entry key="facetType" value="EnumFlat"/>
+        <entry key="facetTitle" value="Department"/>
+        <entry key="linkProperty" value="http://vocab.bris.ac.uk/rr/closed#department"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
+        <entry key="enumList" value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ACAD#org|Academic Faculties,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DARG#org|Academic Registry,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ACRC#org|Advanced Computing Centre (URC),http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ARTF#org|Arts Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ALSP#org|Avon Longitudinal Study of Parents and Children,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BSSS#org|Biological Sciences Services Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BCCE#org|Bristol Colloid Centre,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BIRH#org|Bristol Institute for Research in the Humanities and Arts,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BURW#org|Burwalls Centre for Continuing Education,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BCAP#org|Capital Projects,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CAOP#org|Catering Operations,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ANAT#org|Centre for Comparative and Clinical Anatomy,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DEAF#org|Centre for Deaf Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PHED#org|Centre for Exercise Nutrition and Health Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/AUDI#org|Centre for Hearing and Balance Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CMPO#org|Centre for Market and Public Organisation,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/OPPO#org|Centre for Public Engagement,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ATHF#org|Centre for Sport Exercise &amp; Health,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DSEH#org|Centre for Sport Exercise and Health,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CITI#org|Centre for the Study of Ethnicity and Citizenship (URC),http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/NBCS#org|Clinical Science at North Bristol,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CSSB#org|Clinical Science at South Bristol,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DCMM#org|Communications Division,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/COBM#org|Community-Based Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/VCAD#org|Companion Animal Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DLPG#org|Dental Postgraduate Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ACFI#org|Department of Accounting and Finance,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/AERO#org|Department of Aerospace Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ARCH#org|Department of Archaeology and Anthropology,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CIVE#org|Department of Civil Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CLAS#org|Department of Classics &amp; Ancient History,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CMCC#org|Department of Clinical Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/COSC#org|Department of Computer Science,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DRAM#org|Department of Drama: Theatre Film Television,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ECON#org|Department of Economics,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/EENG#org|Department of Electrical &amp; Electronic Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/EMAT#org|Department of Engineering Mathematics,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ENGL#org|Department of English,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FREN#org|Department of French,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/GERM#org|Department of German,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/HILA#org|Department of Hispanic Portuguese and Latin American Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/HART#org|Department of Historical Studies (History of Arts),http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/HIST#org|Department of Historical Studies (History),http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ITAL#org|Department of Italian,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MGRC#org|Department of Management,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MECH#org|Department of Mechanical Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MUSI#org|Department of Music,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PHIL#org|Department of Philosophy,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/POLI#org|Department of Politics,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/RUSS#org|Department of Russian,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SMED#org|Department of Social Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SOCI#org|Department of Sociology,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/THRS#org|Department of Theology and Religious Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CHHT#org|Division of Child Health,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SURG#org|Division of Surgery,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/EDSU#org|Education Support Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DEDU#org|Edof Ploneucation Support Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ENGF#org|Engineering Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DEST#org|Estates,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FOAT#org|Faculty of Arts,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FENG#org|Faculty of Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FMVS#org|Faculty of Medical and Veterinary Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FMDY#org|Faculty of Medicine and Dentistry,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FSCI#org|Faculty of Science,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FSSL#org|Faculty of Social Sciences and Law,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DFAS#org|Farm Animal Science,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DFIN#org|Finance Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FINC#org|Finance Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FRPE#org|Food Refrigeration and Process Engineering Research Centre,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/GSAH#org|Graduate School of Arts and Humanities,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/EDUC#org|Graduate School of Education,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/IPSS#org|Information Processes and Systems,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DISR#org|Information Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ISER#org|Information Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ISCA#org|Information Services Central Administration,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ISYS#org|Information Systems and Computing,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/IAST#org|Institute for Advanced Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ILRT#org|Institute for Learning and Research Technology,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/IFAC#org|Interface Analysis Centre (URC),http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/INTL#org|International Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/JISC#org|Joint Information Systems Committee,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/LCVS#org|Langford Clinical Veterinary Service,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FARM#org|Langford Farm,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/LANG#org|Language Centre,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/LTSS#org|Learning Technology Support Service,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/IMAN#org|Library Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MEED#org|Medical Education,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MSAD#org|Medical Sciences Building,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MVSF#org|Medical and Veterinary Sciences Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MEDI#org|Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MDYF#org|Medicine and Dentistry Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MVEN#org|Merchant Venturers' School of Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CHAP#org|Multifaith Chaplaincy,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/NORA#org|Norah Fry Research Centre,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CORP#org|Other Corporate Areas,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DPER#org|Personnel Services and Staff Development,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PERS#org|Personnel Services and Staff Development,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DPPP#org|Planning Policy and Project Support,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/POLP#org|Policy Press,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PRIM#org|Primary Health Care,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/INFO#org|Public Relations Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/QUEN#org|Queen's School of Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DRES#org|Research and Enterprise Development,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ORED#org|Research and Enterprise Development,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SRES#org|Residences Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/RESS#org|Residential Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DRCO#org|Residential and Hospitality Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SPOL#org|School for Policy Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ACHS#org|School of Applied Community and Health Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SART#org|School of Arts,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BIOC#org|School of Biochemistry,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/BISC#org|School of Biological Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PANM#org|School of Cellular and Molecular Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CHEM#org|School of Chemistry,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SOCS#org|School of Clinical Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/GELY#org|School of Earth Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/EFIM#org|School of Economics Finance and Management,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PSYC#org|School of Experimental Psychology,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/GEOG#org|School of Geographical Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/HUMS#org|School of Humanities,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/LAWD#org|School of Law,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MATH#org|School of Mathematics,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/MODL#org|School of Modern Languages,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ORDS#org|School of Oral &amp; Dental Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PHYS#org|School of Physics,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/PHPH#org|School of Physiology and Pharmacology,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SSCM#org|School of Social and Community Medicine,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SPAI#org|School of Sociology Politics and International Studies,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/VESC#org|School of Veterinary Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SCIF#org|Science Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/DSTM#org|Senior Team,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/CASU#org|Services Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/ASUB#org|Services Unit,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SSLF#org|Social Sciences and Law Faculty Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/STCS#org|Student Counselling Service,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SRAA#org|Student Recruitment Access and Admissions,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/STSS#org|Students Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/STHE#org|Students' Health Service,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/SUPP#org|Support Services,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/NSQI#org|The Bristol Centre for Nanoscience and Quantum Information,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/UNIV#org|The University of Bristol,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/VGEN#org|Veterinary General,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/VPIM#org|Veterinary Pathology and Infection and Immunity,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/VICH#org|Vice-Chancellor's Office,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/WIDE#org|Widening Participation and Undergraduate Recruitment Office"/>
+        <entry key="requireCounts" value="false"/>
+        <entry key="paramName" value="pdept"/>
+    </util:map>
+    <util:map id="pubFixedDept" map-class="java.util.HashMap">
+        <entry key="facetType" value="EnumFlat"/>
+        <entry key="facetTitle" value="Most Popular Departments"/>
+        <entry key="linkProperty" value="http://vocab.bris.ac.uk/rr/closed#department"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
+        <entry key="enumList" value="http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FOAT#org|Faculty of Arts,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FENG#org|Faculty of Engineering,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FMVS#org|Faculty of Medical and Veterinary Sciences,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FMDY#org|Faculty of Medicine and Dentistry,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FSCI#org|Faculty of Science,http://resrev.ilrt.bris.ac.uk/research-revealed-hub/organisation_units/FSSL#org|Faculty of Social Sciences and Law"/>
+        <entry key="requireCounts" value="true"/>
+        <entry key="paramName" value="pfdept"/>
+    </util:map>
+    <util:map id="pubYearGroups" map-class="java.util.HashMap">
+        <entry key="facetType" value="SimpleNumberRange"/>
+        <entry key="facetTitle" value="Publication date"/>
+        <entry key="linkProperty" value="http://purl.org/dc/terms/date"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
+        <entry key="numericRange" value="#{currentYear}:#{currentYear+1}#This year,#{currentYear - 1}:#{currentYear}#Last year,#{currentYear - 3}:#{currentYear}#Last 3 years,#{currentYear - 5}:#{currentYear}#Last 5 years"/>
+        <entry key="numericRangeType" value="http://www.w3.org/2001/XMLSchema#gYear"/>
+        <entry key="paramName" value="pubyeargrp"/>
+    </util:map>    
+    <util:map id="pubYear" map-class="java.util.HashMap">
+        <entry key="facetType" value="Flat"/>
+        <entry key="facetTitle" value="Year"/>
+        <entry key="linkProperty" value="http://purl.org/dc/terms/date"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication"/>
+        <entry key="paramName" value="pubyear"/>
+        <entry key="order" value="Descending"/>
+    </util:map>
+    <util:list id="pubFacets" list-class="java.util.ArrayList">
+        <ref bean="pubSearch"/>
+        <ref bean="pubType"/>
+        <ref bean="pubDept"/>
+        <ref bean="pubFixedDept"/>
+        <ref bean="pubYearGroups"/>
+        <ref bean="pubYear"/>
+    </util:list>
+    <util:map id="pubProps" map-class="java.util.HashMap">
+        <entry key="viewName" value="Publications"/>
+        <entry key="facetList" value-ref="pubFacets"/>
+        <entry key="viewId" value="pubs"/>
+        <entry key="viewType" value="http://purl.org/dc/terms/Publication"/>
+    </util:map>
+	
+    <!-- Search -->
+    <util:map id="textSearchType" map-class="java.util.HashMap">
+        <entry key="facetType" value="EnumFlat"/>
+        <entry key="facetTitle" value="Filter by type"/>
+        <entry key="linkProperty" value="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/>
+        <entry key="enumList" value="http://purl.org/dc/terms/Publication|Research outputs,http://vocab.ouls.ox.ac.uk/projectfunding#Grant|Grants &amp; funding,http://xmlns.com/foaf/0.1/Person|People"/>
+        <entry key="constraintType"  value="http://purl.org/dc/terms/Publication,http://xmlns.com/foaf/0.1/Person,http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="requireCounts" value="false"/>
+        <entry key="paramName" value="textType"/>
+    </util:map>
+    <util:map id="textSearchText" map-class="java.util.HashMap">
+        <entry key="facetType" value="TextSearch"/>
+        <entry key="facetTitle" value="Type"/>
+        <entry key="constraintType" value="http://purl.org/dc/terms/Publication,http://xmlns.com/foaf/0.1/Person,http://vocab.ouls.ox.ac.uk/projectfunding#Grant"/>
+        <entry key="paramName" value="search"/>
+    </util:map>
+    <util:list id="textFacets" list-class="java.util.ArrayList">
+        <ref bean="textSearchType"/>
+        <ref bean="textSearchText"/>
+    </util:list>
+    <util:map id="textProps" map-class="java.util.HashMap">
+        <entry key="viewName" value="Text Search"/>
+        <entry key="facetList" value-ref="textFacets"/>
+        <entry key="viewId" value="search"/>
+        <entry key="viewType" value="http://purl.org/dc/terms/Publication"/>
+    </util:map>
+	
+    <util:map id="viewList" map-class="java.util.HashMap">
+        <entry key="grant" value-ref="grantProps"/>
+<!--        <entry key="org" value-ref="orgProps"/>-->
+        <entry key="people" value-ref="personProps"/>
+        <entry key="pubs" value-ref="pubProps"/>
+        <entry key="search" value-ref="textProps"/>
+    </util:map>
+	
+ 
+	
+    <!-- scan for controllers -->
+
+    <context:component-scan base-package="org.ilrt.wf.facets.web.spring.controllers"/>
+
+    <!-- Properties -->
+
+    <!-- creates a java.util.Properties instance with values loaded from the supplied location -->
+    <util:properties id="appProperties" location="classpath:resrev.properties"/>
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="appProperties" />
+    </bean>
+
+    <!-- Interceptors -->
+    <bean id="propertyInterceptor" class="org.ilrt.wf.facets.interceptor.PropertyInterceptor">
+        <property name="properties" ref="appProperties"/>
+    </bean>
+
+    <!-- need the DefaultAnnotationHandlerMapping bean for the property interceptor to be used correctly -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"
+        p:interceptors-ref="propertyInterceptor" />
+
+    <!-- SPARQL Endpoint Service -->
+
+    <bean id="sparqlQEFactory" class="org.ilrt.wf.facets.sparql.RemoteQEFactory">
+        <constructor-arg value="${sparql.endpoint}"/>
+    </bean>
+
+    <bean id="sparqlQueryService" class="org.ilrt.wf.facets.sparql.SPARQLQueryServiceGroupOpt">
+        <constructor-arg ref="sparqlQEFactory"/>
+    </bean>
+
+    <!-- Facet Service -->
+
+    <bean id="facetFactoryService" class="org.ilrt.wf.facets.impl.FacetFactoryServiceImpl">
+        <constructor-arg index="0" ref="sparqlQueryService"/>
+        <constructor-arg index="1" ref="prefixes"/>
+    </bean>
+
+    <!-- Facet View Service -->
+
+    <bean id="facetViewService" class="org.ilrt.wf.facets.impl.FacetViewServiceImpl">
+        <constructor-arg index="0" ref="facetFactoryService"/>
+        <constructor-arg index="1" ref="viewList"/>
+        <constructor-arg index="2" ref="prefixes"/>
+    </bean>
+
+    <!-- FreeMarker configuration -->
+
+    <bean id="freemarkerConfig"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/classes/templates/"/>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="object_wrapper">org.ilrt.wf.facets.freemarker.JenaObjectWrapper</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="cache" value="false"/>
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+    </bean>
+
+</beans>

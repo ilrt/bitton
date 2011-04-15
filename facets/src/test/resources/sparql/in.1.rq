@@ -1,0 +1,9 @@
+SELECT *
+WHERE
+{
+  ?s ?p "foo" ;
+     ?p1 1 ;
+     ?p ?o ;
+     ?p1 ?lit .
+  GRAPH ?g { ?o ?p1 2 ; ?p ?lit . }
+}

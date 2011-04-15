@@ -1,0 +1,265 @@
+body {
+    font-family: Helvetica, Verdana, Arial;
+    font-size: 12px;
+}
+
+#container {
+    min-width: 800px;
+}
+
+#nav-links {
+    position: absolute;
+    right: 0;
+    margin-top: 10px;
+}
+
+#nav-links ul {
+    margin-left: 0;
+    padding-left: 0;
+    display: inline;
+}
+
+#nav-links li {
+    margin-left: 0;
+    padding: 3px 10px;
+    border-left: 1px solid #ffffff;
+    list-style-type: none;
+    display: inline;
+}
+
+#nav-links li:first-child {
+    margin-left: 0;
+    border-left: none;
+    list-style-type: none;
+    display: inline;
+}
+
+#nav-links li > a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+#nav-links li > a:hover, #nav-links li > a:active {
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+#nav {
+    height: 40px;
+}
+
+#nav > ul > li > a {
+    display: inline-block;
+    text-decoration: none;
+    color: #000000;
+}
+
+#nav > ul > li > a:hover, #nav > ul > li > a:active {
+    text-decoration: none;
+    color: #000000;
+}
+
+#nav-left {
+    float: left;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+#nav-left ul {
+    display: inline;
+}
+
+#nav-left li {
+    border: 1px solid #b3b3b3;
+    display: inline;
+    list-style-type: none;
+    font-weight: 500;
+    padding: 5px 20px 5px 20px;
+    margin-left: 3px;
+}
+
+#nav-left li:first-child {
+    margin-left: 17px;
+}
+
+#nav-left li:last-child {
+    padding-left: 45px;
+    padding-right: 45px;
+}
+
+#nav-right {
+    float: right;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+#nav-right ul {
+    display: inline;
+}
+
+#nav-right li {
+    border: 1px solid #b3b3b3;
+    display: inline;
+    list-style-type: none;
+    font-weight: 500;
+    padding: 5px 10px 5px 10px;
+    margin-right: 3px;
+}
+
+#nav-right li:last-child {
+    margin-right: 17px;
+}
+/*
+#search {
+    float: left;
+    margin-left: 25px;
+    padding-top: 5px;
+}
+
+#search p {
+    display: inline;
+}*/
+
+#search-text {
+    padding: 3px;
+}
+
+.search-button {
+    background: #f9e6a2;
+    border: solid 1px #e4bb13;
+    padding: 4px 10px 4px 10px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+#main-content {
+	clear: left;
+    padding: 10px 0px 0px 0px;
+    height: 100%;
+}
+
+#main-content h2 {
+    /*font-size: 20px;*/
+    border-bottom: dashed 1px #000000;
+    margin: 0px;
+}
+
+#main-content h3 {
+    /*font-size: 16px;*/
+}
+
+#left-column {
+    float: left;
+    width: 200px;
+    margin: 22px 10px 0px 0px;
+    padding-left: 10px;
+}
+
+#right-column {
+    margin: 0px 0px 0px 230px;
+}
+
+.facet-title {
+    background-color: #cccccc;
+    border: solid 1px #000000;
+    padding: 5px;
+    margin: 0px;
+    font-size: 13px;
+}
+
+.facet-list {
+    margin: 5px;
+    padding: 0px;
+
+}
+
+.facet-list-item {
+    display: inline;
+    padding-right: 3px;
+    font-size: 11px;
+}
+
+#results {
+    padding-bottom: 20px;
+}
+
+#results p {
+    font-size: 14px;
+}
+
+#results p > a, #results p > a:hover, #results p > a:visited {
+    color: #000000;
+}
+
+#footer {
+    clear: both;
+}
+
+#address {
+    height: 30px;
+    margin: 0px;
+    padding: 10px 0px 0px 10px;
+    color: white;
+    font-size: 13px;
+    background-color: #666666;
+}
+
+#keywords {
+    padding: 6px;
+    margin: 0px;
+    font-size: 10px;
+}
+
+#content {
+    padding: 10px;
+}
+
+#content strong {
+    font-weight: bold;
+}
+
+#content em {
+    font-style: italic;
+}
+
+.more-results {
+    color: #000000;
+    text-decoration: none;
+    display: inline;
+    background: #d9d9d9;
+    border: solid 1px #808080;
+    padding: 4px 10px 4px 10px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.more-results > a, .more-results > a:hover, .more-results > a:visited {
+    color: #000000;
+    text-decoration: none;
+}
+
+.collapsible .collapsed
+{
+    display:none;
+}
+
+.collapsible .heading
+{
+    text-decoration: underline;
+}
+
+.autoselect
+{
+    float:left;
+    margin-left: 0.5em;
+    padding:7px;
+}
+
+.autoselectform .search-button { width:5em; }
+
+.loadError {
+    border:1px solid #c92f2f;
+    background-color:#efcbcb;
+}
+
+th { font-weight: bold;}

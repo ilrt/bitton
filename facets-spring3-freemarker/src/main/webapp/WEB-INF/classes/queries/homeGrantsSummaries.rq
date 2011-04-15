@@ -1,0 +1,10 @@
+prefix proj:   <http://vocab.ouls.ox.ac.uk/projectfunding#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+# We can do this using SAMPLE, but not implemented in arnos yet
+select distinct ?s ?gcount ?label
+{
+    { select distinct ?s (count(distinct ?grant) as ?gcount) { graph ?g1 { ?s proj:funds ?grant } } group by ?s}
+    graph ?g2 { ?s rdfs:label ?label }
+} 
+order by desc(?gcount)

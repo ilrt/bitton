@@ -1,0 +1,6 @@
+prefix aiiso:  <http://purl.org/vocab/aiiso/schema#> 
+
+select (count(distinct ?s) as ?count)
+{
+    graph ?g { ?s a aiiso:Institution }
+}

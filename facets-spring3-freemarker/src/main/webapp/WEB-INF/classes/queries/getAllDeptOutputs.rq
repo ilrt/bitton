@@ -1,0 +1,9 @@
+prefix rr: <http://vocab.bris.ac.uk/resrev#>
+prefix dc: <http://purl.org/dc/terms/>
+
+select ?s
+{
+    graph ?g1 { ?s rr:department <%s> }
+    graph ?g2 { ?s dc:date ?date }
+}
+order by desc(?date)

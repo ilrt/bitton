@@ -1,0 +1,7 @@
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dc: <http://purl.org/dc/terms/>
+
+select ?label 
+{ graph ?g 
+    { <%s> dc:isPartOf [ rdfs:label ?label ] } 
+} limit 1 

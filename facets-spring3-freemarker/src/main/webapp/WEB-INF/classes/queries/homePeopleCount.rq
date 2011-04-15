@@ -1,0 +1,6 @@
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select (count(distinct ?s) as ?count)
+{
+    graph ?g { ?s a foaf:Person }
+}
