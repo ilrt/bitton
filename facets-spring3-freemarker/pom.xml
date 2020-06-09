@@ -102,7 +102,7 @@
         </dependency>
     </dependencies>
     <properties>
-        <spring-security.version>3.0.3.RELEASE</spring-security.version>
+        <spring-security.version>3.0.8.RELEASE</spring-security.version>
     </properties>
 </project>
 
